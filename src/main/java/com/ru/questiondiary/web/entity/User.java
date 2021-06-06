@@ -9,7 +9,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @Table(name = "users")
@@ -20,6 +19,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
@@ -30,4 +30,9 @@ public class User {
 
     @OneToMany(mappedBy = "answer")
     private List<Answer> answers = new ArrayList<>();
+
+
+    public User() {
+
+    }
 }
