@@ -1,5 +1,6 @@
 package com.ru.questiondiary.service;
 
+import com.ru.questiondiary.exception.UserDuplicateEmailException;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,11 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto register(RegisterRequest request) {
+    public UserDto register(RegisterRequest request) throws UserDuplicateEmailException {
+        Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
+        if (existingUser.isPresent()) {
+            throw new UserDuplicateEmailException("User with email %s already exists. Consider logging in.");
+        }
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         User user = User.builder()
                 .firstName(request.getFirstName())
