@@ -1,15 +1,18 @@
 import React from "react";
-import {Avatar, Button, Grid, Paper, Typography, Link} from "@material-ui/core";
+import {Avatar, Button, Grid, Paper, Typography} from "@material-ui/core";
 import {green} from "@material-ui/core/colors";
 import {withStyles} from "@material-ui/styles";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import TextField from "@material-ui/core/TextField";
+import connect from "react-redux/lib/connect/connect";
+import {registerStart} from "../../store/actions/authActions";
+import {Link, Redirect} from "react-router-dom";
 
 const styles = (theme) => ({
     paper: {
         padding: 20,
-        height: '70vh',
-        width: 280,
+        height: '80vh',
+        width: 400,
         margin: '20px auto'
     },
     green: {
@@ -22,15 +25,47 @@ const styles = (theme) => ({
     }
 })
 
-class Login extends React.Component {
+class Register extends React.Component {
 
     state = {
         email: '',
+        firstName: '',
+        lastName: '',
         password: ''
     }
 
-    handleLogin = (e) => {
-        console.log(this.state)
+    validateInput = () => {
+        const {email, password} = this.state;
+        const errors = [];
+        if (!email) {
+            errors.push({
+                field: 'email',
+                code: 'EMAIL_EMPTY',
+                description: 'Email required!'
+            })
+        }
+        if (!password) {
+            errors.push({
+                field: 'password',
+                code: 'PASSWORD_EMPTY',
+                description: 'Password required!'
+            })
+        }
+        if (errors.length > 0) {
+            this.setState({
+                errors: errors
+            })
+            return false;
+        }
+        return true;
+    }
+
+    handleLogin = () => {
+        const {email, firstName, lastName, password} = this.state;
+        if (this.validateInput()) {
+            this.props.registerStart(email, lastName, firstName, password);
+        }
+
     }
 
     changeValue(field, e) {
@@ -40,6 +75,12 @@ class Login extends React.Component {
     }
 
     render() {
+        const {auth} = this.props;
+        if (auth.userId) {
+            return (
+                <Redirect to="/"/>
+            )
+        }
         return (
             <Grid>
                 <Paper className={this.props.classes.paper}>
@@ -67,6 +108,28 @@ class Login extends React.Component {
                             margin="normal"
                             required
                             fullWidth
+                            id="First Name"
+                            label="First Name"
+                            name="First Name"
+                            autoFocus
+                            onChange={(e) => this.changeValue('firstName', e)}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="Last Name   "
+                            label="Last Name"
+                            name="Last Name"
+                            autoFocus
+                            onChange={(e) => this.changeValue('lastName', e)}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
                             name="password"
                             label="Password"
                             type="password"
@@ -86,8 +149,8 @@ class Login extends React.Component {
                     </Grid>
                     <Grid>
                         <Grid item xs={8}>
-                            <Link href="/signUp">
-                                {"Don't have an account? Sign Up"}
+                            <Link to='/login'>
+                                {"Already have an account? Sign In"}
                             </Link>
                         </Grid>
                     </Grid>
@@ -97,4 +160,10 @@ class Login extends React.Component {
     }
 }
 
-export default withStyles(styles)(Login);
+const mapStateToProps = state => ({
+    auth: state.authReducer
+});
+
+export default connect(mapStateToProps, {
+    registerStart
+})(withStyles(styles)(Register));
