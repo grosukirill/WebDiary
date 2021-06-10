@@ -33,7 +33,6 @@ class Navbar extends React.Component {
 
     render() {
         const {auth} = this.props;
-        console.log(auth)
         let isAuthenticated = false
         if (auth.userId) {
             isAuthenticated = true

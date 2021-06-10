@@ -37,7 +37,7 @@ class UserServiceImpl implements UserService {
     public UserDto register(RegisterRequest request) throws UserDuplicateEmailException {
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
-            throw new UserDuplicateEmailException("User with email %s already exists. Consider logging in.");
+            throw new UserDuplicateEmailException(String.format("User with email %s already exists. Consider logging in.", request.getEmail()));
         }
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         User user = User.builder()

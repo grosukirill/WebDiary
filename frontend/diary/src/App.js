@@ -10,6 +10,9 @@ import Home from "./conponents/home/Home";
 import connect from "react-redux/lib/connect/connect";
 import {authCheckState} from "./store/actions/authActions";
 import Navbar from "./conponents/navigation/Navbar";
+import {ToastContainer} from "material-react-toastify";
+import 'material-react-toastify/dist/ReactToastify.min.css';
+
 
 const theme = createMuiTheme({
     palette: {
@@ -48,6 +51,17 @@ const App = (props) => {
             <CssBaseline/>
             <Navbar/>
             <Switch>{routes}</Switch>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </ThemeProvider>
     );
 }

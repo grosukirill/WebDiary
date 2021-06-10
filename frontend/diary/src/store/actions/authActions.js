@@ -1,4 +1,6 @@
 import axios from "axios";
+import {toast} from "material-react-toastify";
+import Alert from '@material-ui/lab/Alert';
 
 export const LOGIN_START = "LOGIN_START";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -16,11 +18,11 @@ export const loginStart = (email, password) => {
                 dispatch(loginSuccess(data.bearer, data.id));
             })
             .catch(err => {
-                const errorData = err.response ? err.response.data : "Unknown error";
                 dispatch({
                     type: LOGIN_FAIL,
-                    payload: errorData
+                    payload: err
                 });
+                handleError(err)
             })
     };
 };
@@ -47,7 +49,11 @@ export const registerStart = (email, firstName, lastName, password) => {
             .catch(err => {
                 dispatch({
                     type: LOGIN_FAIL,
+                    payload: {
+                        error: err.response.data
+                    }
                 })
+                handleError(err)
             })
     };
 };
@@ -58,6 +64,11 @@ export const logout = () => {
     return dispatch => {
         dispatch({type: LOGOUT})
     }
+}
+
+const handleError = (error) => {
+    const errorMessage = (error.response.data.error === 'Unauthorized') ? "Wrong credentials" : error.response.data.error
+    toast.warn(errorMessage)
 }
 
 const storeAuthData = (authData) => {
