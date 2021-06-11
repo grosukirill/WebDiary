@@ -5,10 +5,7 @@ import com.ru.questiondiary.web.dto.QuestionDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +20,11 @@ public class QuestionController {
     public ResponseEntity<?> getAllQuestions() {
         List<QuestionDto> questionDtos = questionService.getAllQuestions();
         return ResponseEntity.status(HttpStatus.OK).body(questionDtos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getQuestionById(@PathVariable("id") Long questionId) {
+        QuestionDto questionDto = questionService.getQuestionById(questionId);
+        return ResponseEntity.status(HttpStatus.OK).body(questionDto);
     }
 }
