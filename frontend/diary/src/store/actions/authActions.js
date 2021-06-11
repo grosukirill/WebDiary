@@ -1,6 +1,5 @@
 import axios from "axios";
 import {toast} from "material-react-toastify";
-import Alert from '@material-ui/lab/Alert';
 
 export const LOGIN_START = "LOGIN_START";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -67,13 +66,14 @@ export const logout = () => {
 }
 
 const handleError = (error) => {
-    const errorMessage = (error.response.data.error === 'Unauthorized') ? "Wrong credentials" : error.response.data.error
-    toast.warn(errorMessage)
+    console.log(error)
+    const errorMessage = (error.response.data.error === 'Unauthorized') ? "Введены неправельные данные" : error.response.data.error
+    toast.warning(errorMessage)
 }
 
 const storeAuthData = (authData) => {
     localStorage.setItem('userId', authData.id);
-    localStorage.setItem('token', authData.bearer);
+    localStorage.setItem('token', authData.bearer.slice(7));
 }
 
 const removeAuthData = () => {

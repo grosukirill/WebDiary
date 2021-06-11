@@ -90,7 +90,7 @@ class Register extends React.Component {
                             <LockOutlinedIcon/>
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign in
+                            Регистрация
                         </Typography>
                         <TextField
                             variant="outlined"
@@ -98,7 +98,7 @@ class Register extends React.Component {
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
+                            label="Email"
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -110,7 +110,7 @@ class Register extends React.Component {
                             required
                             fullWidth
                             id="First Name"
-                            label="First Name"
+                            label="Имя"
                             name="First Name"
                             autoFocus
                             onChange={(e) => this.changeValue('firstName', e)}
@@ -120,8 +120,8 @@ class Register extends React.Component {
                             margin="normal"
                             required
                             fullWidth
-                            id="Last Name   "
-                            label="Last Name"
+                            id="Last Name"
+                            label="Фамилия"
                             name="Last Name"
                             autoFocus
                             onChange={(e) => this.changeValue('lastName', e)}
@@ -132,7 +132,7 @@ class Register extends React.Component {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Пароль"
                             type="password"
                             id="password"
                             autoComplete="current-password"
@@ -145,13 +145,13 @@ class Register extends React.Component {
                             className={this.props.classes.btn}
                             onClick={this.handleLogin}
                         >
-                            Sign In
+                            Войти
                         </Button>
                     </Grid>
                     <Grid>
                         <Grid item xs={8}>
                             <Link to='/login'>
-                                {"Already have an account? Sign In"}
+                                {"Уже есть аккаунт? Войти"}
                             </Link>
                         </Grid>
                     </Grid>

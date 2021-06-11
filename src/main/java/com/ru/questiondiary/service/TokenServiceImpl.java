@@ -7,7 +7,6 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ru.questiondiary.web.entity.User;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,9 +21,6 @@ public class TokenServiceImpl implements TokenService {
 
     @Value("${jwt.token.secret}")
     private String TOKEN_SECRET;
-    @Getter
-    @Value("${jwt.token.validity}")
-    private Integer TOKEN_VALIDITY;
 
 
     public String createToken(User user) {
@@ -34,7 +30,6 @@ public class TokenServiceImpl implements TokenService {
             return "Bearer " + JWT.create()
                     .withClaim("username", user.getUsername())
                     .withClaim("userId", user.getId().toString())
-                    .withExpiresAt(new Date(now.getTime() + TOKEN_VALIDITY))
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
             exception.printStackTrace();

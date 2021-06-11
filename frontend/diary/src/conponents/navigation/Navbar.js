@@ -34,7 +34,7 @@ class Navbar extends React.Component {
     render() {
         const {auth} = this.props;
         let isAuthenticated = false
-        if (auth.userId) {
+        if (auth.userId || localStorage.getItem('token')) {
             isAuthenticated = true
         }
         return (
@@ -42,13 +42,13 @@ class Navbar extends React.Component {
                 <Toolbar>
                     <Button variant="raised" href="/" className={this.props.classes.mainBtn}>
                         <Typography variant="h6">
-                            Diary
+                            Дневник Вопросов
                         </Typography>
                     </Button>
                     {isAuthenticated &&
-                    <Button className={this.props.classes.loginLogoutBtn} color="inherit" onClick={this.handleLogout}>Logout</Button>}
+                    <Button className={this.props.classes.loginLogoutBtn} color="inherit" onClick={this.handleLogout}>Выйти</Button>}
                     {!isAuthenticated &&
-                    <Button className={this.props.classes.loginLogoutBtn} color="inherit" href="/login">Login</Button>}
+                    <Button className={this.props.classes.loginLogoutBtn} color="inherit" href="/login">Войти</Button>}
                 </Toolbar>
             </AppBar>
         );

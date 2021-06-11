@@ -86,7 +86,7 @@ class Login extends React.Component {
                             <LockOutlinedIcon/>
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign in
+                            Войти
                         </Typography>
                         <TextField
                             variant="outlined"
@@ -94,7 +94,7 @@ class Login extends React.Component {
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
+                            label="Email"
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -106,7 +106,7 @@ class Login extends React.Component {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Пароль"
                             type="password"
                             id="password"
                             autoComplete="current-password"
@@ -119,13 +119,13 @@ class Login extends React.Component {
                             className={this.props.classes.btn}
                             onClick={this.handleLogin}
                         >
-                            Sign In
+                            Войти
                         </Button>
                     </Grid>
                     <Grid>
                         <Grid item xs={8}>
                             <Link to='/register'>
-                                {"Don't have an account? Sign Up"}
+                                {"Нет аккаунта? Зарегистирироваться"}
                             </Link>
                         </Grid>
                     </Grid>
