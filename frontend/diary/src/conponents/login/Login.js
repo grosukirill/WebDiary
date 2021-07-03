@@ -125,7 +125,7 @@ class Login extends React.Component {
                     <Grid>
                         <Grid item xs={8}>
                             <Link to='/register'>
-                                {"Нет аккаунта? Зарегистирироваться"}
+                                {"Нет аккаунта? Зарегистрироваться"}
                             </Link>
                         </Grid>
                     </Grid>

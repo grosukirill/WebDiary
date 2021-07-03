@@ -40,7 +40,7 @@ class Navbar extends React.Component {
         return (
             <AppBar position="static">
                 <Toolbar>
-                    <Button variant="raised" href="/" className={this.props.classes.mainBtn}>
+                    <Button variant="text" href="/" className={this.props.classes.mainBtn}>
                         <Typography variant="h6">
                             Дневник Вопросов
                         </Typography>

@@ -17,16 +17,16 @@ export const loginStart = (email, password) => {
                 dispatch(loginSuccess(data.bearer, data.id));
             })
             .catch(err => {
+                handleError(err)
                 dispatch({
                     type: LOGIN_FAIL,
                     payload: err
                 });
-                handleError(err)
             })
     };
 };
 
-export const loginSuccess = (token,userId) => {
+export const loginSuccess = (token, userId) => {
     return {
         type: LOGIN_SUCCESS,
         payload: {
@@ -39,11 +39,16 @@ export const loginSuccess = (token,userId) => {
 export const registerStart = (email, firstName, lastName, password) => {
     return dispatch => {
         dispatch({type: LOGIN_START});
-        axios.post("http://localhost:8080/users", {email: email, password: password, firstName: firstName, lastName: lastName})
+        axios.post("http://localhost:8080/users", {
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName
+        })
             .then(resp => {
                 const data = resp.data;
-                storeAuthData(data);
-                dispatch(loginSuccess(null, data.id));
+                storeAuthData(data)
+                dispatch(loginSuccess(data.bearer, data.id));
             })
             .catch(err => {
                 dispatch({
@@ -66,8 +71,7 @@ export const logout = () => {
 }
 
 const handleError = (error) => {
-    console.log(error)
-    const errorMessage = (error.response.data.error === 'Unauthorized') ? "Введены неправельные данные" : error.response.data.error
+    const errorMessage = (error.response.data.error === 'Unauthorized') ? "Введены неправельные данные" : error.response.data.message
     toast.warning(errorMessage)
 }
 
@@ -83,7 +87,7 @@ const removeAuthData = () => {
 export const authCheckState = () => {
     return dispatch => {
         const userId = localStorage.getItem('userId');
-        if (userId){
+        if (userId) {
 
         }
     }

@@ -3,6 +3,7 @@ package com.ru.questiondiary.service;
 import com.ru.questiondiary.exception.UserDuplicateEmailException;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.UserDto;
+import com.ru.questiondiary.web.dto.UserLoginDto;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
 import com.ru.questiondiary.web.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.Optional;
 class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
     @Override
     @Transactional
@@ -35,7 +37,7 @@ class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto register(RegisterRequest request) throws UserDuplicateEmailException {
+    public UserLoginDto register(RegisterRequest request) throws UserDuplicateEmailException {
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
             throw new UserDuplicateEmailException(String.format("User with email %s already exists. Consider logging in.", request.getEmail()));
@@ -49,7 +51,8 @@ class UserServiceImpl implements UserService {
                 .role("USER")
                 .build();
         userRepository.save(user);
-        return UserDto.from(user);
+        String token = tokenService.createToken(user);
+        return UserLoginDto.from(user, token);
     }
 
     @Override

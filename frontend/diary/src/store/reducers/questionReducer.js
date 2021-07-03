@@ -1,9 +1,17 @@
-import {GET_ALL_QUESTIONS_END, GET_ALL_QUESTIONS_FAIL, GET_ALL_QUESTIONS_START} from "../actions/questionActions";
+import {
+    GET_ALL_QUESTIONS_END,
+    GET_ALL_QUESTIONS_FAIL,
+    GET_ALL_QUESTIONS_START,
+    GET_QUESTION_END,
+    GET_QUESTION_FAIL,
+    GET_QUESTION_START
+} from "../actions/questionActions";
 
 const initialState = {
-    data: null,
+    questions: null,
     isLoading: false,
-    error: null
+    error: null,
+    question: null
 }
 
 const questionReducer = (state = initialState, action) => {
@@ -16,10 +24,26 @@ const questionReducer = (state = initialState, action) => {
         case GET_ALL_QUESTIONS_END:
             return {
                 ...state,
-                data: action.payload.data,
+                questions: action.payload.data,
                 isLoading: false
             };
         case GET_ALL_QUESTIONS_FAIL:
+            return {
+                ...initialState,
+                error: action.payload
+            }
+        case GET_QUESTION_START:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case GET_QUESTION_END:
+            return {
+                ...state,
+                question: action.payload.question,
+                isLoading: false
+            };
+        case GET_QUESTION_FAIL:
             return {
                 ...initialState,
                 error: action.payload

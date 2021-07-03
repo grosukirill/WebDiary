@@ -3,7 +3,8 @@ import {Card, CardContent, Grid, Paper, Typography} from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {Redirect} from "react-router";
 import connect from "react-redux/lib/connect/connect";
-import {getAllQuestions} from "../../store/actions/questionActions";
+import {getAllQuestions, getQuestion} from "../../store/actions/questionActions";
+import {Link} from "react-router-dom";
 
 const styles = (theme) => ({
     root: {
@@ -19,10 +20,11 @@ const styles = (theme) => ({
     questions: {
         margin: '10px auto',
         cursor: 'pointer',
+        boxShadow: '0 0 7px lightgreen'
     },
     question: {
-      maxWidth: '80%',
-        fontFamily: "'Viaoda Libre', cursive;"
+        maxWidth: '80%',
+        fontFamily: "Viaoda Libre, serif;"
     },
     cardContent: {
         margin: '10px auto',
@@ -43,12 +45,12 @@ class Home extends React.Component {
         this.props.getAllQuestions();
     }
 
-    handleQuestion = (id) => {
-        console.log(id);
+    handleQuestionClick = (id) => {
+        this.props.getQuestion(id);
     }
 
     render() {
-        const data = this.props.question.data;
+        const data = this.props.question.questions;
         if (!localStorage.getItem('userId')) {
             return (
                 <Redirect to="/login"/>
@@ -57,24 +59,26 @@ class Home extends React.Component {
         return (
             <div>
                 {data !== null ? (
-                    <Paper variant="outlined" elevation="5" className={this.props.classes.paper}>
+                    <Paper variant="outlined" elevation={5} className={this.props.classes.paper}>
                         <Grid className={this.props.classes.root}>
                             {data.map(item => {
-                                return <Card variant="outlined" className={this.props.classes.questions} onClick={() => this.handleQuestion(item.id)}>
+                                return <Link to={"/question/" + item.id} style={{textDecoration: 'none'}}> <Card
+                                    variant="outlined" className={this.props.classes.questions}
+                                    onClick={() => this.handleQuestionClick(item.id)}>
                                     <CardContent className={this.props.classes.cardContent}>
                                         <Typography variant="h4" className={this.props.classes.question}>
                                             {item.question}
                                         </Typography>
                                         <Grid className={this.props.classes.questionInfo}>
-                                        <Typography>
-                                            {item.creator.firstName + " " + item.creator.lastName}
-                                        </Typography>
+                                            <Typography>
+                                                {item.creator.firstName + " " + item.creator.lastName}
+                                            </Typography>
                                             <Typography>
                                                 {item.creationDate}
                                             </Typography>
                                         </Grid>
                                     </CardContent>
-                                </Card>
+                                </Card></Link>
                             })}
 
                         </Grid>
@@ -91,5 +95,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-    getAllQuestions
+    getAllQuestions,
+    getQuestion
 })(withStyles(styles)(Home));

@@ -2,6 +2,7 @@ package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.UserService;
 import com.ru.questiondiary.web.dto.UserDto;
+import com.ru.questiondiary.web.dto.UserLoginDto;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        UserDto user = userService.register(request);
+        UserLoginDto user = userService.register(request);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }

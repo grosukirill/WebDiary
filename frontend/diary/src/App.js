@@ -12,12 +12,13 @@ import {authCheckState} from "./store/actions/authActions";
 import Navbar from "./conponents/navigation/Navbar";
 import {ToastContainer} from "material-react-toastify";
 import 'material-react-toastify/dist/ReactToastify.min.css';
+import Question from "./conponents/question/Question";
 
 
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: '#228b22',
+            main: '#32cd32',
         },
         secondary: {
             main: '#19857b',
@@ -44,6 +45,7 @@ const App = (props) => {
         <Route path='/login' component={Login} key={1}/>,
         <Route path='/register' component={Register} key={2}/>,
         <Route exact path='/' component={Home} key={3}/>,
+        <Route path='/question/:id?' component={Question} key={4}/>
     ];
 
     return (
