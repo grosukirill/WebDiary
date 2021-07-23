@@ -1,4 +1,6 @@
 import {
+    CREATE_ANSWER_END, CREATE_ANSWER_FAIL,
+    CREATE_ANSWER_START,
     GET_ALL_QUESTIONS_END,
     GET_ALL_QUESTIONS_FAIL,
     GET_ALL_QUESTIONS_START,
@@ -11,7 +13,8 @@ const initialState = {
     questions: null,
     isLoading: false,
     error: null,
-    question: null
+    question: null,
+    answers: null,
 }
 
 const questionReducer = (state = initialState, action) => {
@@ -41,9 +44,26 @@ const questionReducer = (state = initialState, action) => {
             return {
                 ...state,
                 question: action.payload.question,
+                answers: action.payload.question.answers,
                 isLoading: false
             };
         case GET_QUESTION_FAIL:
+            return {
+                ...initialState,
+                error: action.payload
+            };
+        case CREATE_ANSWER_START:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case CREATE_ANSWER_END:
+            return {
+                ...state,
+                answers: [...state.answers, action.payload.answers],
+                isLoading: false
+            };
+        case CREATE_ANSWER_FAIL:
             return {
                 ...initialState,
                 error: action.payload

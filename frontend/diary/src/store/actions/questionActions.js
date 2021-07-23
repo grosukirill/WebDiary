@@ -7,6 +7,9 @@ export const GET_ALL_QUESTIONS_FAIL = "GET_ALL_QUESTIONS_FAIL";
 export const GET_QUESTION_START = "GET_QUESTION_START";
 export const GET_QUESTION_END = "GET_QUESTION_END";
 export const GET_QUESTION_FAIL = "GET_QUESTION_FAIL";
+export const CREATE_ANSWER_START = "CREATE_ANSWER_START";
+export const CREATE_ANSWER_END = "CREATE_ANSWER_END";
+export const CREATE_ANSWER_FAIL = "CREATE_ANSWER_FAIL";
 
 
 export const getAllQuestions = () => {
@@ -72,6 +75,43 @@ export const getQuestionSuccess = (data) => {
         type: GET_QUESTION_END,
         payload: {
             question: data
+        }
+    }
+}
+
+export const createAnswer = (answer, questionId) => {
+    return dispatch => {
+        dispatch({type: CREATE_ANSWER_START})
+        let config = {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        }
+        let body = {
+            "answer": answer,
+            "questionId": questionId,
+            "userId": localStorage.getItem('userId')
+        }
+        axios.post("http://localhost:8080/answers", body, config)
+            .then(resp => {
+                const data = resp.data;
+                dispatch(createAnswerSuccess(data));
+            })
+            .catch(err => {
+                dispatch({
+                    type: CREATE_ANSWER_FAIL,
+                    payload: err
+                })
+                handleError(err);
+            })
+    }
+}
+
+export const createAnswerSuccess = (data) => {
+    return {
+        type: CREATE_ANSWER_END,
+        payload: {
+            answers: data
         }
     }
 }

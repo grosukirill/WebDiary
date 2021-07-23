@@ -7,7 +7,6 @@ import TextField from "@material-ui/core/TextField";
 import connect from "react-redux/lib/connect/connect";
 import {registerStart} from "../../store/actions/authActions";
 import {Link, Redirect} from "react-router-dom";
-import Alert from "@material-ui/lab/Alert";
 
 const styles = (theme) => ({
     paper: {

@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import connect from "react-redux/lib/connect/connect";
-import {getQuestion} from "../../store/actions/questionActions";
+import {createAnswer, getQuestion} from "../../store/actions/questionActions";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
@@ -9,6 +9,7 @@ import CalendarTodayOutlinedIcon from '@material-ui/icons/CalendarTodayOutlined'
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import {toast} from "material-react-toastify";
 
 const styles = (theme) => ({
     title: {
@@ -53,13 +54,21 @@ class Question extends React.Component {
         });
     }
 
-    handleAnswerSubmission = () => {
-        console.log(this.state.answer)
+    handleAnswerSubmission = (questionId) => {
+        if (this.state.answer === "") {
+            toast.warning("Для начала напиши ответ!");
+            return;
+        }
+        let answer = this.state.answer;
+        this.setState({answer:""})
+        this.props.createAnswer(answer, questionId)
+
     }
 
     render() {
         const {question} = this.props;
         const questionObject = question.question;
+        const answers = this.props.question.answers;
         return (
 
             <Grid>
@@ -67,7 +76,7 @@ class Question extends React.Component {
                     <Paper variant="outlined" className={this.props.classes.paper}>
                         <Grid className={this.props.classes.title}>{questionObject.question}</Grid>
                         <Grid>
-                            {questionObject.answers.map(item => {
+                            {answers.map(item => {
                                 return <Grid style={{margin: '20px', maxWidth: '60%'}}>
                                     <Grid className={this.props.classes.previousAnswersData}>
                                         <CalendarTodayOutlinedIcon style={{color: "green", fontSize: 'xx-large'}}/>
@@ -81,8 +90,8 @@ class Question extends React.Component {
                             })}
                         </Grid>
                         <TextField variant="outlined" multiline={true} onChange={this.handleAnswerChange}
-                                   className={this.props.classes.newAnswerTF}/>
-                        <Button variant="contained" color="primary" className={this.props.classes.btn} onClick={this.handleAnswerSubmission}>Ответить</Button>
+                                   className={this.props.classes.newAnswerTF} value={this.state.answer}/>
+                        <Button variant="contained" color="primary" className={this.props.classes.btn} onClick={() => this.handleAnswerSubmission(questionObject.id)}>Ответить</Button>
                     </Paper>
                 ) : (
                     <Grid>Error</Grid>
@@ -97,5 +106,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-    getQuestion
+    getQuestion,
+    createAnswer
 })(withStyles(styles)(Question));

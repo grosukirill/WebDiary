@@ -16,6 +16,7 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
+    @Lob
     String answer;
     LocalDate date;
 

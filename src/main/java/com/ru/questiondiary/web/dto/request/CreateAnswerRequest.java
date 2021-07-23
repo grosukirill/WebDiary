@@ -14,9 +14,9 @@ public class CreateAnswerRequest {
     private Long userId;
 
     @JsonCreator
-    public CreateAnswerRequest(@JsonProperty String answer,
-                               @JsonProperty Long questionId,
-                               @JsonProperty Long userId) {
+    public CreateAnswerRequest(@JsonProperty("answer") String answer,
+                               @JsonProperty("questionId") Long questionId,
+                               @JsonProperty("userId") Long userId) {
         this.answer = answer;
         this.questionId = questionId;
         this.userId = userId;
