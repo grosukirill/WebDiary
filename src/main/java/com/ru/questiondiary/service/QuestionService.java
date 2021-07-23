@@ -7,5 +7,5 @@ import java.util.List;
 public interface QuestionService {
     List<QuestionDto> getAllQuestions();
 
-    QuestionDto getQuestionById(Long questionId);
+    QuestionDto getQuestionById(Long questionId, Long userId);
 }

@@ -47,6 +47,9 @@ export const getQuestion = (questionId) => {
         let config = {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            params: {
+                userId: localStorage.getItem('userId')
             }
         }
         axios.get("http://localhost:8080/questions/" + questionId, config)

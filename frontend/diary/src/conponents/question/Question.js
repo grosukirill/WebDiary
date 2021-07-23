@@ -29,7 +29,7 @@ const styles = (theme) => ({
     },
     previousAnswersData: {
         display: 'flex',
-        marginLeft: '10%'
+        marginLeft: '10%',
     },
     btn: {
         margin: '10% auto',
@@ -60,7 +60,6 @@ class Question extends React.Component {
     render() {
         const {question} = this.props;
         const questionObject = question.question;
-        const data = [{"date": "20", "answer": "esdrtfyuhi"}, {"date": "20", "answer": "esdrtfyuhi"}] //Dump data
         return (
 
             <Grid>
@@ -68,15 +67,15 @@ class Question extends React.Component {
                     <Paper variant="outlined" className={this.props.classes.paper}>
                         <Grid className={this.props.classes.title}>{questionObject.question}</Grid>
                         <Grid>
-                            {data.map(item => {
-                                return <Grid style={{margin: '20px'}}>
+                            {questionObject.answers.map(item => {
+                                return <Grid style={{margin: '20px', maxWidth: '60%'}}>
                                     <Grid className={this.props.classes.previousAnswersData}>
                                         <CalendarTodayOutlinedIcon style={{color: "green", fontSize: 'xx-large'}}/>
                                         <Typography>{item.date}</Typography>
                                     </Grid>
                                     <Grid className={this.props.classes.previousAnswersData}>
                                         <ChatBubbleOutlineOutlinedIcon style={{color: "green", fontSize: 'xx-large'}}/>
-                                        <Typography>{item.answer}</Typography>
+                                        <Typography style={{wordBreak: 'break-word'}}>{item.answer}</Typography>
                                     </Grid>
                                 </Grid>
                             })}

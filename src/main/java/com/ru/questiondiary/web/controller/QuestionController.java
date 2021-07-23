@@ -23,8 +23,8 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getQuestionById(@PathVariable("id") Long questionId) {
-        QuestionDto questionDto = questionService.getQuestionById(questionId);
+    public ResponseEntity<?> getQuestionById(@PathVariable("id") Long questionId, @RequestParam("userId") Long userId) {
+        QuestionDto questionDto = questionService.getQuestionById(questionId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(questionDto);
     }
 }

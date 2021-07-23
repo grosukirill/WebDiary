@@ -1,9 +1,13 @@
 package com.ru.questiondiary.service;
 
 import com.ru.questiondiary.exception.QuestionNotFoundException;
+import com.ru.questiondiary.repo.AnswerRepository;
 import com.ru.questiondiary.repo.QuestionRepository;
+import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.QuestionDto;
+import com.ru.questiondiary.web.entity.Answer;
 import com.ru.questiondiary.web.entity.Question;
+import com.ru.questiondiary.web.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
-
+    private final AnswerRepository answerRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -32,11 +37,13 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionDto getQuestionById(Long questionId) {
+    public QuestionDto getQuestionById(Long questionId, Long userId) {
         Optional<Question> question = questionRepository.findById(questionId);
         if (question.isEmpty()) {
             throw new QuestionNotFoundException(String.format("Question with ID [%s] not found", questionId));
         }
-        return QuestionDto.from(question.get());
+        User user = userRepository.getById(userId);
+        List<Answer> answers = answerRepository.getAllByQuestionAndUser(question.get(), user);
+        return QuestionDto.from(question.get(), answers);
     }
 }
