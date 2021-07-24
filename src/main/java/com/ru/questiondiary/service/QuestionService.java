@@ -8,4 +8,6 @@ public interface QuestionService {
     List<QuestionDto> getAllQuestions();
 
     QuestionDto getQuestionById(Long questionId, Long userId);
+
+    List<QuestionDto> getAllQuestionsByCategory(String category);
 }

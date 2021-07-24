@@ -56,7 +56,7 @@ class Question extends React.Component {
 
     handleAnswerSubmission = (questionId) => {
         if (this.state.answer === "") {
-            toast.warning("Для начала напиши ответ!");
+            toast.warning("Для начала напишите ответ!");
             return;
         }
         let answer = this.state.answer;

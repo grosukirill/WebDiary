@@ -46,4 +46,15 @@ public class QuestionServiceImpl implements QuestionService {
         List<Answer> answers = answerRepository.getAllByQuestionAndUser(question.get(), user);
         return QuestionDto.from(question.get(), answers);
     }
+
+    @Override
+    public List<QuestionDto> getAllQuestionsByCategory(String category) {
+        List<Question> questions = questionRepository.getAllByCategories(category);
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        for (Question question: questions) {
+            questionDtos.add(QuestionDto.from(question));
+        }
+        Collections.shuffle(questionDtos);
+        return questionDtos;
+    }
 }

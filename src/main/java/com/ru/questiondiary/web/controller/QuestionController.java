@@ -22,9 +22,15 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.OK).body(questionDtos);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getQuestionById(@PathVariable("id") Long questionId, @RequestParam("userId") Long userId) {
         QuestionDto questionDto = questionService.getQuestionById(questionId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(questionDto);
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<?> getAllQuestionByCategory(@RequestParam("category") String category) {
+        List<QuestionDto> questions = questionService.getAllQuestionsByCategory(category);
+        return ResponseEntity.status(HttpStatus.OK).body(questions);
     }
 }
