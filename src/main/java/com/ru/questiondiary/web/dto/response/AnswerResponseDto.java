@@ -1,5 +1,6 @@
-package com.ru.questiondiary.web.dto;
+package com.ru.questiondiary.web.dto.response;
 
+import com.ru.questiondiary.web.dto.AnswerDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

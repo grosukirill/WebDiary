@@ -2,7 +2,7 @@ package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.AuthenticationService;
 import com.ru.questiondiary.web.dto.UserLoginDto;
-import com.ru.questiondiary.web.dto.UserLoginResponseDto;
+import com.ru.questiondiary.web.dto.response.UserLoginResponseDto;
 import com.ru.questiondiary.web.dto.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

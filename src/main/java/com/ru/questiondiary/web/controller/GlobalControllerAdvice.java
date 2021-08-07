@@ -4,7 +4,7 @@ import com.ru.questiondiary.exception.AuthenticationFailedException;
 import com.ru.questiondiary.exception.QuestionNotFoundException;
 import com.ru.questiondiary.exception.UserDuplicateEmailException;
 import com.ru.questiondiary.web.dto.ErrorDto;
-import com.ru.questiondiary.web.dto.ErrorResponseDto;
+import com.ru.questiondiary.web.dto.response.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
