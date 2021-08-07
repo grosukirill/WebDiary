@@ -5,9 +5,9 @@ import com.ru.questiondiary.web.dto.QuestionDto;
 import java.util.List;
 
 public interface QuestionService {
-    List<QuestionDto> getAllQuestions();
+    List<QuestionDto> findAllQuestions();
 
-    QuestionDto getQuestionById(Long questionId, Long userId);
+    QuestionDto findQuestionById(Long questionId, Long userId);
 
-    List<QuestionDto> getAllQuestionsByCategory(String category);
+    List<QuestionDto> findAllQuestionsByCategory(String category);
 }

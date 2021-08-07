@@ -26,7 +26,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public List<QuestionDto> getAllQuestions() {
+    public List<QuestionDto> findAllQuestions() {
         List<Question> questions = questionRepository.findAll();
         List<QuestionDto> questionDtos = new ArrayList<>();
         for (Question question: questions) {
@@ -37,7 +37,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionDto getQuestionById(Long questionId, Long userId) {
+    public QuestionDto findQuestionById(Long questionId, Long userId) {
         Optional<Question> question = questionRepository.findById(questionId);
         if (question.isEmpty()) {
             throw new QuestionNotFoundException(String.format("Question with ID [%s] not found", questionId));
@@ -48,7 +48,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<QuestionDto> getAllQuestionsByCategory(String category) {
+    public List<QuestionDto> findAllQuestionsByCategory(String category) {
         List<Question> questions = questionRepository.getAllByCategories(category);
         List<QuestionDto> questionDtos = new ArrayList<>();
         for (Question question: questions) {
