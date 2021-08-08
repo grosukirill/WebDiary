@@ -1,8 +1,8 @@
 package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.AuthenticationService;
+import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.UserLoginDto;
-import com.ru.questiondiary.web.dto.response.UserLoginResponseDto;
 import com.ru.questiondiary.web.dto.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class AuthenticationController {
     @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         UserLoginDto authenticatedUser = authenticationService.authenticate(loginRequest);
-        UserLoginResponseDto userLoginResponseDto = new UserLoginResponseDto(authenticatedUser);
+        OkResponse userLoginResponseDto = new OkResponse(authenticatedUser);
         return ResponseEntity.status(HttpStatus.OK).body(userLoginResponseDto);
     }
 }

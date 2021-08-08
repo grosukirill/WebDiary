@@ -1,10 +1,9 @@
 package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.UserService;
+import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
-import com.ru.questiondiary.web.dto.response.UserLoginResponseDto;
-import com.ru.questiondiary.web.dto.response.UsersResponseDto;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,14 +22,14 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> findAllUsers() {
         List<UserDto> allUsers = userService.findAllUsers();
-        UsersResponseDto usersResponseDto = new UsersResponseDto(allUsers);
+        OkResponse usersResponseDto = new OkResponse(allUsers);
         return ResponseEntity.status(HttpStatus.OK).body(usersResponseDto);
     }
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         UserLoginDto user = userService.register(request);
-        UserLoginResponseDto userLoginResponseDto = new UserLoginResponseDto(user);
+        OkResponse userLoginResponseDto = new OkResponse(user);
         return ResponseEntity.status(HttpStatus.OK).body(userLoginResponseDto);
     }
 }

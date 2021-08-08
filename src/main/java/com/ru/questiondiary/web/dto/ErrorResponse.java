@@ -1,16 +1,15 @@
-package com.ru.questiondiary.web.dto.response;
+package com.ru.questiondiary.web.dto;
 
-import com.ru.questiondiary.web.dto.ErrorDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class ErrorResponseDto {
+public class ErrorResponse {
     private final Boolean status = false;
     private ErrorDto error;
 
-    public ErrorResponseDto(ErrorDto error) {
+    public ErrorResponse(ErrorDto error) {
         this.error = error;
     }
 }

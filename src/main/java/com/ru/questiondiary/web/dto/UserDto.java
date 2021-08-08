@@ -3,12 +3,14 @@ package com.ru.questiondiary.web.dto;
 import com.ru.questiondiary.web.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserDto {
+public class UserDto extends ResponseData {
     private Long id;
     private String email;
     private String firstName;

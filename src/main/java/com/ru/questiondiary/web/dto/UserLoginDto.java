@@ -2,11 +2,13 @@ package com.ru.questiondiary.web.dto;
 
 import com.ru.questiondiary.web.entity.User;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Data
-public class UserLoginDto {
+public class UserLoginDto extends ResponseData {
     private Long id;
     private String email;
     private String firstName;

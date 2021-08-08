@@ -2,7 +2,7 @@ package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.AnswerService;
 import com.ru.questiondiary.web.dto.AnswerDto;
-import com.ru.questiondiary.web.dto.response.AnswerResponseDto;
+import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.request.CreateAnswerRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class AnswerController {
     @PostMapping
     public ResponseEntity<?> createAnswer(@RequestBody CreateAnswerRequest request) {
         AnswerDto answer = answerService.createAnswer(request);
-        AnswerResponseDto answerResponseDto = new AnswerResponseDto(answer);
+        OkResponse answerResponseDto = new OkResponse(answer);
         return ResponseEntity.status(HttpStatus.OK).body(answerResponseDto);
     }
 }
