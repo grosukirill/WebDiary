@@ -1,5 +1,7 @@
 package com.ru.questiondiary.service;
 
+import com.ru.questiondiary.exception.QuestionNotFoundException;
+import com.ru.questiondiary.exception.UserNotFoundException;
 import com.ru.questiondiary.repo.AnswerRepository;
 import com.ru.questiondiary.repo.QuestionRepository;
 import com.ru.questiondiary.repo.UserRepository;
@@ -28,6 +30,11 @@ public class AnswerServiceImpl implements AnswerService {
         Optional<Question> question = questionRepository.findById(request.getQuestionId());
         Optional<User> user = userRepository.findById(request.getUserId());
         LocalDate date = LocalDate.now(ZoneId.of("UTC+3"));
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with ID [%s] not found", request.getUserId()));
+        } else if (question.isEmpty()) {
+            throw new QuestionNotFoundException(String.format("Question with ID [%s] not found", request.getQuestionId()));
+        }
         Answer answerRecord = answerRepository.save(Answer.builder()
                 .answer(answer)
                 .question(question.get())
