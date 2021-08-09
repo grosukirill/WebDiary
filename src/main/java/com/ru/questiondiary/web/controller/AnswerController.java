@@ -19,7 +19,7 @@ public class AnswerController {
     @PostMapping
     public ResponseEntity<?> createAnswer(@RequestBody CreateAnswerRequest request) {
         AnswerDto answer = answerService.createAnswer(request);
-        OkResponse answerResponseDto = new OkResponse(answer);
-        return ResponseEntity.status(HttpStatus.OK).body(answerResponseDto);
+        OkResponse response = new OkResponse(answer);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

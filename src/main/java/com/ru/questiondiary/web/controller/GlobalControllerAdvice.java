@@ -19,21 +19,21 @@ public class GlobalControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<?> handleAuthenticationException(AuthenticationFailedException e) {
         ErrorDto errorDto = new ErrorDto(e.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        ErrorResponse errorResponseDto = new ErrorResponse(errorDto);
-        return ResponseEntity.status(HttpStatus.OK).body(errorResponseDto);
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> handleUserDuplicateEmailException(UserDuplicateEmailException e) {
         ErrorDto errorDto = new ErrorDto(e.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        ErrorResponse errorResponseDto = new ErrorResponse(errorDto);
-        return ResponseEntity.status(HttpStatus.OK).body(errorResponseDto);
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> handleQuestionNotFoundException(QuestionNotFoundException e) {
         ErrorDto errorDto = new ErrorDto(e.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        ErrorResponse errorResponseDto = new ErrorResponse(errorDto);
-        return ResponseEntity.status(HttpStatus.OK).body(errorResponseDto);
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

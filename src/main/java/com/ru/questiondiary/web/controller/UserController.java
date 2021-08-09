@@ -22,14 +22,14 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> findAllUsers() {
         List<UserDto> allUsers = userService.findAllUsers();
-        OkResponse usersResponseDto = new OkResponse(allUsers);
-        return ResponseEntity.status(HttpStatus.OK).body(usersResponseDto);
+        OkResponse response = new OkResponse(allUsers);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         UserLoginDto user = userService.register(request);
-        OkResponse userLoginResponseDto = new OkResponse(user);
-        return ResponseEntity.status(HttpStatus.OK).body(userLoginResponseDto);
+        OkResponse response = new OkResponse(user);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
