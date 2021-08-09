@@ -55,7 +55,7 @@ export const getQuestion = (questionId) => {
                 userId: localStorage.getItem('userId')
             }
         }
-        axios.get("http://localhost:8080/questions/" + questionId, config)
+            axios.get("http://localhost:8080/questions/id/" + questionId, config)
             .then(resp => {
                 const data = resp.data;
                 dispatch(getQuestionSuccess(data))

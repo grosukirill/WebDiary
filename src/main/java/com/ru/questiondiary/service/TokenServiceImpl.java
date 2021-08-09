@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +25,7 @@ public class TokenServiceImpl implements TokenService {
     public String createToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
-            Date now = new Date();
-            return "Bearer " + JWT.create()
+            return JWT.create()
                     .withClaim("username", user.getUsername())
                     .withClaim("userId", user.getId().toString())
                     .sign(algorithm);
