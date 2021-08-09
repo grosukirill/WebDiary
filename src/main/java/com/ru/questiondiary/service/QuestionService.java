@@ -1,13 +1,16 @@
 package com.ru.questiondiary.service;
 
 import com.ru.questiondiary.web.dto.QuestionDto;
+import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
 
 import java.util.List;
 
 public interface QuestionService {
-    List<QuestionDto> getAllQuestions();
+    List<QuestionDto> findAllQuestions();
 
-    QuestionDto getQuestionById(Long questionId, Long userId);
+    QuestionDto findQuestionById(Long questionId, String token);
 
-    List<QuestionDto> getAllQuestionsByCategory(String category);
+    List<QuestionDto> findAllQuestionsByCategory(String category);
+
+    QuestionDto createQuestion(CreateQuestionRequest request);
 }

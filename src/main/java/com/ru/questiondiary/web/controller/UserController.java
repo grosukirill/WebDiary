@@ -1,6 +1,7 @@
 package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.UserService;
+import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
@@ -21,12 +22,14 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> findAllUsers() {
         List<UserDto> allUsers = userService.findAllUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(allUsers);
+        OkResponse response = new OkResponse(allUsers);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         UserLoginDto user = userService.register(request);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+        OkResponse response = new OkResponse(user);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

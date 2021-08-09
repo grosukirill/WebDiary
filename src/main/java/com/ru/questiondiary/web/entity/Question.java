@@ -1,12 +1,10 @@
 package com.ru.questiondiary.web.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,6 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "question")
 public class Question {
     @Id
@@ -21,6 +20,7 @@ public class Question {
     private Long id;
     private String question;
     private LocalDate creationDate;
+    private Boolean isAdmins;
 
     @ElementCollection
     @CollectionTable(name = "categories", joinColumns = @JoinColumn(name = "question_id"))
@@ -31,6 +31,16 @@ public class Question {
     @JoinColumn(name = "creator_id", nullable = false, updatable = false)
     private User creator;
 
-    @OneToMany(mappedBy = "answer")
-    private List<Answer> answers;
+    @OneToMany(mappedBy = "question")
+    private List<Answer> answers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question")
+    private List<Vote> votes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question")
+    private List<Comment> comments = new ArrayList<>();
+
+    public Integer getCountOfVotes() {
+        return getVotes().stream().map(Vote::getVote).mapToInt(Integer::intValue).sum();
+    }
 }
