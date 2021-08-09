@@ -1,8 +1,6 @@
 package com.ru.questiondiary.web.controller;
 
-import com.ru.questiondiary.exception.AuthenticationFailedException;
-import com.ru.questiondiary.exception.QuestionNotFoundException;
-import com.ru.questiondiary.exception.UserDuplicateEmailException;
+import com.ru.questiondiary.exception.*;
 import com.ru.questiondiary.web.dto.ErrorDto;
 import com.ru.questiondiary.web.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -35,5 +33,22 @@ public class GlobalControllerAdvice {
         ErrorDto errorDto = new ErrorDto(e.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         ErrorResponse response = new ErrorResponse(errorDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+<<<<<<< HEAD
+=======
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleDuplicateVoteException(DuplicateVoteException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+>>>>>>> 0fc03ef5aed58a6e8a166b4a5e086e8d0684dc32
     }
 }
