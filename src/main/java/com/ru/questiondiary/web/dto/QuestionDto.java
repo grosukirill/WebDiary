@@ -21,7 +21,6 @@ public class QuestionDto extends ResponseData {
     private LocalDate creationDate;
     private UserDto creator;
     private List<AnswerDto> answers;
-    private Integer votes;
 
     public static QuestionDto from(Question question, List<Answer> answers) {
         List<AnswerDto> answerDtos = new ArrayList<>();
@@ -43,7 +42,6 @@ public class QuestionDto extends ResponseData {
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
         result.setCreator(UserDto.from(question.getCreator()));
-        result.setVotes(question.getCountOfVotes());
         return result;
     }
 }
