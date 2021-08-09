@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Vote> getAllByQuestionAndUser(Question question, User user);
+
+    List<Vote> getAllByQuestion(Question question);
 }

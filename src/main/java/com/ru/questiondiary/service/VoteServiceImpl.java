@@ -14,6 +14,7 @@ import com.ru.questiondiary.web.entity.Vote;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public class VoteServiceImpl implements VoteService {
 
 
     @Override
+    @Transactional
     public QuestionDto createVote(CreateVoteRequest request) {
         Integer vote = request.getVote();
         Optional<Question> question = questionRepository.findById(request.getQuestionId());
@@ -43,7 +45,8 @@ public class VoteServiceImpl implements VoteService {
                 .user(user.get())
                 .build();
         voteRepository.save(createdVote);
-        return QuestionDto.from(question.get());
+        List<Vote> updatedVotes = voteRepository.getAllByQuestion(question.get());
+        return QuestionDto.fromWithVotes(question.get(), updatedVotes);
     }
 
     private boolean checkForRepeatedVote(Question question, User user) {

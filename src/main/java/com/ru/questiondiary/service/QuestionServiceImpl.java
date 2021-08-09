@@ -38,6 +38,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public QuestionDto findQuestionById(Long questionId, String token) {
         Optional<Question> question = questionRepository.findById(questionId);
         Map<String, String> userData = tokenService.getUserDataFromToken(token);
@@ -46,10 +47,11 @@ public class QuestionServiceImpl implements QuestionService {
         }
         User user = userRepository.getById(Long.parseLong(userData.get("id")));
         List<Answer> answers = answerRepository.getAllByQuestionAndUser(question.get(), user);
-        return QuestionDto.from(question.get(), answers);
+        return QuestionDto.fromWithAnswers(question.get(), answers);
     }
 
     @Override
+    @Transactional
     public List<QuestionDto> findAllQuestionsByCategory(String category) {
         List<Question> questions = questionRepository.getAllByCategories(category);
         List<QuestionDto> questionDtos = new ArrayList<>();
@@ -61,6 +63,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public QuestionDto createQuestion(CreateQuestionRequest request) {
         Map<String, String> userData = tokenService.getUserDataFromToken(request.getToken());
         User user = userRepository.getById(Long.parseLong(userData.get("id")));

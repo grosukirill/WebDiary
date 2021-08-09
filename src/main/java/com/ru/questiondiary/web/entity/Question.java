@@ -37,6 +37,9 @@ public class Question {
     @OneToMany(mappedBy = "question")
     private List<Vote> votes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "question")
+    private List<Comment> comments = new ArrayList<>();
+
     public Integer getCountOfVotes() {
         return getVotes().stream().map(Vote::getVote).mapToInt(Integer::intValue).sum();
     }
