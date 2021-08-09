@@ -1,0 +1,47 @@
+.auth_input {
+    background: #F4F8F7;
+    border-radius: 5px;
+    border: none;
+    padding: 16px 16px;
+    font-size: 18px;
+    width: calc(100% - 56px);
+}
+
+.auth_input:-webkit-autofill,
+.auth_input:-webkit-autofill:hover, 
+.auth_input:-webkit-autofill:focus, 
+.auth_input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px #F4F8F7 inset !important;
+}
+
+.auth_input:focus {
+    outline: none;
+}
+
+.auth_input_block {
+    width: 360px;
+    background: #F4F8F7;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.auth_input_block:last-child {
+    margin-bottom: 0;
+}
+
+.auth_input_block svg {
+    margin-left: 21px;
+    margin-top: 2px;
+}
+
+.eye_icon {
+    margin-left: 0px !important;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.auth_input_password {
+    width: calc(100% - 90px);
+}
