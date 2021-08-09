@@ -33,6 +33,7 @@ public class QuestionDto extends ResponseData {
         result.setCreationDate(question.getCreationDate());
         result.setCreator(UserDto.from(question.getCreator()));
         result.setAnswers(answerDtos);
+        result.setVotes(question.getCountOfVotes());
         return result;
     }
 
