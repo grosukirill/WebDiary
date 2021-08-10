@@ -22,6 +22,7 @@ public class QuestionDto extends ResponseData {
     private List<AnswerDto> answers;
     private Integer votes;
     private List<CommentDto> comments;
+    private Boolean voted = null;
 
     public static QuestionDto fromWithComments(Question question, List<Comment> comments) {
         List<CommentDto> commentsDtos = new ArrayList<>();
@@ -85,7 +86,7 @@ public class QuestionDto extends ResponseData {
         return result;
     }
 
-    public static QuestionDto from(Question question) {
+    public static QuestionDto from(Question question, Boolean voted) {
         List<CommentDto> comments = new ArrayList<>();
         for (Comment comment: question.getComments()) {
             comments.add(CommentDto.from(comment));
@@ -97,6 +98,9 @@ public class QuestionDto extends ResponseData {
         result.setCreator(UserDto.from(question.getCreator()));
         result.setVotes(question.getCountOfVotes());
         result.setComments(comments);
+        result.setVoted(voted);
         return result;
     }
+
+
 }

@@ -5,6 +5,7 @@ import com.ru.questiondiary.exception.TokenValidationException;
 import com.ru.questiondiary.repo.AnswerRepository;
 import com.ru.questiondiary.repo.QuestionRepository;
 import com.ru.questiondiary.repo.UserRepository;
+import com.ru.questiondiary.repo.VoteRepository;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
 import com.ru.questiondiary.web.entity.Answer;
@@ -23,16 +24,26 @@ import java.util.*;
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final VoteRepository voteRepository;
     private final UserRepository userRepository;
     private final TokenService tokenService;
+
 
     @Override
     @Transactional
     public List<QuestionDto> findAllQuestions() {
         List<Question> questions = questionRepository.findAll();
         List<QuestionDto> questionDtos = new ArrayList<>();
+        List<Long> upVoted = voteRepository.getAllByVote(1);
+        List<Long> downVoted = voteRepository.getAllByVote(-1);
         for (Question question: questions) {
-            questionDtos.add(QuestionDto.from(question));
+            if (upVoted.contains(question.getId())) {
+                questionDtos.add(QuestionDto.from(question, true));
+            } else if (downVoted.contains(question.getId())) {
+                questionDtos.add(QuestionDto.from(question, false));
+            } else {
+                questionDtos.add(QuestionDto.from(question, null));
+            }
         }
         Collections.shuffle(questionDtos);
         return questionDtos;
@@ -59,8 +70,14 @@ public class QuestionServiceImpl implements QuestionService {
     public List<QuestionDto> findAllQuestionsByCategory(String category) {
         List<Question> questions = questionRepository.getAllByCategories(category);
         List<QuestionDto> questionDtos = new ArrayList<>();
+        List<Long> upVoted = voteRepository.getAllByVote(1);
+        List<Long> downVoted = voteRepository.getAllByVote(-1);
         for (Question question: questions) {
-            questionDtos.add(QuestionDto.from(question));
+            if (upVoted.contains(question.getId())) {
+                questionDtos.add(QuestionDto.from(question, true));
+            } else if (downVoted.contains(question.getId())) {
+                questionDtos.add(QuestionDto.from(question, false));
+            }
         }
         Collections.shuffle(questionDtos);
         return questionDtos;
@@ -77,6 +94,6 @@ public class QuestionServiceImpl implements QuestionService {
         question.setCreator(user);
         question.setCreationDate(now);
         questionRepository.save(question);
-        return QuestionDto.from(question);
+        return QuestionDto.from(question, null);
     }
 }
