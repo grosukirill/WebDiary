@@ -3,6 +3,7 @@ package com.ru.questiondiary.web.controller;
 import com.ru.questiondiary.service.CommunityService;
 import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.OkResponse;
+import com.ru.questiondiary.web.dto.request.AddWorkerToCommunityRequest;
 import com.ru.questiondiary.web.dto.request.CreateCommunityRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,13 @@ public class CommunityController {
     @PostMapping
     public ResponseEntity<?> createCommunity(@RequestBody CreateCommunityRequest request, @RequestHeader("Authorization") String rawToken) {
         CommunityDto community = communityService.createCommunity(request, rawToken);
+        OkResponse response = new OkResponse(community);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/workers")
+    public ResponseEntity<?> addWorkerToCommunity(@RequestBody AddWorkerToCommunityRequest request) {
+        CommunityDto community = communityService.addWorkerToCommunity(request);
         OkResponse response = new OkResponse(community);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -3,6 +3,7 @@ package com.ru.questiondiary.web.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,5 +23,5 @@ public class CommunityUser {
     private User user;
 
     @ManyToMany
-    private List<Community> communities;
+    private List<Community> communities = new ArrayList<>();
 }
