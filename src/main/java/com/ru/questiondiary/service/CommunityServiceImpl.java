@@ -82,7 +82,7 @@ public class CommunityServiceImpl implements CommunityService {
         }
         Optional<CommunityUser> existingCommunityUser = communityUserRepository.findByRoleAndUser(request.getRole(), user.get());
         List<CommunityUser> workers = community.get().getWorkers();
-        CommunityUser communityUser = new CommunityUser();
+        CommunityUser communityUser;
         if (existingCommunityUser.isEmpty()) {
             communityUser = CommunityUser.builder()
                     .role(request.getRole())
@@ -90,11 +90,10 @@ public class CommunityServiceImpl implements CommunityService {
                     .communities(new ArrayList<>())
                     .build();
             communityUserRepository.save(communityUser);
-            workers.add(communityUser);
         } else {
             communityUser = existingCommunityUser.get();
-            workers.add(communityUser);
         }
+        workers.add(communityUser);
         community.get().setWorkers(workers);
         communityRepository.save(community.get());
         List<Community> communities = communityUser.getCommunities();
