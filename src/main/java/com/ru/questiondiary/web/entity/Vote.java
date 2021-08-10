@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Table(name = "vote")
 public class Vote {
@@ -26,6 +27,4 @@ public class Vote {
     @ToString.Exclude
     @JoinColumn(name = "question_id", nullable = false, updatable = false)
     private Question question;
-
-    protected Vote() {}
 }

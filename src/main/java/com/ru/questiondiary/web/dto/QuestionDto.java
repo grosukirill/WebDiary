@@ -1,9 +1,6 @@
 package com.ru.questiondiary.web.dto;
 
-import com.ru.questiondiary.web.entity.Answer;
-import com.ru.questiondiary.web.entity.Comment;
-import com.ru.questiondiary.web.entity.Question;
-import com.ru.questiondiary.web.entity.Vote;
+import com.ru.questiondiary.web.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

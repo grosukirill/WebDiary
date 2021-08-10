@@ -28,7 +28,7 @@ public class Question {
     private List<String> categories;
 
     @ManyToOne
-    @JoinColumn(name = "creator_id", nullable = false, updatable = false)
+    @JoinColumn(name = "creator_id", nullable = true, updatable = false)
     private User creator;
 
     @OneToMany(mappedBy = "question")
@@ -39,6 +39,10 @@ public class Question {
 
     @OneToMany(mappedBy = "question")
     private List<Comment> comments = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "community_id", nullable = true, updatable = false)
+    private Community createdBy;
 
     public Integer getCountOfVotes() {
         return getVotes().stream().map(Vote::getVote).mapToInt(Integer::intValue).sum();

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Table(name = "comment")
 public class Comment {
@@ -30,5 +31,4 @@ public class Comment {
     @JoinColumn(name = "question_id", nullable = false, updatable = false)
     private Question question;
 
-    protected Comment() {}
 }

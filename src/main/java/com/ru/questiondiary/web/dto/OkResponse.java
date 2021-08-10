@@ -9,9 +9,9 @@ public class OkResponse {
     private final Boolean status = true;
     private Object data;
 
-    public OkResponse(ResponseData data) {
-        this.data = data;
-    }
+//    public OkResponse(ResponseData data) {
+//        this.data = data;
+//    }
 
     public OkResponse(Object data) {
         this.data = data;

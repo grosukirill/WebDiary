@@ -35,6 +35,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "answer")
     private List<Answer> answers = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "followers")
+    private List<Community> following;
+
 
     public User() {
 
