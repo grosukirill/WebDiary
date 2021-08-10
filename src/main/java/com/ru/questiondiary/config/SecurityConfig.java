@@ -2,6 +2,7 @@ package com.ru.questiondiary.config;
 
 import com.ru.questiondiary.service.TokenService;
 import com.ru.questiondiary.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,14 +16,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import javax.servlet.http.HttpServletResponse;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final TokenService tokenService;
-
-    public SecurityConfig(UserService userService, TokenService tokenService) {
-        this.userService = userService;
-        this.tokenService = tokenService;
-    }
 
     @Bean
     @Override
