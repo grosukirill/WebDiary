@@ -44,7 +44,7 @@ public class QuestionServiceImpl implements QuestionService {
         Optional<Question> question = questionRepository.findById(questionId);
         Map<String, String> userData = tokenService.getUserDataFromToken(token);
         if (userData == null || userData.isEmpty()) {
-            throw new TokenValidationException("Wrong token");
+            throw new TokenValidationException("Invalid token");
         }
         if (question.isEmpty()) {
             throw new QuestionNotFoundException(String.format("Question with ID [%s] not found", questionId));

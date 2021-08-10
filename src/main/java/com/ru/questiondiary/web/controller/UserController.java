@@ -32,4 +32,18 @@ public class UserController {
         OkResponse response = new OkResponse(user);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> findUserById(@PathVariable("id") Long id) {
+        UserDto user = userService.findUserById(id);
+        OkResponse response = new OkResponse(user);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/token/{token}")
+    public ResponseEntity<?> findUserByToken(@PathVariable("token") String token) {
+        UserDto user = userService.findUserByToken(token);
+        OkResponse response = new OkResponse(user);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

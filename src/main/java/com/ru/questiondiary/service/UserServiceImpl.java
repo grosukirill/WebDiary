@@ -1,6 +1,8 @@
 package com.ru.questiondiary.service;
 
+import com.ru.questiondiary.exception.TokenValidationException;
 import com.ru.questiondiary.exception.UserDuplicateEmailException;
+import com.ru.questiondiary.exception.UserNotFoundException;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -53,6 +56,30 @@ class UserServiceImpl implements UserService {
         userRepository.save(user);
         String token = tokenService.createToken(user);
         return UserLoginDto.from(user, token);
+    }
+
+    @Override
+    @Transactional
+    public UserDto findUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with ID [%s] not found", id));
+        }
+        return UserDto.from(user.get());
+    }
+
+    @Override
+    @Transactional
+    public UserDto findUserByToken(String token) {
+        Map<String, String> userData = tokenService.getUserDataFromToken(token);
+        if (userData == null || userData.isEmpty()) {
+            throw new TokenValidationException("Invalid token");
+        }
+        Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("Token [%s] has no linked user", token));
+        }
+        return UserDto.from(user.get());
     }
 
     @Override
