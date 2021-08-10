@@ -34,6 +34,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
         Map<String, String> userData = tokenService.getUserDataFromToken(token);
         if (userData == null || userData.isEmpty()) {
+            String body = "{\"status\":false, \"data\": {\"message\":\"Wrong token\"}}";
+            response.getWriter().write(body);
+            response.getWriter().flush();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -42,6 +45,9 @@ public class JwtFilter extends OncePerRequestFilter {
         String userId = userData.get("id");
 
         if (userEmail == null || userId == null) {
+            String body = "{\"status\":false, \"data\": {\"message\":\"Wrong token\"}}";
+            response.getWriter().write(body);
+            response.getWriter().flush();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         } else {
             request.setAttribute("userId", userId);

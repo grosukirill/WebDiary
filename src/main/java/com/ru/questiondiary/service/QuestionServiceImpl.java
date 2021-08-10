@@ -1,6 +1,7 @@
 package com.ru.questiondiary.service;
 
 import com.ru.questiondiary.exception.QuestionNotFoundException;
+import com.ru.questiondiary.exception.TokenValidationException;
 import com.ru.questiondiary.repo.AnswerRepository;
 import com.ru.questiondiary.repo.QuestionRepository;
 import com.ru.questiondiary.repo.UserRepository;
@@ -42,6 +43,9 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionDto findQuestionById(Long questionId, String token) {
         Optional<Question> question = questionRepository.findById(questionId);
         Map<String, String> userData = tokenService.getUserDataFromToken(token);
+        if (userData == null || userData.isEmpty()) {
+            throw new TokenValidationException("Wrong token");
+        }
         if (question.isEmpty()) {
             throw new QuestionNotFoundException(String.format("Question with ID [%s] not found", questionId));
         }

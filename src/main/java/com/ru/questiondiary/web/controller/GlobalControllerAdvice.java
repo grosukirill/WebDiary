@@ -49,4 +49,11 @@ public class GlobalControllerAdvice {
         ErrorResponse response = new ErrorResponse(errorDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleTokenValidationException(TokenValidationException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
