@@ -2,7 +2,6 @@ package com.ru.questiondiary.config;
 
 import com.ru.questiondiary.service.TokenService;
 import com.ru.questiondiary.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,11 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
     private final UserService userService;
+
+    public JwtFilter(TokenService tokenService, UserService userService) {
+        this.tokenService = tokenService;
+        this.userService = userService;
+    }
 
     @Override
     protected void doFilterInternal( HttpServletRequest request,
