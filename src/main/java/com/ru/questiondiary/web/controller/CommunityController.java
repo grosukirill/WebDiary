@@ -30,4 +30,11 @@ public class CommunityController {
         OkResponse response = new OkResponse(community);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @PostMapping("/follow/{id}")
+    public ResponseEntity<?> followCommunity(@PathVariable("id") Long communityId, @RequestHeader("Authorization") String rawToken) {
+        CommunityDto community = communityService.followCommunity(communityId, rawToken);
+        OkResponse response = new OkResponse(community);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

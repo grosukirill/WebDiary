@@ -102,4 +102,24 @@ public class CommunityServiceImpl implements CommunityService {
         communityUserRepository.save(communityUser);
         return CommunityDto.from(community.get());
     }
+
+    @Override
+    public CommunityDto followCommunity(Long communityId, String rawToken) {
+        Optional<Community> community = communityRepository.findById(communityId);
+        if (community.isEmpty()) {
+            throw new CommunityNotFoundException(String.format("Community with ID [%s] not found", communityId));
+        }
+        String token = rawToken.substring(7);
+        Map<String, String> userData = tokenService.getUserDataFromToken(token);
+        if (userData == null || userData.isEmpty()) {
+            throw new TokenValidationException("Invalid token");
+        }
+        Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with ID [%s] not found", userData.get("id")));
+        }
+        community.get().follow(user.get());
+        communityRepository.save(community.get());
+        return CommunityDto.from(community.get());
+    }
 }

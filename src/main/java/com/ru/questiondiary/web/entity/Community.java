@@ -32,4 +32,11 @@ public class Community {
 
     @ManyToMany(mappedBy = "communities")
     private List<CommunityUser> workers = new ArrayList<>();
+
+    public List<User> follow(User user) {
+        List<User> followers = this.followers;
+        followers.add(user);
+        this.setFollowers(followers);
+        return this.followers;
+    }
 }

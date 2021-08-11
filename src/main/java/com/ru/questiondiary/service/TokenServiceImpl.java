@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,16 +22,22 @@ public class TokenServiceImpl implements TokenService {
     @Value("${jwt.token.secret}")
     private String TOKEN_SECRET;
 
+//    @Value("${jwt.token.validity}")
+//    private Integer TOKEN_VALIDITY;
+
 
     public String createToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            Date now = new Date();
             return JWT.create()
                     .withClaim("username", user.getUsername())
                     .withClaim("userId", user.getId().toString())
+//                    .withClaim("createdAt", now)
+//                    .withExpiresAt(new Date(now.getTime() + TOKEN_VALIDITY))
                     .sign(algorithm);
-        } catch (JWTCreationException exception) {
-            exception.printStackTrace();
+        } catch (JWTCreationException e) {
+            e.printStackTrace();
         }
         return null;
     }

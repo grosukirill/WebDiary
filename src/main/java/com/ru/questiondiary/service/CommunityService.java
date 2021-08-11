@@ -8,4 +8,6 @@ public interface CommunityService {
     CommunityDto createCommunity(CreateCommunityRequest request, String rawToken);
 
     CommunityDto addWorkerToCommunity(AddWorkerToCommunityRequest request);
+
+    CommunityDto followCommunity(Long communityId, String rawToken);
 }
