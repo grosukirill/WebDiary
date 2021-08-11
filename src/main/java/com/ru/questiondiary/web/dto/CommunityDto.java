@@ -35,7 +35,7 @@ public class CommunityDto extends ResponseData {
         for (Question question: community.getQuestions()) {
             questions.add(QuestionDto.from(question, null));
         }
-        for (CommunityUser worker:community.getWorkers()) {
+        for (CommunityUser worker: community.getWorkers()) {
             workers.add(CommunityUserDto.from(worker));
         }
         CommunityDto result = new CommunityDto();

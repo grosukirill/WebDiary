@@ -8,9 +8,11 @@ import com.ru.questiondiary.repo.CommunityRepository;
 import com.ru.questiondiary.repo.CommunityUserRepository;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.CommunityDto;
+import com.ru.questiondiary.web.dto.CommunityUserDto;
 import com.ru.questiondiary.web.dto.request.AddWorkerToCommunityRequest;
 import com.ru.questiondiary.web.dto.request.CreateCommunityRequest;
 import com.ru.questiondiary.web.dto.request.UpdateCommunityRequest;
+import com.ru.questiondiary.web.dto.request.UpdateWorkerRoleRequest;
 import com.ru.questiondiary.web.entity.Community;
 import com.ru.questiondiary.web.entity.CommunityUser;
 import com.ru.questiondiary.web.entity.Role;
@@ -131,6 +133,27 @@ public class CommunityServiceImpl implements CommunityService {
         community.get().setDescription(request.getNewDescription());
         community.get().setLink(request.getNewLink());
         communityRepository.save(community.get());
+        return CommunityDto.from(community.get());
+    }
+
+    @Override
+    @Transactional
+    public CommunityUserDto updateWorkerRole(UpdateWorkerRoleRequest request) {
+        Optional<CommunityUser> communityUser = communityUserRepository.findById(request.getCommunityUserId());
+        if (communityUser.isEmpty()) {
+            throw new CommunityUserNotFoundException(String.format("Worker with ID [%s] not found", request.getCommunityUserId()));
+        }
+        communityUser.get().setRole(request.getNewRole());
+        communityUserRepository.save(communityUser.get());
+        return CommunityUserDto.from(communityUser.get());
+    }
+
+    @Override
+    public CommunityDto findById(Long id) {
+        Optional<Community> community = communityRepository.findById(id);
+        if (community.isEmpty()) {
+            throw new CommunityNotFoundException(String.format("Community with ID [%s] not found", id));
+        }
         return CommunityDto.from(community.get());
     }
 

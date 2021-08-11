@@ -2,10 +2,12 @@ package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.CommunityService;
 import com.ru.questiondiary.web.dto.CommunityDto;
+import com.ru.questiondiary.web.dto.CommunityUserDto;
 import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.request.AddWorkerToCommunityRequest;
 import com.ru.questiondiary.web.dto.request.CreateCommunityRequest;
 import com.ru.questiondiary.web.dto.request.UpdateCommunityRequest;
+import com.ru.questiondiary.web.dto.request.UpdateWorkerRoleRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,18 @@ public class CommunityController {
     @PutMapping
     public ResponseEntity<?> updateCommunity(@RequestParam("communityId") Long communityId, @RequestBody UpdateCommunityRequest request, @RequestHeader("Authorization") String rawToken) {
         CommunityDto community = communityService.updateCommunity(communityId, request, rawToken);
+        return buildResponse(community);
+    }
+
+    @PutMapping("/workers")
+    public ResponseEntity<?> updateWorkerRole(@RequestBody UpdateWorkerRoleRequest request) {
+        CommunityUserDto communityUser = communityService.updateWorkerRole(request);
+        return buildResponse(communityUser);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findCommunity(@PathVariable("id") Long id) {
+        CommunityDto community = communityService.findById(id);
         return buildResponse(community);
     }
 
