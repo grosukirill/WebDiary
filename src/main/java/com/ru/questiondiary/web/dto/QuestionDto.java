@@ -18,6 +18,7 @@ public class QuestionDto extends ResponseData {
     private Long id;
     private String question;
     private LocalDate creationDate;
+    private List<String> categories;
     private UserDto creator;
     private List<AnswerDto> answers;
     private Integer votes;
@@ -37,6 +38,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
+        result.setCategories(question.getCategories());
         result.setCreator(UserDto.from(question.getCreator()));
         result.setVotes(question.getCountOfVotes());
         result.setAnswers(answerDtos);
@@ -58,6 +60,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
+        result.setCategories(question.getCategories());
         result.setCreator(UserDto.from(question.getCreator()));
         result.setAnswers(answerDtos);
         result.setVotes(question.getCountOfVotes());
@@ -79,6 +82,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
+        result.setCategories(question.getCategories());
         result.setCreator(UserDto.from(question.getCreator()));
         result.setAnswers(answerDtos);
         result.setVotes(question.getCountOfVotes());
@@ -95,6 +99,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
+        result.setCategories(question.getCategories());
         result.setCreator(UserDto.from(question.getCreator()));
         result.setVotes(question.getCountOfVotes());
         result.setComments(comments);

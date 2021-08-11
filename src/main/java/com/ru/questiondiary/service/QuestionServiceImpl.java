@@ -1,5 +1,6 @@
 package com.ru.questiondiary.service;
 
+import com.ru.questiondiary.exception.QuestionDuplicateException;
 import com.ru.questiondiary.exception.QuestionNotFoundException;
 import com.ru.questiondiary.exception.TokenValidationException;
 import com.ru.questiondiary.repo.AnswerRepository;
@@ -82,6 +83,8 @@ public class QuestionServiceImpl implements QuestionService {
                 questionDtos.add(QuestionDto.from(question, true));
             } else if (downVoted.contains(question.getId())) {
                 questionDtos.add(QuestionDto.from(question, false));
+            } else {
+                questionDtos.add(QuestionDto.from(question, null));
             }
         }
         Collections.shuffle(questionDtos);
@@ -90,14 +93,22 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public QuestionDto createQuestion(CreateQuestionRequest request) {
-        Map<String, String> userData = tokenService.getUserDataFromToken(request.getToken());
+    public QuestionDto createQuestion(CreateQuestionRequest request, String rawToken) {
+        Optional<Question> existingQuestion = questionRepository.findByQuestion(request.getQuestion());
+        if (existingQuestion.isPresent()) {
+            throw new QuestionDuplicateException("This question already exists");
+        }
+        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
         User user = userRepository.getById(Long.parseLong(userData.get("id")));
         LocalDate now = LocalDate.now(ZoneId.of("UTC+3"));
         Question question = new Question();
         question.setQuestion(request.getQuestion());
         question.setCreator(user);
         question.setCreationDate(now);
+        question.setAnswers(new ArrayList<>());
+        question.setCategories(new ArrayList<>());
+        question.setComments(new ArrayList<>());
+        question.setVotes(new ArrayList<>());
         questionRepository.save(question);
         return QuestionDto.from(question, null);
     }

@@ -13,5 +13,5 @@ public interface QuestionService {
 
     List<QuestionDto> findAllQuestionsByCategory(String category);
 
-    QuestionDto createQuestion(CreateQuestionRequest request);
+    QuestionDto createQuestion(CreateQuestionRequest request, String rawToken);
 }

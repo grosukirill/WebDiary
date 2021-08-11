@@ -25,7 +25,7 @@ public class Question {
     @ElementCollection
     @CollectionTable(name = "categories", joinColumns = @JoinColumn(name = "question_id"))
     @Column(name = "category")
-    private List<String> categories;
+    private List<String> categories = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = true, updatable = false)

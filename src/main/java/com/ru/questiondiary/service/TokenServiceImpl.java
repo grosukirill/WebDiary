@@ -43,7 +43,11 @@ public class TokenServiceImpl implements TokenService {
     }
 
 
-    public Map<String, String> getUserDataFromToken(String token) {
+    public Map<String, String> getUserDataFromToken(String rawToken) {
+        String token = rawToken;
+        if (rawToken.startsWith("Bearer ")) {
+            token = rawToken.substring(7);
+        }
         Map<String, String> result = new HashMap<>();
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);

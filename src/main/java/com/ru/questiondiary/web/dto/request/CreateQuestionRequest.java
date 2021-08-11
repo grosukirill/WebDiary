@@ -9,12 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class CreateQuestionRequest {
     private String question;
-    private String token;
 
     @JsonCreator
-    public CreateQuestionRequest(@JsonProperty String question,
-                                 @JsonProperty String token) {
+    public CreateQuestionRequest(@JsonProperty String question) {
         this.question = question;
-        this.token = token;
     }
 }

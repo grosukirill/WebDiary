@@ -27,8 +27,8 @@ public class QuestionController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<?> findQuestionById(@PathVariable("id") Long questionId, @RequestParam("token") String token) {
-        QuestionDto questionDto = questionService.findQuestionById(questionId, token);
+    public ResponseEntity<?> findQuestionById(@PathVariable("id") Long questionId, @RequestHeader("Authorization") String rawToken) {
+        QuestionDto questionDto = questionService.findQuestionById(questionId, rawToken);
         OkResponse response = new OkResponse(questionDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -41,8 +41,8 @@ public class QuestionController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createQuestion(@RequestBody CreateQuestionRequest request) {
-        QuestionDto questionDto = questionService.createQuestion(request);
+    public ResponseEntity<?> createQuestion(@RequestBody CreateQuestionRequest request, @RequestHeader("Authorization") String rawToken) {
+        QuestionDto questionDto = questionService.createQuestion(request, rawToken);
         OkResponse response = new OkResponse(questionDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

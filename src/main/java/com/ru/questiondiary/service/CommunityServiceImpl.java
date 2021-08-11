@@ -33,19 +33,21 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     @Transactional
     public CommunityDto createCommunity(CreateCommunityRequest request, String rawToken) {
-        String token = rawToken.substring(7);
-        Map<String, String> userData = tokenService.getUserDataFromToken(token);
+        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
         if (userData == null || userData.isEmpty()) {
             throw new TokenValidationException("Invalid token");
         }
-        User user = userRepository.getById(Long.parseLong(userData.get("id")));
+        Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with ID [%s] not found", userData.get("id")));
+        }
         List<CommunityUser> workers = new ArrayList<>();
-        Optional<CommunityUser> existingCommunityUser = communityUserRepository.findByRoleAndUser(Role.ADMIN, user);
+        Optional<CommunityUser> existingCommunityUser = communityUserRepository.findByRoleAndUser(Role.ADMIN, user.get());
         CommunityUser communityUser = new CommunityUser();
         if (existingCommunityUser.isEmpty()) {
             communityUser = CommunityUser.builder()
                     .role(Role.ADMIN)
-                    .user(user)
+                    .user(user.get())
                     .communities(new ArrayList<>())
                     .build();
             communityUserRepository.save(communityUser);
@@ -109,8 +111,7 @@ public class CommunityServiceImpl implements CommunityService {
         if (community.isEmpty()) {
             throw new CommunityNotFoundException(String.format("Community with ID [%s] not found", communityId));
         }
-        String token = rawToken.substring(7);
-        Map<String, String> userData = tokenService.getUserDataFromToken(token);
+        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
         if (userData == null || userData.isEmpty()) {
             throw new TokenValidationException("Invalid token");
         }
