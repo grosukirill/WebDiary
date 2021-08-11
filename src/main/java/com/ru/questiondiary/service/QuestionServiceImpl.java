@@ -1,8 +1,6 @@
 package com.ru.questiondiary.service;
 
-import com.ru.questiondiary.exception.DuplicateQuestionException;
-import com.ru.questiondiary.exception.QuestionNotFoundException;
-import com.ru.questiondiary.exception.TokenValidationException;
+import com.ru.questiondiary.exception.*;
 import com.ru.questiondiary.repo.AnswerRepository;
 import com.ru.questiondiary.repo.QuestionRepository;
 import com.ru.questiondiary.repo.UserRepository;
@@ -10,6 +8,7 @@ import com.ru.questiondiary.repo.VoteRepository;
 import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
+import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
 import com.ru.questiondiary.web.entity.Answer;
 import com.ru.questiondiary.web.entity.Question;
 import com.ru.questiondiary.web.entity.User;
@@ -59,14 +58,10 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional
     public QuestionDto findQuestionById(Long questionId, String token) {
         Optional<Question> question = questionRepository.findById(questionId);
-        Map<String, String> userData = tokenService.getUserDataFromToken(token);
-        if (userData == null || userData.isEmpty()) {
-            throw new TokenValidationException("Invalid token");
-        }
         if (question.isEmpty()) {
             throw new QuestionNotFoundException(String.format("Question with ID [%s] not found", questionId));
         }
-        User user = userRepository.getById(Long.parseLong(userData.get("id")));
+        User user = getUserFromToken(token);
         List<Answer> answers = answerRepository.getAllByQuestionAndUser(question.get(), user);
         return QuestionDto.fromWithAnswers(question.get(), answers);
     }
@@ -98,8 +93,7 @@ public class QuestionServiceImpl implements QuestionService {
         if (existingQuestion.isPresent()) {
             throw new DuplicateQuestionException("This question already exists");
         }
-        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
-        User user = userRepository.getById(Long.parseLong(userData.get("id")));
+        User user = getUserFromToken(rawToken);
         LocalDate now = LocalDate.now(ZoneId.of("UTC+3"));
         Question question = new Question();
         question.setQuestion(request.getQuestion());
@@ -111,5 +105,37 @@ public class QuestionServiceImpl implements QuestionService {
         question.setVotes(new ArrayList<>());
         questionRepository.save(question);
         return QuestionDto.from(question, null);
+    }
+
+    @Override
+    public QuestionDto updateQuestion(Long questionId, UpdateQuestionRequest request, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        Optional<Question> question = questionRepository.findByIdAndCreator(questionId, user);
+        if (question.isEmpty()) {
+            throw new ForeignQuestionUpdateException("You are trying to update other people's question");
+        }
+        question.get().setQuestion(request.getNewQuestion());
+        questionRepository.save(question.get());
+        return QuestionDto.from(question.get(), null);
+    }
+
+    @Override
+    public void deleteQuestion(Long id, String rawToken) {
+        getUserFromToken(rawToken);
+        User user = getUserFromToken(rawToken);
+        Optional<Question> question = questionRepository.findByIdAndCreator(id, user);
+        if (question.isEmpty()) {
+            throw new ForeignQuestionDeleteException("You are trying to delete other people's question");
+        }
+        questionRepository.deleteById(id);
+    }
+
+    private User getUserFromToken(String rawToken) {
+        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
+        Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with ID [%s] not found", userData.get("id")));
+        }
+        return user.get();
     }
 }

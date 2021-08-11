@@ -106,6 +106,4 @@ public class QuestionDto extends ResponseData {
         result.setVoted(voted);
         return result;
     }
-
-
 }

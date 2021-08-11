@@ -5,6 +5,7 @@ import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
+import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,20 @@ public class QuestionController {
     public ResponseEntity<?> createQuestion(@RequestBody CreateQuestionRequest request, @RequestHeader("Authorization") String rawToken) {
         QuestionDto questionDto = questionService.createQuestion(request, rawToken);
         OkResponse response = new OkResponse(questionDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateQuestion(@RequestParam("questionId") Long questionId, @RequestBody UpdateQuestionRequest request, @RequestHeader("Authorization") String rawToken) {
+        QuestionDto question = questionService.updateQuestion(questionId, request, rawToken);
+        OkResponse response = new OkResponse(question);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteQuestion(@PathVariable("id") Long id, @RequestHeader("Authorization") String rawToken) {
+        questionService.deleteQuestion(id, rawToken);
+        OkResponse response = new OkResponse();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

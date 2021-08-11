@@ -9,7 +9,9 @@ public enum ErrorCode {
     INVALID_TOKEN(6),
     DUPLICATE_EMAIL(7),
     USER_NOT_FOUND(8),
-    BAD_CREDENTIALS(9);
+    BAD_CREDENTIALS(9),
+    FOREIGN_QUESTION_UPDATE(10),
+    FOREIGN_QUESTION_DELETE(11);
 
     public final Integer number;
 

@@ -94,4 +94,18 @@ public class GlobalControllerAdvice {
         ErrorResponse response = new ErrorResponse(errorDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleForeignQuestionUpdateException(ForeignQuestionUpdateException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage(), ErrorCode.FOREIGN_QUESTION_UPDATE.number, ErrorCode.FOREIGN_QUESTION_UPDATE, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleForeignQuestionDeleteException(ForeignQuestionDeleteException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage(), ErrorCode.FOREIGN_QUESTION_DELETE.number, ErrorCode.FOREIGN_QUESTION_DELETE, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

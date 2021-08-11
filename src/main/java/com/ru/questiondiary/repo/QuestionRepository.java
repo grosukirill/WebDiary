@@ -1,6 +1,7 @@
 package com.ru.questiondiary.repo;
 
 import com.ru.questiondiary.web.entity.Question;
+import com.ru.questiondiary.web.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -16,4 +17,6 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     Page<Question> findAll(Pageable pageable);
 
     Optional<Question> findByQuestion(String question);
+
+    Optional<Question> findByIdAndCreator(Long questionId, User user);
 }
