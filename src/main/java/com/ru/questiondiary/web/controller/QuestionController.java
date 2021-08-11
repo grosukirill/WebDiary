@@ -55,8 +55,8 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteQuestion(@PathVariable("id") Long id, @RequestHeader("Authorization") String rawToken) {
+    @DeleteMapping
+    public ResponseEntity<?> deleteQuestion(@RequestParam("questionId") Long id, @RequestHeader("Authorization") String rawToken) {
         questionService.deleteQuestion(id, rawToken);
         OkResponse response = new OkResponse();
         return ResponseEntity.status(HttpStatus.OK).body(response);
