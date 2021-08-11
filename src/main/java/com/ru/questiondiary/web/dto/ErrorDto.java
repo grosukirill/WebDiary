@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ErrorDto {
     private String message;
-    private String  date;
+    private ErrorCode code;
+    private String date;
 }

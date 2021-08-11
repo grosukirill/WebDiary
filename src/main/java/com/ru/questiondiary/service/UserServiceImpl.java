@@ -1,7 +1,7 @@
 package com.ru.questiondiary.service;
 
 import com.ru.questiondiary.exception.TokenValidationException;
-import com.ru.questiondiary.exception.UserDuplicateEmailException;
+import com.ru.questiondiary.exception.DuplicateUserEmailException;
 import com.ru.questiondiary.exception.UserNotFoundException;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.UserDto;
@@ -40,10 +40,10 @@ class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserLoginDto register(RegisterRequest request) throws UserDuplicateEmailException {
+    public UserLoginDto register(RegisterRequest request) throws DuplicateUserEmailException {
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
-            throw new UserDuplicateEmailException(String.format("User with email %s already exists. Consider logging in.", request.getEmail()));
+            throw new DuplicateUserEmailException(String.format("User with email %s already exists. Consider logging in.", request.getEmail()));
         }
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         User user = User.builder()

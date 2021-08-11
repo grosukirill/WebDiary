@@ -1,6 +1,6 @@
 package com.ru.questiondiary.service;
 
-import com.ru.questiondiary.exception.QuestionDuplicateException;
+import com.ru.questiondiary.exception.DuplicateQuestionException;
 import com.ru.questiondiary.exception.QuestionNotFoundException;
 import com.ru.questiondiary.exception.TokenValidationException;
 import com.ru.questiondiary.repo.AnswerRepository;
@@ -96,7 +96,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionDto createQuestion(CreateQuestionRequest request, String rawToken) {
         Optional<Question> existingQuestion = questionRepository.findByQuestion(request.getQuestion());
         if (existingQuestion.isPresent()) {
-            throw new QuestionDuplicateException("This question already exists");
+            throw new DuplicateQuestionException("This question already exists");
         }
         Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
         User user = userRepository.getById(Long.parseLong(userData.get("id")));
