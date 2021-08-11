@@ -1,13 +1,19 @@
 package com.ru.questiondiary.web.dto;
 
 public enum ErrorCode {
-    AUTHENTICATION_ERROR,
-    COMMUNITY_NOT_FOUND,
-    DUPLICATE_VOTE,
-    DUPLICATE_QUESTION,
-    QUESTION_NOT_FOUND,
-    INVALID_TOKEN,
-    DUPLICATE_EMAIL,
-    USER_NOT_FOUND,
-    BAD_CREDENTIALS
+    AUTHENTICATION_ERROR(1),
+    COMMUNITY_NOT_FOUND(2),
+    DUPLICATE_VOTE(3),
+    DUPLICATE_QUESTION(4),
+    QUESTION_NOT_FOUND(5),
+    INVALID_TOKEN(6),
+    DUPLICATE_EMAIL(7),
+    USER_NOT_FOUND(8),
+    BAD_CREDENTIALS(9);
+
+    public final Integer number;
+
+    ErrorCode(Integer number) {
+        this.number = number;
+    }
 }

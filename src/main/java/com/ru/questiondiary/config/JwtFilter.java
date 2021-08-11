@@ -34,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         Map<String, String> userData = tokenService.getUserDataFromToken(token);
         if (userData == null || userData.isEmpty()) {
-            String body = "{\"status\":false, \"data\": {\"message\":\"Invalid token\", \"code\":\"INVALID_TOKEN\"}}";
+            String body = "{\"status\":false, \"data\": {\"message\":\"Invalid token\", \"code\":6, \"description\":\"INVALID_TOKEN\"}}";
             response.getWriter().write(body);
             response.getWriter().flush();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -45,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String userId = userData.get("id");
 
         if (userEmail == null || userId == null) {
-            String body = "{\"status\":false, \"data\": {\"message\":\"Invalid token\", \"code\":\"INVALID_TOKEN\"}}";
+            String body = "{\"status\":false, \"data\": {\"message\":\"Invalid token\", \"code\":6, \"description\":\"INVALID_TOKEN\"}}";
             response.getWriter().write(body);
             response.getWriter().flush();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
