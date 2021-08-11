@@ -19,6 +19,10 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<?> createComment(@RequestBody CreateCommentRequest request) {
         QuestionDto question = commentService.createComment(request);
+        return buildResponse(question);
+    }
+
+    private ResponseEntity<?> buildResponse(Object question) {
         OkResponse response = new OkResponse(question);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

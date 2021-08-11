@@ -19,6 +19,10 @@ public class AnswerController {
     @PostMapping
     public ResponseEntity<?> createAnswer(@RequestBody CreateAnswerRequest request) {
         AnswerDto answer = answerService.createAnswer(request);
+        return buildResponse(answer);
+    }
+
+    private ResponseEntity<?> buildResponse(Object answer) {
         OkResponse response = new OkResponse(answer);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

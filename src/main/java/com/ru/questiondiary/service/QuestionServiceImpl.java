@@ -108,6 +108,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public QuestionDto updateQuestion(Long questionId, UpdateQuestionRequest request, String rawToken) {
         User user = getUserFromToken(rawToken);
         Optional<Question> question = questionRepository.findByIdAndCreator(questionId, user);
@@ -120,6 +121,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public void deleteQuestion(Long id, String rawToken) {
         getUserFromToken(rawToken);
         User user = getUserFromToken(rawToken);

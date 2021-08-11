@@ -22,27 +22,28 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> findAllUsers() {
         List<UserDto> allUsers = userService.findAllUsers();
-        OkResponse response = new OkResponse(allUsers);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(allUsers);
     }
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         UserLoginDto user = userService.register(request);
-        OkResponse response = new OkResponse(user);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(user);
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<?> findUserById(@PathVariable("id") Long id) {
         UserDto user = userService.findUserById(id);
-        OkResponse response = new OkResponse(user);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(user);
     }
 
     @GetMapping("/token/{token}")
     public ResponseEntity<?> findUserByToken(@PathVariable("token") String token) {
         UserDto user = userService.findUserByToken(token);
+        return buildResponse(user);
+    }
+
+    private ResponseEntity<?> buildResponse(Object user) {
         OkResponse response = new OkResponse(user);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

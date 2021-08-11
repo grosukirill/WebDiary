@@ -1,7 +1,8 @@
 package com.ru.questiondiary.service;
 
+import com.ru.questiondiary.exception.AuthoritiesGrantedException;
 import com.ru.questiondiary.exception.CommunityNotFoundException;
-import com.ru.questiondiary.exception.TokenValidationException;
+import com.ru.questiondiary.exception.CommunityUserNotFoundException;
 import com.ru.questiondiary.exception.UserNotFoundException;
 import com.ru.questiondiary.repo.CommunityRepository;
 import com.ru.questiondiary.repo.CommunityUserRepository;
@@ -9,6 +10,7 @@ import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.request.AddWorkerToCommunityRequest;
 import com.ru.questiondiary.web.dto.request.CreateCommunityRequest;
+import com.ru.questiondiary.web.dto.request.UpdateCommunityRequest;
 import com.ru.questiondiary.web.entity.Community;
 import com.ru.questiondiary.web.entity.CommunityUser;
 import com.ru.questiondiary.web.entity.Role;
@@ -33,21 +35,14 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     @Transactional
     public CommunityDto createCommunity(CreateCommunityRequest request, String rawToken) {
-        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
-        if (userData == null || userData.isEmpty()) {
-            throw new TokenValidationException("Invalid token");
-        }
-        Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));
-        if (user.isEmpty()) {
-            throw new UserNotFoundException(String.format("User with ID [%s] not found", userData.get("id")));
-        }
+        User user = getUserFromToken(rawToken);
         List<CommunityUser> workers = new ArrayList<>();
-        Optional<CommunityUser> existingCommunityUser = communityUserRepository.findByRoleAndUser(Role.ADMIN, user.get());
+        Optional<CommunityUser> existingCommunityUser = communityUserRepository.findByRoleAndUser(Role.ADMIN, user);
         CommunityUser communityUser = new CommunityUser();
         if (existingCommunityUser.isEmpty()) {
             communityUser = CommunityUser.builder()
                     .role(Role.ADMIN)
-                    .user(user.get())
+                    .user(user)
                     .communities(new ArrayList<>())
                     .build();
             communityUserRepository.save(communityUser);
@@ -75,10 +70,10 @@ public class CommunityServiceImpl implements CommunityService {
     @Transactional
     public CommunityDto addWorkerToCommunity(AddWorkerToCommunityRequest request) {
         Optional<Community> community = communityRepository.findById(request.getCommunityId());
-        Optional<User> user = userRepository.findById(request.getUserId());
         if (community.isEmpty()) {
             throw new CommunityNotFoundException(String.format("Community with ID [%s] not found", request.getCommunityId()));
         }
+        Optional<User> user = userRepository.findById(request.getUserId());
         if (user.isEmpty()) {
             throw new UserNotFoundException(String.format("User with ID [%s] not found", request.getUserId()));
         }
@@ -106,21 +101,45 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    @Transactional
     public CommunityDto followCommunity(Long communityId, String rawToken) {
         Optional<Community> community = communityRepository.findById(communityId);
         if (community.isEmpty()) {
             throw new CommunityNotFoundException(String.format("Community with ID [%s] not found", communityId));
         }
-        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
-        if (userData == null || userData.isEmpty()) {
-            throw new TokenValidationException("Invalid token");
+        User user = getUserFromToken(rawToken);
+        community.get().follow(user);
+        communityRepository.save(community.get());
+        return CommunityDto.from(community.get());
+    }
+
+    @Override
+    @Transactional
+    public CommunityDto updateCommunity(Long communityId, UpdateCommunityRequest request, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        Optional<Community> community = communityRepository.findById(communityId);
+        if (community.isEmpty()) {
+            throw new CommunityNotFoundException(String.format("Community with ID [%s] not found", communityId));
         }
+        Optional<CommunityUser> communityUser = communityUserRepository.findByUserAndCommunities(user, community.get());
+        if (communityUser.isEmpty()) {
+            throw new CommunityUserNotFoundException("You have no rights to update communities. You are not part of it.");
+        } else if (communityUser.get().getRole() != Role.ADMIN) {
+            throw new AuthoritiesGrantedException("You must be an admin to update this community");
+        }
+        community.get().setTitle(request.getNewTitle());
+        community.get().setDescription(request.getNewDescription());
+        community.get().setLink(request.getNewLink());
+        communityRepository.save(community.get());
+        return CommunityDto.from(community.get());
+    }
+
+    private User getUserFromToken(String rawToken) {
+        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
         Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));
         if (user.isEmpty()) {
             throw new UserNotFoundException(String.format("User with ID [%s] not found", userData.get("id")));
         }
-        community.get().follow(user.get());
-        communityRepository.save(community.get());
-        return CommunityDto.from(community.get());
+        return user.get();
     }
 }

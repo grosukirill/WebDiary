@@ -23,42 +23,42 @@ public class QuestionController {
     @GetMapping
     public ResponseEntity<?> findAllQuestions(@RequestParam("page") Integer pageNumber) {
         PaginationDto questionDtos = questionService.findAllQuestions(pageNumber);
-        OkResponse response = new OkResponse(questionDtos);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(questionDtos);
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<?> findQuestionById(@PathVariable("id") Long questionId, @RequestHeader("Authorization") String rawToken) {
         QuestionDto questionDto = questionService.findQuestionById(questionId, rawToken);
-        OkResponse response = new OkResponse(questionDto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(questionDto);
     }
 
     @GetMapping("/category")
     public ResponseEntity<?> findAllQuestionByCategory(@RequestParam("category") String category) {
         List<QuestionDto> questions = questionService.findAllQuestionsByCategory(category);
-        OkResponse response = new OkResponse(questions);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(questions);
     }
 
     @PostMapping
     public ResponseEntity<?> createQuestion(@RequestBody CreateQuestionRequest request, @RequestHeader("Authorization") String rawToken) {
         QuestionDto questionDto = questionService.createQuestion(request, rawToken);
-        OkResponse response = new OkResponse(questionDto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(questionDto);
     }
 
     @PutMapping
     public ResponseEntity<?> updateQuestion(@RequestParam("questionId") Long questionId, @RequestBody UpdateQuestionRequest request, @RequestHeader("Authorization") String rawToken) {
         QuestionDto question = questionService.updateQuestion(questionId, request, rawToken);
-        OkResponse response = new OkResponse(question);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(question);
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteQuestion(@RequestParam("questionId") Long id, @RequestHeader("Authorization") String rawToken) {
         questionService.deleteQuestion(id, rawToken);
         OkResponse response = new OkResponse();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    private ResponseEntity<?> buildResponse(Object question) {
+        OkResponse response = new OkResponse(question);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

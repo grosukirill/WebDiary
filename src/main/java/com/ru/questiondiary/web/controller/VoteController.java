@@ -19,6 +19,10 @@ public class VoteController {
     @PostMapping
     public ResponseEntity<?> createVote(@RequestBody CreateVoteRequest request) {
         QuestionDto question = voteService.createVote(request);
+        return getResponseEntity(question);
+    }
+
+    private ResponseEntity<?> getResponseEntity(Object question) {
         OkResponse response = new OkResponse(question);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

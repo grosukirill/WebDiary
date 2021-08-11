@@ -108,4 +108,18 @@ public class GlobalControllerAdvice {
         ErrorResponse response = new ErrorResponse(errorDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleCommunityUserNotFoundException(CommunityUserNotFoundException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage(), ErrorCode.COMMUNITY_USER_NOT_FOUND.number, ErrorCode.COMMUNITY_USER_NOT_FOUND, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleAuthoritiesGrantedException(AuthoritiesGrantedException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage(), ErrorCode.AUTHORITIES_GRANTED.number, ErrorCode.AUTHORITIES_GRANTED, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

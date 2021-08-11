@@ -19,6 +19,10 @@ public class AuthenticationController {
     @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         UserLoginDto authenticatedUser = authenticationService.authenticate(loginRequest);
+        return buildResponse(authenticatedUser);
+    }
+
+    private ResponseEntity<?> buildResponse(Object authenticatedUser) {
         OkResponse response = new OkResponse(authenticatedUser);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

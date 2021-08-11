@@ -5,6 +5,7 @@ import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.request.AddWorkerToCommunityRequest;
 import com.ru.questiondiary.web.dto.request.CreateCommunityRequest;
+import com.ru.questiondiary.web.dto.request.UpdateCommunityRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,20 +21,28 @@ public class CommunityController {
     @PostMapping
     public ResponseEntity<?> createCommunity(@RequestBody CreateCommunityRequest request, @RequestHeader("Authorization") String rawToken) {
         CommunityDto community = communityService.createCommunity(request, rawToken);
-        OkResponse response = new OkResponse(community);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(community);
     }
 
     @PostMapping("/workers")
     public ResponseEntity<?> addWorkerToCommunity(@RequestBody AddWorkerToCommunityRequest request) {
         CommunityDto community = communityService.addWorkerToCommunity(request);
-        OkResponse response = new OkResponse(community);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return buildResponse(community);
     }
 
     @PostMapping("/follow/{id}")
     public ResponseEntity<?> followCommunity(@PathVariable("id") Long communityId, @RequestHeader("Authorization") String rawToken) {
         CommunityDto community = communityService.followCommunity(communityId, rawToken);
+        return buildResponse(community);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateCommunity(@RequestParam("communityId") Long communityId, @RequestBody UpdateCommunityRequest request, @RequestHeader("Authorization") String rawToken) {
+        CommunityDto community = communityService.updateCommunity(communityId, request, rawToken);
+        return buildResponse(community);
+    }
+
+    private ResponseEntity<?> buildResponse(Object community) {
         OkResponse response = new OkResponse(community);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
