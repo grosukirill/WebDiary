@@ -2,6 +2,7 @@ package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.QuestionService;
 import com.ru.questiondiary.web.dto.OkResponse;
+import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping
-    public ResponseEntity<?> findAllQuestions() {
-        List<QuestionDto> questionDtos = questionService.findAllQuestions();
+    public ResponseEntity<?> findAllQuestions(@RequestParam("page") Integer pageNumber) {
+        PaginationDto questionDtos = questionService.findAllQuestions(pageNumber);
         OkResponse response = new OkResponse(questionDtos);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
