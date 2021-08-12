@@ -26,8 +26,7 @@ public class User implements UserDetails {
     private String password;
     private String role;
 
-    @Lob
-    private byte[] avatar;
+    private String avatar;
 
     @OneToMany(mappedBy = "creator")
     private List<Question> createdQuestions = new ArrayList<>();

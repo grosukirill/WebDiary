@@ -19,7 +19,9 @@ public class QuestionDto extends ResponseData {
     private String question;
     private LocalDate creationDate;
     private List<String> categories;
+    private String type;
     private UserDto creator;
+    private CommunityDto createdBy;
     private List<AnswerDto> answers;
     private Integer votes;
     private List<CommentDto> comments;
@@ -27,6 +29,14 @@ public class QuestionDto extends ResponseData {
     private Boolean isFavorite;
 
     public static QuestionDto fromWithComments(Question question, List<Comment> comments, Boolean isFavorite) {
+        String type;
+        boolean isUsers = false;
+        if (question.getCreator() != null) {
+            type = "User";
+            isUsers = true;
+        } else {
+            type = "Community";
+        }
         List<CommentDto> commentsDtos = new ArrayList<>();
         List<AnswerDto> answerDtos = new ArrayList<>();
         for (Comment comment: comments) {
@@ -40,7 +50,12 @@ public class QuestionDto extends ResponseData {
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
         result.setCategories(question.getCategories());
-        result.setCreator(UserDto.from(question.getCreator()));
+        result.setType(type);
+        if (isUsers) {
+            result.setCreator(UserDto.from(question.getCreator()));
+        } else {
+            result.setCreatedBy(CommunityDto.from(question.getCreatedBy()));
+        }
         result.setVotes(question.getCountOfVotes());
         result.setAnswers(answerDtos);
         result.setComments(commentsDtos);
@@ -49,6 +64,14 @@ public class QuestionDto extends ResponseData {
     }
 
     public static QuestionDto fromWithVotes(Question question, List<Vote> votes, Boolean isFavorite) {
+        String type;
+        boolean isUsers = false;
+        if (question.getCreator() != null) {
+            type = "User";
+            isUsers = true;
+        } else {
+            type = "Community";
+        }
         int countVotes = votes.stream().map(Vote::getVote).mapToInt(Integer::intValue).sum();
         List<AnswerDto> answerDtos = new ArrayList<>();
         List<CommentDto> commentDtos = new ArrayList<>();
@@ -63,7 +86,12 @@ public class QuestionDto extends ResponseData {
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
         result.setCategories(question.getCategories());
-        result.setCreator(UserDto.from(question.getCreator()));
+        result.setType(type);
+        if (isUsers) {
+            result.setCreator(UserDto.from(question.getCreator()));
+        } else {
+            result.setCreatedBy(CommunityDto.from(question.getCreatedBy()));
+        }
         result.setAnswers(answerDtos);
         result.setVotes(question.getCountOfVotes());
         result.setComments(commentDtos);
@@ -73,6 +101,14 @@ public class QuestionDto extends ResponseData {
     }
 
     public static QuestionDto fromWithAnswers(Question question, List<Answer> answers, Boolean isFavorite) {
+        String type;
+        boolean isUsers = false;
+        if (question.getCreator() != null) {
+            type = "User";
+            isUsers = true;
+        } else {
+            type = "Community";
+        }
         List<AnswerDto> answerDtos = new ArrayList<>();
         List<CommentDto> comments = new ArrayList<>();
         for (Answer answer: answers) {
@@ -86,7 +122,12 @@ public class QuestionDto extends ResponseData {
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
         result.setCategories(question.getCategories());
-        result.setCreator(UserDto.from(question.getCreator()));
+        result.setType(type);
+        if (isUsers) {
+            result.setCreator(UserDto.from(question.getCreator()));
+        } else {
+            result.setCreatedBy(CommunityDto.from(question.getCreatedBy()));
+        }
         result.setAnswers(answerDtos);
         result.setVotes(question.getCountOfVotes());
         result.setComments(comments);
@@ -95,6 +136,14 @@ public class QuestionDto extends ResponseData {
     }
 
     public static QuestionDto from(Question question, Boolean voted, Boolean isFavorite) {
+        String type;
+        boolean isUsers = false;
+        if (question.getCreator() != null) {
+            type = "User";
+            isUsers = true;
+        } else {
+            type = "Community";
+        }
         List<CommentDto> comments = new ArrayList<>();
         for (Comment comment: question.getComments()) {
             comments.add(CommentDto.from(comment));
@@ -104,7 +153,12 @@ public class QuestionDto extends ResponseData {
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
         result.setCategories(question.getCategories());
-        result.setCreator(UserDto.from(question.getCreator()));
+        result.setType(type);
+        if (isUsers) {
+            result.setCreator(UserDto.from(question.getCreator()));
+        } else {
+            result.setCreatedBy(CommunityDto.from(question.getCreatedBy()));
+        }
         result.setVotes(question.getCountOfVotes());
         result.setComments(comments);
         result.setVoted(voted);

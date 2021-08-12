@@ -15,6 +15,7 @@ public class UserDto extends ResponseData {
     private String email;
     private String firstName;
     private String lastName;
+    private String avatar;
 
     public static UserDto from(User user) {
         UserDto result = new UserDto();
@@ -22,6 +23,7 @@ public class UserDto extends ResponseData {
         result.email = user.getEmail();
         result.firstName = user.getFirstName();
         result.lastName = user.getLastName();
+        result.avatar = user.getAvatar();
         return result;
     }
 }
