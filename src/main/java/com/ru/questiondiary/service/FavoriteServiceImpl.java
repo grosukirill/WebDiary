@@ -33,6 +33,10 @@ public class FavoriteServiceImpl implements FavoriteService {
             throw new QuestionNotFoundException(String.format("Question with ID [%s] not found", questionId));
         }
         User user = getUserFromToken(rawToken);
+        if (favoriteRepository.existsByQuestionAndUser(question.get(), user)) {
+            favoriteRepository.deleteByQuestionAndUser(question.get(), user);
+            return QuestionDto.from(question.get(), null, false);
+        }
         List<Favorite> favoriteQuestions = user.getFavoriteQuestions();
         Favorite favorite = Favorite.builder()
                 .question(question.get())

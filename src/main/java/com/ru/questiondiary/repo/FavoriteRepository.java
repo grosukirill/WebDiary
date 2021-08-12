@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     Boolean existsByQuestionAndUser(Question question, User user);
+
+    void deleteByQuestionAndUser(Question question, User user);
 }
