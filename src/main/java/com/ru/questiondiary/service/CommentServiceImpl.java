@@ -3,6 +3,7 @@ package com.ru.questiondiary.service;
 import com.ru.questiondiary.exception.QuestionNotFoundException;
 import com.ru.questiondiary.exception.UserNotFoundException;
 import com.ru.questiondiary.repo.CommentRepository;
+import com.ru.questiondiary.repo.FavoriteRepository;
 import com.ru.questiondiary.repo.QuestionRepository;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.QuestionDto;
@@ -24,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
+    private final FavoriteRepository favoriteRepository;
 
     @Override
     @Transactional
@@ -44,6 +46,7 @@ public class CommentServiceImpl implements CommentService {
                 .build();
         commentRepository.save(createdComment);
         List<Comment> updatedComments = commentRepository.getAllByQuestion(question.get());
-        return QuestionDto.fromWithComments(question.get(), updatedComments);
+        Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question.get(), user.get());
+        return QuestionDto.fromWithComments(question.get(), updatedComments, isFavorite);
     }
 }

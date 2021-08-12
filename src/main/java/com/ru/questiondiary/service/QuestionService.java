@@ -8,11 +8,11 @@ import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
 import java.util.List;
 
 public interface QuestionService {
-    PaginationDto findAllQuestions(Integer pageNumber);
+    PaginationDto findAllQuestions(Integer pageNumber, String rawToken);
 
     QuestionDto findQuestionById(Long questionId, String token);
 
-    List<QuestionDto> findAllQuestionsByCategory(String category);
+    List<QuestionDto> findAllQuestionsByCategory(String category, String rawToken);
 
     QuestionDto createQuestion(CreateQuestionRequest request, String rawToken);
 

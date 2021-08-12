@@ -1,10 +1,7 @@
 package com.ru.questiondiary.service;
 
 import com.ru.questiondiary.exception.*;
-import com.ru.questiondiary.repo.AnswerRepository;
-import com.ru.questiondiary.repo.QuestionRepository;
-import com.ru.questiondiary.repo.UserRepository;
-import com.ru.questiondiary.repo.VoteRepository;
+import com.ru.questiondiary.repo.*;
 import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
@@ -31,23 +28,26 @@ public class QuestionServiceImpl implements QuestionService {
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private final FavoriteRepository favoriteRepository;
 
 
     @Override
     @Transactional
-    public PaginationDto findAllQuestions(Integer pageNumber) {
+    public PaginationDto findAllQuestions(Integer pageNumber, String rawToken) {
+        User user = getUserFromToken(rawToken);
         Pageable page = PageRequest.of(pageNumber, 20);
         Page<Question> questions = questionRepository.findAll(page);
         List<QuestionDto> questionDtos = new ArrayList<>();
-        List<Long> upVoted = voteRepository.getAllByVote(1);
-        List<Long> downVoted = voteRepository.getAllByVote(-1);
+        List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
+        List<Long> downVoted = voteRepository.getAllByVoteAndUser(-1, user.getId());
         for (Question question: questions.getContent()) {
+            Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question, user);
             if (upVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, true));
+                questionDtos.add(QuestionDto.from(question, true, isFavorite));
             } else if (downVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, false));
+                questionDtos.add(QuestionDto.from(question, false, isFavorite));
             } else {
-                questionDtos.add(QuestionDto.from(question, null));
+                questionDtos.add(QuestionDto.from(question, null, isFavorite));
             }
         }
         Collections.shuffle(questionDtos);
@@ -63,23 +63,26 @@ public class QuestionServiceImpl implements QuestionService {
         }
         User user = getUserFromToken(token);
         List<Answer> answers = answerRepository.getAllByQuestionAndUser(question.get(), user);
-        return QuestionDto.fromWithAnswers(question.get(), answers);
+        Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question.get(), user);
+        return QuestionDto.fromWithAnswers(question.get(), answers, isFavorite);
     }
 
     @Override
     @Transactional
-    public List<QuestionDto> findAllQuestionsByCategory(String category) {
+    public List<QuestionDto> findAllQuestionsByCategory(String category, String rawToken) {
+        User user = getUserFromToken(rawToken);
         List<Question> questions = questionRepository.getAllByCategories(category);
         List<QuestionDto> questionDtos = new ArrayList<>();
-        List<Long> upVoted = voteRepository.getAllByVote(1);
-        List<Long> downVoted = voteRepository.getAllByVote(-1);
+        List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
+        List<Long> downVoted = voteRepository.getAllByVoteAndUser(-1, user.getId());
         for (Question question: questions) {
+            Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question, user);
             if (upVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, true));
+                questionDtos.add(QuestionDto.from(question, true, isFavorite));
             } else if (downVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, false));
+                questionDtos.add(QuestionDto.from(question, false, isFavorite));
             } else {
-                questionDtos.add(QuestionDto.from(question, null));
+                questionDtos.add(QuestionDto.from(question, null, isFavorite));
             }
         }
         Collections.shuffle(questionDtos);
@@ -104,7 +107,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setComments(new ArrayList<>());
         question.setVotes(new ArrayList<>());
         questionRepository.save(question);
-        return QuestionDto.from(question, null);
+        return QuestionDto.from(question, null, null);
     }
 
     @Override
@@ -117,7 +120,8 @@ public class QuestionServiceImpl implements QuestionService {
         }
         question.get().setQuestion(request.getNewQuestion());
         questionRepository.save(question.get());
-        return QuestionDto.from(question.get(), null);
+        Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question.get(), user);
+        return QuestionDto.from(question.get(), null, isFavorite);
     }
 
     @Override

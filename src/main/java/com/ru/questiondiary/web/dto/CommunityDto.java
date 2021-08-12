@@ -33,7 +33,7 @@ public class CommunityDto extends ResponseData {
             followers.add(UserDto.from(user));
         }
         for (Question question: community.getQuestions()) {
-            questions.add(QuestionDto.from(question, null));
+            questions.add(QuestionDto.from(question, null, null));
         }
         for (CommunityUser worker: community.getWorkers()) {
             workers.add(CommunityUserDto.from(worker));

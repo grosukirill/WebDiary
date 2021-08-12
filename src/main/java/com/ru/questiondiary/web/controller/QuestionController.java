@@ -21,8 +21,8 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping
-    public ResponseEntity<?> findAllQuestions(@RequestParam("page") Integer pageNumber) {
-        PaginationDto questionDtos = questionService.findAllQuestions(pageNumber);
+    public ResponseEntity<?> findAllQuestions(@RequestParam("page") Integer pageNumber, @RequestHeader("Authorization") String rawToken) {
+        PaginationDto questionDtos = questionService.findAllQuestions(pageNumber, rawToken);
         return buildResponse(questionDtos);
     }
 
@@ -33,8 +33,8 @@ public class QuestionController {
     }
 
     @GetMapping("/category")
-    public ResponseEntity<?> findAllQuestionByCategory(@RequestParam("category") String category) {
-        List<QuestionDto> questions = questionService.findAllQuestionsByCategory(category);
+    public ResponseEntity<?> findAllQuestionByCategory(@RequestParam("category") String category, @RequestHeader("Authorization") String rawToken) {
+        List<QuestionDto> questions = questionService.findAllQuestionsByCategory(category, rawToken);
         return buildResponse(questions);
     }
 

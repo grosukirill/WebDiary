@@ -24,8 +24,9 @@ public class QuestionDto extends ResponseData {
     private Integer votes;
     private List<CommentDto> comments;
     private Boolean voted = null;
+    private Boolean isFavorite;
 
-    public static QuestionDto fromWithComments(Question question, List<Comment> comments) {
+    public static QuestionDto fromWithComments(Question question, List<Comment> comments, Boolean isFavorite) {
         List<CommentDto> commentsDtos = new ArrayList<>();
         List<AnswerDto> answerDtos = new ArrayList<>();
         for (Comment comment: comments) {
@@ -43,10 +44,11 @@ public class QuestionDto extends ResponseData {
         result.setVotes(question.getCountOfVotes());
         result.setAnswers(answerDtos);
         result.setComments(commentsDtos);
+        result.setIsFavorite(isFavorite);
         return result;
     }
 
-    public static QuestionDto fromWithVotes(Question question, List<Vote> votes) {
+    public static QuestionDto fromWithVotes(Question question, List<Vote> votes, Boolean isFavorite) {
         int countVotes = votes.stream().map(Vote::getVote).mapToInt(Integer::intValue).sum();
         List<AnswerDto> answerDtos = new ArrayList<>();
         List<CommentDto> commentDtos = new ArrayList<>();
@@ -66,10 +68,11 @@ public class QuestionDto extends ResponseData {
         result.setVotes(question.getCountOfVotes());
         result.setComments(commentDtos);
         result.setVotes(countVotes);
+        result.setIsFavorite(isFavorite);
         return result;
     }
 
-    public static QuestionDto fromWithAnswers(Question question, List<Answer> answers) {
+    public static QuestionDto fromWithAnswers(Question question, List<Answer> answers, Boolean isFavorite) {
         List<AnswerDto> answerDtos = new ArrayList<>();
         List<CommentDto> comments = new ArrayList<>();
         for (Answer answer: answers) {
@@ -87,10 +90,11 @@ public class QuestionDto extends ResponseData {
         result.setAnswers(answerDtos);
         result.setVotes(question.getCountOfVotes());
         result.setComments(comments);
+        result.setIsFavorite(isFavorite);
         return result;
     }
 
-    public static QuestionDto from(Question question, Boolean voted) {
+    public static QuestionDto from(Question question, Boolean voted, Boolean isFavorite) {
         List<CommentDto> comments = new ArrayList<>();
         for (Comment comment: question.getComments()) {
             comments.add(CommentDto.from(comment));
@@ -104,6 +108,7 @@ public class QuestionDto extends ResponseData {
         result.setVotes(question.getCountOfVotes());
         result.setComments(comments);
         result.setVoted(voted);
+        result.setIsFavorite(isFavorite);
         return result;
     }
 }

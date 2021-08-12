@@ -29,14 +29,17 @@ public class User implements UserDetails {
     @Lob
     private byte[] avatar;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "creator")
     private List<Question> createdQuestions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "question")
     private List<Answer> answers = new ArrayList<>();
 
     @ManyToMany(mappedBy = "followers")
     private List<Community> following;
+
+    @OneToMany(mappedBy = "question")
+    private List<Favorite> favoriteQuestions = new ArrayList<>();
 
 
     public User() {

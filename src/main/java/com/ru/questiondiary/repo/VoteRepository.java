@@ -16,8 +16,8 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     List<Vote> getAllByQuestion(Question question);
 
-    @Query(nativeQuery = true, value = "select question_id from public.vote where vote=:vote")
-    List<Long> getAllByVote(@Param("vote") Integer vote);
+    @Query(nativeQuery = true, value = "select question_id from public.vote where vote=:vote and users_id=:userId")
+    List<Long> getAllByVoteAndUser(@Param("vote") Integer vote, @Param("userId") Long userId);
 
     void deleteAllByQuestion(Question question);
 }

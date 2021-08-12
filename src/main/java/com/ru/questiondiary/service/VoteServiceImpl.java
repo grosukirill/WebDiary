@@ -3,6 +3,7 @@ package com.ru.questiondiary.service;
 import com.ru.questiondiary.exception.DuplicateVoteException;
 import com.ru.questiondiary.exception.QuestionNotFoundException;
 import com.ru.questiondiary.exception.UserNotFoundException;
+import com.ru.questiondiary.repo.FavoriteRepository;
 import com.ru.questiondiary.repo.QuestionRepository;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.repo.VoteRepository;
@@ -24,6 +25,7 @@ public class VoteServiceImpl implements VoteService {
     private final VoteRepository voteRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+    private final FavoriteRepository favoriteRepository;
 
 
     @Override
@@ -46,7 +48,8 @@ public class VoteServiceImpl implements VoteService {
                 .build();
         voteRepository.save(createdVote);
         List<Vote> updatedVotes = voteRepository.getAllByQuestion(question.get());
-        return QuestionDto.fromWithVotes(question.get(), updatedVotes);
+        Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question.get(), user.get());
+        return QuestionDto.fromWithVotes(question.get(), updatedVotes, isFavorite);
     }
 
     private boolean checkForRepeatedVote(Question question, User user) {
