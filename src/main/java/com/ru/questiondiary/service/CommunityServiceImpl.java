@@ -195,7 +195,7 @@ public class CommunityServiceImpl implements CommunityService {
         }
         communityUserRepository.deleteAllByCommunities(community.get());
         questionRepository.deleteAllByCreatedBy(community.get());
-        userRepository.deleteAllByFollowing(community.get());
+        userRepository.deleteAllByFollowingCommunities(community.get());
         communityRepository.delete(community.get());
     }
 

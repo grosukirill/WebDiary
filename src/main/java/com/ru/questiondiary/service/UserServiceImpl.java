@@ -52,6 +52,10 @@ class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .password(hashedPassword)
                 .role("USER")
+                .avatar("")
+                .answers(new ArrayList<>())
+                .following(new ArrayList<>())
+                .followers(new ArrayList<>())
                 .build();
         userRepository.save(user);
         String token = tokenService.createToken(user);
@@ -60,17 +64,44 @@ class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto findUserById(Long id) {
+    public UserDto findUserById(Long id, String rawToken) {
+        User requester = getUserFromToken(rawToken);
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
             throw new UserNotFoundException(String.format("User with ID [%s] not found", id));
         }
-        return UserDto.from(user.get());
+        Boolean isFollowed = user.get().getFollowers().contains(requester);
+        return UserDto.from(user.get(), isFollowed);
     }
 
     @Override
     @Transactional
     public UserDto findUserByToken(String token) {
+        User user = getUserFromToken(token);
+        return UserDto.from(user);
+    }
+
+    @Override
+    @Transactional
+    public void followUser(Long userId, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        Optional<User> userToFollow = userRepository.findById(userId);
+        if (userToFollow.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with ID [%s] not found", userId));
+        }
+        user.followOtherUser(userToFollow.get());
+        userToFollow.get().addFollower(user);
+        userRepository.save(userToFollow.get());
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with email %s not found", email)));
+    }
+
+    private User getUserFromToken(String token) {
         Map<String, String> userData = tokenService.getUserDataFromToken(token);
         if (userData == null || userData.isEmpty()) {
             throw new TokenValidationException("Invalid token");
@@ -79,12 +110,6 @@ class UserServiceImpl implements UserService {
         if (user.isEmpty()) {
             throw new UserNotFoundException(String.format("Token [%s] has no linked user", token));
         }
-        return UserDto.from(user.get());
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with email %s not found", email)));
+        return user.get();
     }
 }

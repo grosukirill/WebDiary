@@ -32,8 +32,8 @@ public class UserController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<?> findUserById(@PathVariable("id") Long id) {
-        UserDto user = userService.findUserById(id);
+    public ResponseEntity<?> findUserById(@PathVariable("id") Long id, @RequestHeader("Authorization") String rawToken) {
+        UserDto user = userService.findUserById(id, rawToken);
         return buildResponse(user);
     }
 
@@ -43,8 +43,14 @@ public class UserController {
         return buildResponse(user);
     }
 
-    private ResponseEntity<?> buildResponse(Object user) {
-        OkResponse response = new OkResponse(user);
+    @PostMapping("/follow/{id}")
+    public ResponseEntity<?> followUser(@PathVariable("id") Long userId, @RequestHeader("Authorization") String rawToken) {
+        userService.followUser(userId, rawToken);
+        return ResponseEntity.status(HttpStatus.OK).body(new OkResponse());
+    }
+
+    private ResponseEntity<?> buildResponse(Object data) {
+        OkResponse response = new OkResponse(data);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -1,6 +1,9 @@
 package com.ru.questiondiary.web.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,7 +38,16 @@ public class User implements UserDetails {
     private List<Answer> answers = new ArrayList<>();
 
     @ManyToMany(mappedBy = "followers")
-    private List<Community> following;
+    private List<Community> followingCommunities;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_RELATIONS",
+            joinColumns = @JoinColumn(name = "followed_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    private List<User> following;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<User> followers;
 
     @OneToMany(mappedBy = "question")
     private List<Favorite> favoriteQuestions = new ArrayList<>();
@@ -91,5 +103,17 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void followOtherUser(User user) {
+        List<User> following = this.following;
+        following.add(user);
+        this.following = following;
+    }
+
+    public void addFollower(User user) {
+        List<User> followers = this.followers;
+        followers.add(user);
+        this.followers = followers;
     }
 }

@@ -14,7 +14,9 @@ public interface UserService extends UserDetailsService {
 
     UserLoginDto register(RegisterRequest request) throws DuplicateUserEmailException;
 
-    UserDto findUserById(Long id);
+    UserDto findUserById(Long id, String rawToken);
 
     UserDto findUserByToken(String token);
+
+    void followUser(Long userId, String rawToken);
 }
