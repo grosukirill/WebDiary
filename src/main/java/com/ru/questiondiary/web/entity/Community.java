@@ -36,6 +36,12 @@ public class Community {
     public void follow(User user) {
         List<User> followers = this.followers;
         followers.add(user);
-        this.setFollowers(followers);
+        this.followers = followers;
+    }
+
+    public void deleteWorker(CommunityUser worker) {
+        List<CommunityUser> workers = this.workers;
+        workers.remove(worker);
+        this.workers = workers;
     }
 }

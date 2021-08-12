@@ -6,6 +6,7 @@ import com.ru.questiondiary.exception.CommunityUserNotFoundException;
 import com.ru.questiondiary.exception.UserNotFoundException;
 import com.ru.questiondiary.repo.CommunityRepository;
 import com.ru.questiondiary.repo.CommunityUserRepository;
+import com.ru.questiondiary.repo.QuestionRepository;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.CommunityUserDto;
@@ -32,6 +33,7 @@ public class CommunityServiceImpl implements CommunityService {
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
     private final CommunityUserRepository communityUserRepository;
+    private final QuestionRepository questionRepository;
     private final TokenService tokenService;
 
     @Override
@@ -149,12 +151,52 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    @Transactional
     public CommunityDto findById(Long id) {
         Optional<Community> community = communityRepository.findById(id);
         if (community.isEmpty()) {
             throw new CommunityNotFoundException(String.format("Community with ID [%s] not found", id));
         }
         return CommunityDto.from(community.get());
+    }
+
+    @Override
+    @Transactional
+    public CommunityDto deleteWorker(Long communityId, Long workerId, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        Optional<Community> community = communityRepository.findById(communityId);
+        if (community.isEmpty()) {
+            throw new CommunityNotFoundException(String.format("Community with ID [%s] not found", communityId));
+        }
+        Optional<CommunityUser> communityAdmin = communityUserRepository.findByUserAndRoleAndCommunities(user, Role.ADMIN, community.get());
+        if (communityAdmin.isEmpty()) {
+            throw new AuthoritiesGrantedException("You are not admin of this Community. You have no rights to delete worker.");
+        }
+        Optional<CommunityUser> worker = communityUserRepository.findById(workerId);
+        if (worker.isEmpty()) {
+            throw new CommunityUserNotFoundException(String.format("Worker with ID [%s] not found", workerId));
+        }
+        community.get().deleteWorker(worker.get());
+        communityRepository.save(community.get());
+        return CommunityDto.from(community.get());
+    }
+
+    @Override
+    @Transactional
+    public void deleteCommunity(Long communityId, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        Optional<Community> community = communityRepository.findById(communityId);
+        if (community.isEmpty()) {
+            throw new CommunityNotFoundException(String.format("Community with ID [%s] not found", communityId));
+        }
+        Optional<CommunityUser> communityAdmin = communityUserRepository.findByUserAndRoleAndCommunities(user, Role.ADMIN, community.get());
+        if (communityAdmin.isEmpty()) {
+            throw new AuthoritiesGrantedException("You are not admin of this Community. You have no rights to delete this Community.");
+        }
+        communityUserRepository.deleteAllByCommunities(community.get());
+        questionRepository.deleteAllByCreatedBy(community.get());
+        userRepository.deleteAllByFollowing(community.get());
+        communityRepository.delete(community.get());
     }
 
     private User getUserFromToken(String rawToken) {

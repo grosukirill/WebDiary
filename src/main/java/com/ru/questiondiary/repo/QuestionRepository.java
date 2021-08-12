@@ -1,5 +1,6 @@
 package com.ru.questiondiary.repo;
 
+import com.ru.questiondiary.web.entity.Community;
 import com.ru.questiondiary.web.entity.Question;
 import com.ru.questiondiary.web.entity.User;
 import org.springframework.data.domain.Page;
@@ -19,4 +20,6 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     Optional<Question> findByQuestion(String question);
 
     Optional<Question> findByIdAndCreator(Long questionId, User user);
+
+    void deleteAllByCreatedBy(Community community);
 }

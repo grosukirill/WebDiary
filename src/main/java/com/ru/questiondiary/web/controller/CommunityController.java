@@ -20,6 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class CommunityController {
     private final CommunityService communityService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findCommunity(@PathVariable("id") Long id) {
+        CommunityDto community = communityService.findById(id);
+        return buildResponse(community);
+    }
+
     @PostMapping
     public ResponseEntity<?> createCommunity(@RequestBody CreateCommunityRequest request, @RequestHeader("Authorization") String rawToken) {
         CommunityDto community = communityService.createCommunity(request, rawToken);
@@ -50,10 +56,16 @@ public class CommunityController {
         return buildResponse(communityUser);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findCommunity(@PathVariable("id") Long id) {
-        CommunityDto community = communityService.findById(id);
+    @DeleteMapping("/workers/{id}")
+    public ResponseEntity<?> deleteWorker(@PathVariable("id") Long workerId, @RequestParam("communityId") Long communityId, @RequestHeader("Authorization") String rawToken) {
+        CommunityDto community = communityService.deleteWorker(communityId, workerId, rawToken);
         return buildResponse(community);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCommunity(@PathVariable("id") Long communityId, @RequestHeader("Authorization") String rawToken) {
+        communityService.deleteCommunity(communityId, rawToken);
+        return ResponseEntity.status(HttpStatus.OK).body(new OkResponse());
     }
 
     private ResponseEntity<?> buildResponse(Object community) {

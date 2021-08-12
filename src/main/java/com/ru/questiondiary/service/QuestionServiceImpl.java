@@ -129,7 +129,9 @@ public class QuestionServiceImpl implements QuestionService {
         if (question.isEmpty()) {
             throw new ForeignQuestionDeleteException("You are trying to delete other people's question");
         }
-        questionRepository.deleteById(id);
+        answerRepository.deleteAllByQuestion(question.get());
+        voteRepository.deleteAllByQuestion(question.get());
+        questionRepository.delete(question.get());
     }
 
     private User getUserFromToken(String rawToken) {

@@ -14,4 +14,8 @@ public interface CommunityUserRepository extends JpaRepository<CommunityUser, Lo
     Optional<CommunityUser> findByRoleAndUser(Role role, User user);
 
     Optional<CommunityUser> findByUserAndCommunities(User user, Community community);
+
+    Optional<CommunityUser> findByUserAndRoleAndCommunities(User user, Role role, Community community);
+
+    void deleteAllByCommunities(Community community);
 }

@@ -19,4 +19,8 @@ public interface CommunityService {
     CommunityUserDto updateWorkerRole(UpdateWorkerRoleRequest request);
 
     CommunityDto findById(Long id);
+
+    CommunityDto deleteWorker(Long communityId, Long workerId, String rawToken);
+
+    void deleteCommunity(Long communityId, String rawToken);
 }
