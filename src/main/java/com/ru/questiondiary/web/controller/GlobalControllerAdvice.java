@@ -122,4 +122,11 @@ public class GlobalControllerAdvice {
         ErrorResponse response = new ErrorResponse(errorDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleWrongFeedTypeException(WrongFeedTypeException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage(), ErrorCode.WRONG_FEED_TYPE.number, ErrorCode.WRONG_FEED_TYPE, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        ErrorResponse response = new ErrorResponse(errorDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

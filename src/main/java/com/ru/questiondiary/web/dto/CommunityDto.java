@@ -2,8 +2,6 @@ package com.ru.questiondiary.web.dto;
 
 import com.ru.questiondiary.web.entity.Community;
 import com.ru.questiondiary.web.entity.CommunityUser;
-import com.ru.questiondiary.web.entity.Question;
-import com.ru.questiondiary.web.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,19 +20,11 @@ public class CommunityDto extends ResponseData {
     private String description;
     private String link;
     private List<CommunityUserDto> workers;
-    private List<UserDto> followers;
-    private List<QuestionDto> questions;
+    private Integer followers;
+    private Integer questions;
 
     public static CommunityDto from(Community community) {
-        List<UserDto> followers = new ArrayList<>();
-        List<QuestionDto> questions = new ArrayList<>();
         List<CommunityUserDto> workers = new ArrayList<>();
-        for (User user: community.getFollowers()) {
-            followers.add(UserDto.from(user));
-        }
-        for (Question question: community.getQuestions()) {
-            questions.add(QuestionDto.from(question, null, null));
-        }
         for (CommunityUser worker: community.getWorkers()) {
             workers.add(CommunityUserDto.from(worker));
         }
@@ -43,8 +33,8 @@ public class CommunityDto extends ResponseData {
         result.setTitle(community.getTitle());
         result.setDescription(community.getDescription());
         result.setLink(community.getLink());
-        result.setFollowers(followers);
-        result.setQuestions(questions);
+        result.setFollowers(community.getFollowers().size());
+        result.setQuestions(community.getQuestions().size());
         result.setWorkers(workers);
         return result;
     }

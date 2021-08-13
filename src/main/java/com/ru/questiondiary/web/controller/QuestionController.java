@@ -57,6 +57,14 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/feed")
+    public ResponseEntity<?> findFeed(@RequestParam("type") String type,
+                                      @RequestParam("page") Integer pageNumber,
+                                      @RequestHeader("Authorization") String rawToken) {
+        PaginationDto questions = questionService.findFeed(type, pageNumber, rawToken);
+        return buildResponse(questions);
+    }
+
     private ResponseEntity<?> buildResponse(Object question) {
         OkResponse response = new OkResponse(question);
         return ResponseEntity.status(HttpStatus.OK).body(response);

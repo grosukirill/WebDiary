@@ -13,7 +13,8 @@ public enum ErrorCode {
     FOREIGN_QUESTION_UPDATE(10),
     FOREIGN_QUESTION_DELETE(11),
     COMMUNITY_USER_NOT_FOUND(12),
-    AUTHORITIES_GRANTED(13);
+    AUTHORITIES_GRANTED(13),
+    WRONG_FEED_TYPE(14);
 
     public final Integer number;
 

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -136,6 +137,35 @@ public class QuestionServiceImpl implements QuestionService {
         answerRepository.deleteAllByQuestion(question.get());
         voteRepository.deleteAllByQuestion(question.get());
         questionRepository.delete(question.get());
+    }
+
+    @Override
+    @Transactional
+    public PaginationDto findFeed(String type, Integer pageNumber, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        Pageable page = PageRequest.of(pageNumber, 20, Sort.by("creation_date").descending());
+        Page<Question> questions;
+        if (type.equals("Admin")) {
+            questions = questionRepository.findAllByIsAdminsTrue(page);
+        } else if (type.equals("Users")) {
+            questions = questionRepository.findAllByIsAdminsFalse(user.getId(), page);
+        } else {
+            throw new WrongFeedTypeException(String.format("Feed type %s does not match any known types.", type));
+        }
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
+        List<Long> downVoted = voteRepository.getAllByVoteAndUser(-1, user.getId());
+        for (Question question: questions.getContent()) {
+            Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question, user);
+            if (upVoted.contains(question.getId())) {
+                questionDtos.add(QuestionDto.from(question, true, isFavorite));
+            } else if (downVoted.contains(question.getId())) {
+                questionDtos.add(QuestionDto.from(question, false, isFavorite));
+            } else {
+                questionDtos.add(QuestionDto.from(question, null, isFavorite));
+            }
+        }
+        return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
     }
 
     private User getUserFromToken(String rawToken) {

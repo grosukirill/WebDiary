@@ -19,4 +19,6 @@ public interface QuestionService {
     QuestionDto updateQuestion(Long questionId, UpdateQuestionRequest request, String rawToken);
 
     void deleteQuestion(Long id, String rawToken);
+
+    PaginationDto findFeed(String type, Integer pageNumber, String rawToken);
 }
