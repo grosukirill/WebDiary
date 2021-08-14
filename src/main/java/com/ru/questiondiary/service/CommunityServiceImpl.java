@@ -41,19 +41,13 @@ public class CommunityServiceImpl implements CommunityService {
     public CommunityDto createCommunity(CreateCommunityRequest request, String rawToken) {
         User user = getUserFromToken(rawToken);
         List<CommunityUser> workers = new ArrayList<>();
-        Optional<CommunityUser> existingCommunityUser = communityUserRepository.findByRoleAndUser(Role.ADMIN, user);
-        CommunityUser communityUser = new CommunityUser();
-        if (existingCommunityUser.isEmpty()) {
-            communityUser = CommunityUser.builder()
-                    .role(Role.ADMIN)
-                    .user(user)
-                    .communities(new ArrayList<>())
-                    .build();
-            communityUserRepository.save(communityUser);
-            workers.add(communityUser);
-        } else {
-            workers.add(existingCommunityUser.get());
-        }
+        CommunityUser communityUser = CommunityUser.builder()
+                .role(Role.ADMIN)
+                .user(user)
+                .communities(new ArrayList<>())
+                .build();
+        communityUserRepository.save(communityUser);
+        workers.add(communityUser);
         Community createdCommunity = Community.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())

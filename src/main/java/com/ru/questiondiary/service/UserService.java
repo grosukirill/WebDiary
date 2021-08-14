@@ -1,6 +1,7 @@
 package com.ru.questiondiary.service;
 
 import com.ru.questiondiary.exception.DuplicateUserEmailException;
+import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
@@ -19,4 +20,6 @@ public interface UserService extends UserDetailsService {
     UserDto findUserByToken(String token);
 
     void followUser(Long userId, String rawToken);
+
+    List<CommunityDto> findLastFourSubscriptions(String rawToken);
 }

@@ -3,10 +3,13 @@ package com.ru.questiondiary.service;
 import com.ru.questiondiary.exception.TokenValidationException;
 import com.ru.questiondiary.exception.DuplicateUserEmailException;
 import com.ru.questiondiary.exception.UserNotFoundException;
+import com.ru.questiondiary.repo.CommunityRepository;
 import com.ru.questiondiary.repo.UserRepository;
+import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
+import com.ru.questiondiary.web.entity.Community;
 import com.ru.questiondiary.web.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +28,7 @@ import java.util.Optional;
 class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CommunityRepository communityRepository;
     private final TokenService tokenService;
 
     @Override
@@ -93,6 +97,17 @@ class UserServiceImpl implements UserService {
         userToFollow.get().addFollower(user);
         userRepository.save(userToFollow.get());
         userRepository.save(user);
+    }
+
+    @Override
+    public List<CommunityDto> findLastFourSubscriptions(String rawToken) {
+        User user = getUserFromToken(rawToken);
+        List<Community> communities = communityRepository.findLastFourSubscriptions(user.getId());
+        List<CommunityDto> communityDtos = new ArrayList<>();
+        for (Community community: communities) {
+            communityDtos.add(CommunityDto.from(community));
+        }
+        return communityDtos;
     }
 
     @Override

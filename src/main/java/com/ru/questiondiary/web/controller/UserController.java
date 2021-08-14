@@ -1,6 +1,7 @@
 package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.UserService;
+import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
@@ -47,6 +48,12 @@ public class UserController {
     public ResponseEntity<?> followUser(@PathVariable("id") Long userId, @RequestHeader("Authorization") String rawToken) {
         userService.followUser(userId, rawToken);
         return ResponseEntity.status(HttpStatus.OK).body(new OkResponse());
+    }
+
+    @GetMapping("/lastFourSubscriptions")
+    public ResponseEntity<?> getLastFourSubscriptions(@RequestHeader("Authorization") String rawToken) {
+        List<CommunityDto> communityDtos = userService.findLastFourSubscriptions(rawToken);
+        return buildResponse(communityDtos);
     }
 
     private ResponseEntity<?> buildResponse(Object data) {
