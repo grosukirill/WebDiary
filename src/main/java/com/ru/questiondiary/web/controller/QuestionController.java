@@ -1,6 +1,7 @@
 package com.ru.questiondiary.web.controller;
 
 import com.ru.questiondiary.service.QuestionService;
+import com.ru.questiondiary.web.dto.CategoryDto;
 import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
@@ -64,6 +65,13 @@ public class QuestionController {
         PaginationDto questions = questionService.findFeed(type, pageNumber, rawToken);
         return buildResponse(questions);
     }
+
+    @GetMapping("/categories")
+    public ResponseEntity<?> findAllCategories() {
+        List<CategoryDto> categories = questionService.findAllCategories();
+        return buildResponse(categories);
+    }
+
 
     private ResponseEntity<?> buildResponse(Object question) {
         OkResponse response = new OkResponse(question);

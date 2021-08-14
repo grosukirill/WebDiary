@@ -5,7 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,10 +24,8 @@ public class Question {
     private LocalDate creationDate;
     private Boolean isAdmins;
 
-    @ElementCollection
-    @CollectionTable(name = "categories", joinColumns = @JoinColumn(name = "question_id"))
-    @Column(name = "category")
-    private List<String> categories = new ArrayList<>();
+    @ManyToMany(mappedBy = "questions")
+    private Set<Category> categories = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = true, updatable = false)

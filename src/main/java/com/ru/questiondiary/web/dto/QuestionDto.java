@@ -18,7 +18,7 @@ public class QuestionDto extends ResponseData {
     private Long id;
     private String question;
     private LocalDate creationDate;
-    private List<String> categories;
+    private List<CategoryDto> categories;
     private String type;
     private UserDto creator;
     private CommunityDto createdBy;
@@ -39,6 +39,10 @@ public class QuestionDto extends ResponseData {
         }
         List<CommentDto> commentsDtos = new ArrayList<>();
         List<AnswerDto> answerDtos = new ArrayList<>();
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        for (Category category: question.getCategories()) {
+            categoryDtos.add(CategoryDto.from(category));
+        }
         for (Comment comment: comments) {
             commentsDtos.add(CommentDto.from(comment));
         }
@@ -49,7 +53,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
-        result.setCategories(question.getCategories());
+        result.setCategories(categoryDtos);
         result.setType(type);
         if (isUsers) {
             result.setCreator(UserDto.from(question.getCreator()));
@@ -75,6 +79,10 @@ public class QuestionDto extends ResponseData {
         int countVotes = votes.stream().map(Vote::getVote).mapToInt(Integer::intValue).sum();
         List<AnswerDto> answerDtos = new ArrayList<>();
         List<CommentDto> commentDtos = new ArrayList<>();
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        for (Category category: question.getCategories()) {
+            categoryDtos.add(CategoryDto.from(category));
+        }
         for (Answer answer: question.getAnswers()) {
             answerDtos.add(AnswerDto.from(answer));
         }
@@ -85,7 +93,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
-        result.setCategories(question.getCategories());
+        result.setCategories(categoryDtos);
         result.setType(type);
         if (isUsers) {
             result.setCreator(UserDto.from(question.getCreator()));
@@ -111,6 +119,10 @@ public class QuestionDto extends ResponseData {
         }
         List<AnswerDto> answerDtos = new ArrayList<>();
         List<CommentDto> comments = new ArrayList<>();
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        for (Category category: question.getCategories()) {
+            categoryDtos.add(CategoryDto.from(category));
+        }
         for (Answer answer: answers) {
             answerDtos.add(AnswerDto.from(answer));
         }
@@ -121,7 +133,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
-        result.setCategories(question.getCategories());
+        result.setCategories(categoryDtos);
         result.setType(type);
         if (isUsers) {
             result.setCreator(UserDto.from(question.getCreator()));
@@ -145,6 +157,10 @@ public class QuestionDto extends ResponseData {
             type = "Community";
         }
         List<CommentDto> comments = new ArrayList<>();
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        for (Category category: question.getCategories()) {
+            categoryDtos.add(CategoryDto.from(category));
+        }
         for (Comment comment: question.getComments()) {
             comments.add(CommentDto.from(comment));
         }
@@ -152,7 +168,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
-        result.setCategories(question.getCategories());
+        result.setCategories(categoryDtos);
         result.setType(type);
         if (isUsers) {
             result.setCreator(UserDto.from(question.getCreator()));

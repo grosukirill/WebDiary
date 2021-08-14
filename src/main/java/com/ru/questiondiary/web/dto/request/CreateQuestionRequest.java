@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class CreateQuestionRequest {
     private String question;
+    private Long categoryId;
 
     @JsonCreator
-    public CreateQuestionRequest(@JsonProperty String question) {
+    public CreateQuestionRequest(@JsonProperty String question, @JsonProperty Long categoryId) {
         this.question = question;
+        this.categoryId = categoryId;
     }
 }

@@ -14,7 +14,8 @@ public enum ErrorCode {
     FOREIGN_QUESTION_DELETE(11),
     COMMUNITY_USER_NOT_FOUND(12),
     AUTHORITIES_GRANTED(13),
-    WRONG_FEED_TYPE(14);
+    WRONG_FEED_TYPE(14),
+    CATEGORY_NOT_FOUND(15);
 
     public final Integer number;
 

@@ -2,11 +2,13 @@ package com.ru.questiondiary.service;
 
 import com.ru.questiondiary.exception.*;
 import com.ru.questiondiary.repo.*;
+import com.ru.questiondiary.web.dto.CategoryDto;
 import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
 import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
 import com.ru.questiondiary.web.entity.Answer;
+import com.ru.questiondiary.web.entity.Category;
 import com.ru.questiondiary.web.entity.Question;
 import com.ru.questiondiary.web.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private final FavoriteRepository favoriteRepository;
+    private final CategoryRepository categoryRepository;
 
 
     @Override
@@ -99,12 +102,18 @@ public class QuestionServiceImpl implements QuestionService {
         }
         User user = getUserFromToken(rawToken);
         LocalDate now = LocalDate.now(ZoneId.of("UTC+3"));
+        Optional<Category> category = categoryRepository.findById(request.getCategoryId());
+        if (category.isEmpty()) {
+            throw new CategoryNotFoundException(String.format("Category with ID [%s] not found", request.getCategoryId()));
+        }
+        Set<Category> categories = new HashSet<>();
+        categories.add(category.get());
         Question question = new Question();
         question.setQuestion(request.getQuestion());
         question.setCreator(user);
         question.setCreationDate(now);
         question.setAnswers(new ArrayList<>());
-        question.setCategories(new ArrayList<>());
+        question.setCategories(categories);
         question.setComments(new ArrayList<>());
         question.setVotes(new ArrayList<>());
         questionRepository.save(question);
@@ -166,6 +175,16 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }
         return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
+    }
+
+    @Override
+    public List<CategoryDto> findAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        for (Category category: categories) {
+            categoryDtos.add(CategoryDto.from(category));
+        }
+        return categoryDtos;
     }
 
     private User getUserFromToken(String rawToken) {

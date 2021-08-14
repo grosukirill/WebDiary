@@ -1,5 +1,6 @@
 package com.ru.questiondiary.service;
 
+import com.ru.questiondiary.web.dto.CategoryDto;
 import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
@@ -21,4 +22,6 @@ public interface QuestionService {
     void deleteQuestion(Long id, String rawToken);
 
     PaginationDto findFeed(String type, Integer pageNumber, String rawToken);
+
+    List<CategoryDto> findAllCategories();
 }
