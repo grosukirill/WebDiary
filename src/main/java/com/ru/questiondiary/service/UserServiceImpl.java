@@ -1,7 +1,8 @@
 package com.ru.questiondiary.service;
 
-import com.ru.questiondiary.exception.TokenValidationException;
+import com.ru.questiondiary.exception.AuthoritiesGrantedException;
 import com.ru.questiondiary.exception.DuplicateUserEmailException;
+import com.ru.questiondiary.exception.TokenValidationException;
 import com.ru.questiondiary.exception.UserNotFoundException;
 import com.ru.questiondiary.repo.CommunityRepository;
 import com.ru.questiondiary.repo.UserRepository;
@@ -56,6 +57,7 @@ class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .password(hashedPassword)
                 .role("USER")
+                .isApproved(false)
                 .avatar("")
                 .answers(new ArrayList<>())
                 .following(new ArrayList<>())
@@ -108,6 +110,21 @@ class UserServiceImpl implements UserService {
             communityDtos.add(CommunityDto.from(community));
         }
         return communityDtos;
+    }
+
+    @Override
+    public UserDto approveUser(Long userId, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        if (user.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            throw new AuthoritiesGrantedException("You have no rights to update any user");
+        }
+        Optional<User> userToApprove = userRepository.findById(userId);
+        if (userToApprove.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with ID [%s] not found", userId));
+        }
+        userToApprove.get().setIsApproved(true);
+        userRepository.save(userToApprove.get());
+        return UserDto.from(userToApprove.get());
     }
 
     @Override

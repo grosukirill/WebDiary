@@ -56,6 +56,12 @@ public class UserController {
         return buildResponse(communityDtos);
     }
 
+    @PutMapping("/approve")
+    public ResponseEntity<?> approveUser(@RequestParam("userId") Long userId, @RequestHeader("Authorization") String rawToken) {
+        UserDto user = userService.approveUser(userId, rawToken);
+        return buildResponse(user);
+    }
+
     private ResponseEntity<?> buildResponse(Object data) {
         OkResponse response = new OkResponse(data);
         return ResponseEntity.status(HttpStatus.OK).body(response);

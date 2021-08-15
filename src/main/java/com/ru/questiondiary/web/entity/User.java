@@ -28,8 +28,8 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role;
-
     private String avatar;
+    private Boolean isApproved;
 
     @OneToMany(mappedBy = "creator")
     private List<Question> createdQuestions = new ArrayList<>();

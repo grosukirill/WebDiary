@@ -22,4 +22,6 @@ public interface UserService extends UserDetailsService {
     void followUser(Long userId, String rawToken);
 
     List<CommunityDto> findLastFourSubscriptions(String rawToken);
+
+    UserDto approveUser(Long userId, String rawToken);
 }
