@@ -23,6 +23,7 @@ public class Question {
     private String question;
     private LocalDate creationDate;
     private Boolean isAdmins;
+    private Boolean isApproved;
 
     @ManyToMany(mappedBy = "questions")
     private Set<Category> categories = new HashSet<>();

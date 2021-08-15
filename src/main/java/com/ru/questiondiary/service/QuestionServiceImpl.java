@@ -73,9 +73,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public List<QuestionDto> findAllQuestionsByCategory(String category, String rawToken) {
+    public List<QuestionDto> findAllQuestionsByCategory(Long category, String rawToken) {
         User user = getUserFromToken(rawToken);
-        List<Question> questions = questionRepository.getAllByCategories(category);
+        Set<Question> questions = questionRepository.findAllByCategories(category);
         List<QuestionDto> questionDtos = new ArrayList<>();
         List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
         List<Long> downVoted = voteRepository.getAllByVoteAndUser(-1, user.getId());
@@ -154,12 +154,18 @@ public class QuestionServiceImpl implements QuestionService {
         User user = getUserFromToken(rawToken);
         Pageable page = PageRequest.of(pageNumber, 20, Sort.by("creation_date").descending());
         Page<Question> questions;
-        if (type.equals("Admin")) {
-            questions = questionRepository.findAllByIsAdminsTrue(page);
-        } else if (type.equals("Users")) {
-            questions = questionRepository.findAllByIsAdminsFalse(user.getId(), page);
-        } else {
-            throw new WrongFeedTypeException(String.format("Feed type %s does not match any known types.", type));
+        switch (type) {
+            case "Admin":
+                questions = questionRepository.findAllByIsAdminsTrue(page);
+                break;
+            case "Users":
+                questions = questionRepository.findAllByIsAdminsFalse(user.getId(), page);
+                break;
+            case "Recommendations":
+                questions = questionRepository.findRecommendations(user.getId(), page);
+                break;
+            default:
+                throw new WrongFeedTypeException(String.format("Feed type %s does not match any known types.", type));
         }
         List<QuestionDto> questionDtos = new ArrayList<>();
         List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
@@ -178,6 +184,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public List<CategoryDto> findAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         List<CategoryDto> categoryDtos = new ArrayList<>();

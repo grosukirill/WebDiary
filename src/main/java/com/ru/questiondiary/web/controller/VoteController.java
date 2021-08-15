@@ -17,8 +17,8 @@ public class VoteController {
     private final VoteService voteService;
 
     @PostMapping
-    public ResponseEntity<?> createVote(@RequestBody CreateVoteRequest request) {
-        QuestionDto question = voteService.createVote(request);
+    public ResponseEntity<?> createVote(@RequestBody CreateVoteRequest request, @RequestHeader("Authorization") String rawToken) {
+        QuestionDto question = voteService.createVote(request, rawToken);
         return getResponseEntity(question);
     }
 

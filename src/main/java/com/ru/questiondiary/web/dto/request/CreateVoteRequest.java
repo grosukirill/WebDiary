@@ -9,13 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class CreateVoteRequest {
     private Integer vote;
-    private Long userId;
     private Long questionId;
 
     @JsonCreator
-    public CreateVoteRequest(@JsonProperty Integer vote, @JsonProperty Long userId, @JsonProperty Long questionId) {
+    public CreateVoteRequest(@JsonProperty Integer vote, @JsonProperty Long questionId) {
         this.vote = vote;
-        this.userId = userId;
         this.questionId = questionId;
     }
 }

@@ -10,12 +10,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface QuestionRepository extends PagingAndSortingRepository<Question, Long> {
-    List<Question> getAllByCategories(String category);
+    @Query(nativeQuery = true, value = "select * from public.question where id in (select questions_id from public.categories_questions where categories_id=:categoryId)")
+    Set<Question> findAllByCategories(@Param("categoryId") Long categoryId);
 
     Page<Question> findAll(Pageable pageable);
 
@@ -28,6 +29,9 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     @Query(nativeQuery = true, value = "select * from public.question where is_admins=true")
     Page<Question> findAllByIsAdminsTrue(Pageable pageable);
 
-    @Query(nativeQuery = true, value = "select * from question where is_admins=false and community_id in (select following_communities_id from public.community_followers where followers_id=:followedId) or creator_id in (select follower_id from public.user_relations where followed_id=:followedId)")
+    @Query(nativeQuery = true, value = "select * from public.question where is_admins=false and community_id in (select following_communities_id from public.community_followers where followers_id=:followedId) or creator_id in (select follower_id from public.user_relations where followed_id=:followedId)")
     Page<Question> findAllByIsAdminsFalse(@Param("followedId") Long followedId, Pageable pageable);
+
+    @Query(nativeQuery = true, value = "select * from public.question where creator_id in (select id from public.users where is_approved=true) and creator_id not in (select follower_id from public.user_relations where followed_id=:followedId) order by random()")
+    Page<Question> findRecommendations(@Param("followedId")Long followedId, Pageable page);
 }

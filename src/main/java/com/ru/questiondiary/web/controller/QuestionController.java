@@ -34,8 +34,8 @@ public class QuestionController {
     }
 
     @GetMapping("/category")
-    public ResponseEntity<?> findAllQuestionByCategory(@RequestParam("category") String category, @RequestHeader("Authorization") String rawToken) {
-        List<QuestionDto> questions = questionService.findAllQuestionsByCategory(category, rawToken);
+    public ResponseEntity<?> findAllQuestionByCategory(@RequestParam("categoryId") Long categoryId, @RequestHeader("Authorization") String rawToken) {
+        List<QuestionDto> questions = questionService.findAllQuestionsByCategory(categoryId, rawToken);
         return buildResponse(questions);
     }
 

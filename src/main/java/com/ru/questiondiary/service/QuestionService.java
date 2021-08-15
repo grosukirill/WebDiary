@@ -13,7 +13,7 @@ public interface QuestionService {
 
     QuestionDto findQuestionById(Long questionId, String token);
 
-    List<QuestionDto> findAllQuestionsByCategory(String category, String rawToken);
+    List<QuestionDto> findAllQuestionsByCategory(Long category, String rawToken);
 
     QuestionDto createQuestion(CreateQuestionRequest request, String rawToken);
 
