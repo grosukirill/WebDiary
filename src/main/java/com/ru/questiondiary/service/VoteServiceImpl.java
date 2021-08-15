@@ -1,6 +1,5 @@
 package com.ru.questiondiary.service;
 
-import com.ru.questiondiary.exception.DuplicateVoteException;
 import com.ru.questiondiary.exception.QuestionNotFoundException;
 import com.ru.questiondiary.exception.TokenValidationException;
 import com.ru.questiondiary.exception.UserNotFoundException;
@@ -39,8 +38,22 @@ public class VoteServiceImpl implements VoteService {
         Optional<Question> question = questionRepository.findById(request.getQuestionId());
         if (question.isEmpty()) {
             throw new QuestionNotFoundException(String.format("Question with ID [%s] not found", request.getQuestionId()));
-        } else if (checkForRepeatedVote(question.get(), user)) {
-            throw new DuplicateVoteException("This user already voted this question");
+        }
+        Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question.get(), user);
+        if (checkForRepeatedVote(question.get(), user, vote)) {
+            Vote voteToDelete = voteRepository.getByQuestionAndUserAndVote(question.get(), user, vote);
+            voteRepository.delete(voteToDelete);
+            return QuestionDto.from(question.get(), null, isFavorite);
+        } else if (voteRepository.existsByQuestionAndUserAndVoteNot(question.get(), user, vote)) {
+            int oldVote = -vote;
+            Vote voteToUpdate = voteRepository.getByQuestionAndUserAndVote(question.get(), user, oldVote);
+            voteToUpdate.setVote(vote);
+            voteRepository.save(voteToUpdate);
+            if (vote == 1) {
+                return QuestionDto.from(question.get(), true, isFavorite);
+            } else {
+                return QuestionDto.from(question.get(), false, isFavorite);
+            }
         }
         Vote createdVote = Vote.builder()
                 .vote(vote)
@@ -49,12 +62,11 @@ public class VoteServiceImpl implements VoteService {
                 .build();
         voteRepository.save(createdVote);
         List<Vote> updatedVotes = voteRepository.getAllByQuestion(question.get());
-        Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question.get(), user);
         return QuestionDto.fromWithVotes(question.get(), updatedVotes, isFavorite);
     }
 
-    private boolean checkForRepeatedVote(Question question, User user) {
-        List<Vote> votes = voteRepository.getAllByQuestionAndUser(question, user);
+    private boolean checkForRepeatedVote(Question question, User user, Integer vote) {
+        List<Vote> votes = voteRepository.getAllByQuestionAndUserAndVote(question, user, vote);
         return !votes.isEmpty();
     }
 

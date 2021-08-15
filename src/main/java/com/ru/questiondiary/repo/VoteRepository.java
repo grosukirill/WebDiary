@@ -12,7 +12,11 @@ import java.util.List;
 
 @Repository
 public interface VoteRepository extends JpaRepository<Vote, Long> {
-    List<Vote> getAllByQuestionAndUser(Question question, User user);
+    List<Vote> getAllByQuestionAndUserAndVote(Question question, User user, Integer vote);
+
+    Boolean existsByQuestionAndUserAndVoteNot(Question question, User user, Integer vote);
+
+    Vote getByQuestionAndUserAndVote(Question question, User user, Integer vote);
 
     List<Vote> getAllByQuestion(Question question);
 
