@@ -6,6 +6,7 @@ import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
+import com.ru.questiondiary.web.dto.request.QuestionByDateRequest;
 import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -70,6 +71,12 @@ public class QuestionController {
     public ResponseEntity<?> findAllCategories() {
         List<CategoryDto> categories = questionService.findAllCategories();
         return buildResponse(categories);
+    }
+
+    @GetMapping("/date")
+    public ResponseEntity<?> findAllQuestionByDate(@RequestParam("page") Integer page, @RequestBody QuestionByDateRequest request, @RequestHeader("Authorization") String rawToken) {
+        PaginationDto questions = questionService.findAllQuestionsByDate(page, request, rawToken);
+        return buildResponse(questions);
     }
 
 

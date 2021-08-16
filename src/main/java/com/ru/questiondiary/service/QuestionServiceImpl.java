@@ -6,6 +6,7 @@ import com.ru.questiondiary.web.dto.CategoryDto;
 import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
+import com.ru.questiondiary.web.dto.request.QuestionByDateRequest;
 import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
 import com.ru.questiondiary.web.entity.Answer;
 import com.ru.questiondiary.web.entity.Category;
@@ -192,6 +193,20 @@ public class QuestionServiceImpl implements QuestionService {
             categoryDtos.add(CategoryDto.from(category));
         }
         return categoryDtos;
+    }
+
+    @Override
+    @Transactional
+    public PaginationDto findAllQuestionsByDate(Integer page, QuestionByDateRequest request, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        Pageable pageable = PageRequest.of(page, 20);
+        Page<Question> questions = questionRepository.findAllByDate(user.getId(), request.getDate(), pageable);
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        for (Question question: questions.getContent()) {
+            List<Answer> answers = answerRepository.getAllByQuestionAndUser(question, user);
+            questionDtos.add(QuestionDto.fromWithAnswers(question, answers, null));
+        }
+        return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
     }
 
     private User getUserFromToken(String rawToken) {

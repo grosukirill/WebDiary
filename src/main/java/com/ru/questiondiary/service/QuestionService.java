@@ -4,6 +4,7 @@ import com.ru.questiondiary.web.dto.CategoryDto;
 import com.ru.questiondiary.web.dto.PaginationDto;
 import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
+import com.ru.questiondiary.web.dto.request.QuestionByDateRequest;
 import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface QuestionService {
     PaginationDto findFeed(String type, Integer pageNumber, String rawToken);
 
     List<CategoryDto> findAllCategories();
+
+    PaginationDto findAllQuestionsByDate(Integer page, QuestionByDateRequest request, String rawToken);
 }

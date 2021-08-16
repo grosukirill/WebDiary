@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +13,7 @@ import java.time.LocalDate;
 public class AnswerDto extends ResponseData {
     private Long id;
     private String answer;
-    private LocalDate date;
+    private String date;
 
     public static AnswerDto from(Answer answer) {
         AnswerDto result = new AnswerDto();

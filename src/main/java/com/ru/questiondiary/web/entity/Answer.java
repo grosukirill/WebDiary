@@ -3,7 +3,6 @@ package com.ru.questiondiary.web.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -18,7 +17,7 @@ public class Answer {
     Long id;
     @Lob
     String answer;
-    LocalDate date;
+    String date;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false)

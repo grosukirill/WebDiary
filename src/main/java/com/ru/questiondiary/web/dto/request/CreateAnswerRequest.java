@@ -11,14 +11,11 @@ import lombok.NoArgsConstructor;
 public class CreateAnswerRequest {
     private String answer;
     private Long questionId;
-    private Long userId;
 
     @JsonCreator
     public CreateAnswerRequest(@JsonProperty("answer") String answer,
-                               @JsonProperty("questionId") Long questionId,
-                               @JsonProperty("userId") Long userId) {
+                               @JsonProperty("questionId") Long questionId) {
         this.answer = answer;
         this.questionId = questionId;
-        this.userId = userId;
     }
 }

@@ -17,8 +17,8 @@ public class AnswerController {
     private final AnswerService answerService;
 
     @PostMapping
-    public ResponseEntity<?> createAnswer(@RequestBody CreateAnswerRequest request) {
-        AnswerDto answer = answerService.createAnswer(request);
+    public ResponseEntity<?> createAnswer(@RequestBody CreateAnswerRequest request, @RequestHeader("Authorization") String rawToken) {
+        AnswerDto answer = answerService.createAnswer(request, rawToken);
         return buildResponse(answer);
     }
 

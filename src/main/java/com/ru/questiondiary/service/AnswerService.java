@@ -4,5 +4,5 @@ import com.ru.questiondiary.web.dto.AnswerDto;
 import com.ru.questiondiary.web.dto.request.CreateAnswerRequest;
 
 public interface AnswerService {
-    AnswerDto createAnswer(CreateAnswerRequest request);
+    AnswerDto createAnswer(CreateAnswerRequest request, String rawToken);
 }
