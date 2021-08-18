@@ -17,8 +17,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,7 @@ class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final CommunityRepository communityRepository;
     private final TokenService tokenService;
+    private final ImageService imageService;
 
     @Override
     @Transactional
@@ -125,6 +128,15 @@ class UserServiceImpl implements UserService {
         userToApprove.get().setIsApproved(true);
         userRepository.save(userToApprove.get());
         return UserDto.from(userToApprove.get());
+    }
+
+    @Override
+    public UserDto uploadAvatar(MultipartFile image, String rawToken) throws IOException {
+        User user = getUserFromToken(rawToken);
+        String newAvatarURL = imageService.uploadImage(image);
+        user.setAvatar(newAvatarURL);
+        userRepository.save(user);
+        return UserDto.from(user);
     }
 
     @Override

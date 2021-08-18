@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -59,6 +61,12 @@ public class UserController {
     @PutMapping("/approve")
     public ResponseEntity<?> approveUser(@RequestParam("userId") Long userId, @RequestHeader("Authorization") String rawToken) {
         UserDto user = userService.approveUser(userId, rawToken);
+        return buildResponse(user);
+    }
+
+    @PutMapping(value = "/avatar", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> uploadAvatar(@RequestPart("image") MultipartFile image, @RequestHeader("Authorization") String rawToken) throws IOException {
+        UserDto user = userService.uploadAvatar(image, rawToken);
         return buildResponse(user);
     }
 
