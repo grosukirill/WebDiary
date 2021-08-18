@@ -20,7 +20,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private String writeToStore(byte[] bytes) {
-        String url = "https://api.imgbb.com/1/upload?key=deb6e224d995b483c95f61f82bc61ad8";
+        String url = "https://api.imgbb.com/1/upload?key=806d06f1eaf4888b86029a1d1339564f";
         MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
         bodyMap.add("image", Base64.getEncoder().encode(bytes));
         HttpHeaders headers = new HttpHeaders();
