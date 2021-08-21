@@ -15,6 +15,7 @@ public class UserLoginDto extends ResponseData {
     private String lastName;
     private String role;
     private String bearer;
+    private String avatar;
 
     public static UserLoginDto from(User user, String bearer) {
         UserLoginDto result = new UserLoginDto();
@@ -23,6 +24,7 @@ public class UserLoginDto extends ResponseData {
         result.firstName = user.getFirstName();
         result.lastName = user.getLastName();
         result.role = user.getRole();
+        result.avatar = user.getAvatar();
         result.bearer = bearer;
         return result;
     }
