@@ -76,6 +76,7 @@ public class VoteServiceImpl implements VoteService {
         return !votes.isEmpty();
     }
 
+
     private User getUserFromToken(String token) {
         Map<String, String> userData = tokenService.getUserDataFromToken(token);
         if (userData == null || userData.isEmpty()) {
