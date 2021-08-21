@@ -16,5 +16,5 @@ public class CreateVoteRequest {
         this.vote = vote;
         this.questionId = questionId;
     }
-    
+
 }
