@@ -43,7 +43,8 @@ public class VoteServiceImpl implements VoteService {
         if (checkForRepeatedVote(question.get(), user, vote)) {
             Vote voteToDelete = voteRepository.getByQuestionAndUserAndVote(question.get(), user, vote);
             voteRepository.delete(voteToDelete);
-            return QuestionDto.from(question.get(), null, isFavorite);
+            List<Vote> updatedVotes = voteRepository.getAllByQuestion(question.get());
+            return QuestionDto.fromWithVotes(question.get(), updatedVotes, isFavorite, null);
         } else if (voteRepository.existsByQuestionAndUserAndVoteNot(question.get(), user, vote)) {
             int oldVote = -vote;
             Vote voteToUpdate = voteRepository.getByQuestionAndUserAndVote(question.get(), user, oldVote);
@@ -62,7 +63,12 @@ public class VoteServiceImpl implements VoteService {
                 .build();
         voteRepository.save(createdVote);
         List<Vote> updatedVotes = voteRepository.getAllByQuestion(question.get());
-        return QuestionDto.fromWithVotes(question.get(), updatedVotes, isFavorite);
+        if (vote == 1) {
+            return QuestionDto.fromWithVotes(question.get(), updatedVotes, isFavorite, true);
+
+        } else {
+            return QuestionDto.fromWithVotes(question.get(), updatedVotes, isFavorite, false);
+        }
     }
 
     private boolean checkForRepeatedVote(Question question, User user, Integer vote) {

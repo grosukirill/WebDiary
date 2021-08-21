@@ -42,7 +42,7 @@ public class ImageServiceImpl implements ImageService {
         private String status;
 
         @Data
-        public class Detail {
+        public static class Detail {
             private String display_url;
 
             private String size;
