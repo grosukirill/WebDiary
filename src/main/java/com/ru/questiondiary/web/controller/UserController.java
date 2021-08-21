@@ -40,8 +40,8 @@ public class UserController {
         return buildResponse(user);
     }
 
-    @GetMapping("/token/{token}")
-    public ResponseEntity<?> findUserByToken(@PathVariable("token") String token) {
+    @GetMapping("/token")
+    public ResponseEntity<?> findUserByToken(@RequestHeader("Authorization") String token) {
         UserDto user = userService.findUserByToken(token);
         return buildResponse(user);
     }
