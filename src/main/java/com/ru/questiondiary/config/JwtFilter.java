@@ -48,7 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String body = "{\"status\":false, \"data\": {\"message\":\"Invalid token\", \"code\":6, \"description\":\"INVALID_TOKEN\"}}";
             response.getWriter().write(body);
             response.getWriter().flush();
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(HttpServletResponse.SC_OK);
         } else {
             request.setAttribute("userId", userId);
             request.setAttribute("username", userEmail);

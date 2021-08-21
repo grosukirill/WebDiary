@@ -61,7 +61,7 @@ class UserServiceImpl implements UserService {
                 .password(hashedPassword)
                 .role("USER")
                 .isApproved(false)
-                .avatar("")
+                .avatar("https://i.ibb.co/0sjR2Nj/Default-avatar.jpg")
                 .answers(new ArrayList<>())
                 .following(new ArrayList<>())
                 .followers(new ArrayList<>())
