@@ -67,7 +67,7 @@ public class QuestionDto extends ResponseData {
         return result;
     }
 
-    public static QuestionDto fromWithVotes(Question question, List<Vote> votes, Boolean isFavorite) {
+    public static QuestionDto fromWithVotes(Question question, List<Vote> votes, Boolean isFavorite, Boolean voted) {
         String type;
         boolean isUsers = false;
         if (question.getCreator() != null) {
@@ -105,6 +105,7 @@ public class QuestionDto extends ResponseData {
         result.setComments(commentDtos);
         result.setVotes(countVotes);
         result.setIsFavorite(isFavorite);
+        result.setVoted(voted);
         return result;
     }
 

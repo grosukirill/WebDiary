@@ -6,11 +6,16 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ru.questiondiary.web.dto.ErrorCode;
+import com.ru.questiondiary.web.dto.ErrorDto;
+import com.ru.questiondiary.web.dto.ErrorResponse;
 import com.ru.questiondiary.web.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +45,12 @@ public class TokenServiceImpl implements TokenService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public ErrorResponse createTokenException() {
+        ErrorDto errorDto = new ErrorDto("Invalid Token.", ErrorCode.INVALID_TOKEN.number, ErrorCode.INVALID_TOKEN, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        return new ErrorResponse(errorDto);
     }
 
 
