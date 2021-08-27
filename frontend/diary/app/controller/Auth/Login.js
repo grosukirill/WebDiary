@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { setData } from '../../../store/actions/mainAction'
 import { withRouter } from 'next/router'
+import { authenticationStart, setAuthData } from '../../../store/actions/authAction'
 
 import LoginView from '../../view/Auth/Login';
 
@@ -18,6 +19,10 @@ class Login extends React.Component {
             checkbox: false,
             inputs: []
         }
+    }
+
+    componentDidMount = () => {
+        this.props.setAuthData("errors", {})
     }
 
     changeState = (key, value) => {
@@ -59,17 +64,17 @@ class Login extends React.Component {
             this.validate("password")
             return false;
         }
-        if (!this.state.checkbox) {
-            this.validate("checkbox")
-            return false;
-        }
         return true;
     }
 
     signIn = () => {
         const validation = this.validation();
         if (validation) {
-           console.log(true)
+            const obj = {
+                email: this.state.user,
+                password: this.state.password
+            }
+            this.props.authenticationStart(obj)
         }
     }
 
@@ -111,7 +116,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         dispatch,
-        ...bindActionCreators({ setData }, dispatch),
+        ...bindActionCreators({ setData, authenticationStart, setAuthData }, dispatch),
     }
 }
 

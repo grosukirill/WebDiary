@@ -1,0 +1,135 @@
+.tab_component {
+    width: 350px;
+    margin-left: 20px;
+    background-color: white;
+    height: fit-content;
+    border-radius: 8px;
+}
+
+.tab_component ul {
+    padding: 5px 0;
+}
+
+.tab_component ul li {
+    cursor: pointer;
+    padding: 9px 10px 9px 18px;
+    color: #353535;
+    font-size: 15px;
+}
+
+.tab_component ul .active_tab_li {
+    font-weight: 500;
+    background-color: var( --background-hover-grey);
+    border-left: 2px solid var(--global-color);
+}
+
+.tab_component ul li:hover {
+    background-color: var( --background-hover-grey);
+}
+
+.post_block {
+    padding: 12px 0;
+    width: 100%;
+}
+
+.vote_post_block {
+    text-align: center;
+    padding-top: 10px;
+    border-right: 1px solid rgb(230, 230, 230);
+    width: 50px;
+}
+
+.vote_post_block svg {
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    fill: #353535;
+}
+
+.vote_count_block {
+    padding: 5px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #353535;
+}
+
+.post_component {
+    margin-top: 15px;
+    background-color: white;
+    border-radius: 8px;
+    display: flex;
+}
+
+.top_post_author_block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.main_top_author_block {
+    display: flex;
+    align-items: center;
+}
+
+.post_author_info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.post_author_info .post_author_title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #353535;
+}
+
+.post_author_info .post_author_date {
+    font-size: 15px;
+    color: #5f5f5f;
+    margin-top: 3px;
+}
+
+.post_horiz_line svg {
+    fill: #5f5f5f;
+    cursor: pointer;
+}
+
+.main_post_block {
+    margin-top: 20px;
+    border-bottom: 1px solid rgb(230, 230, 230);
+    padding: 0 15px 20px 15px;
+}
+
+.main_post_block .question_title {
+    color: #353535;
+    font-size: 20px;
+}
+
+.end_post_block {
+    padding: 0 15px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.end_post_block svg {
+    cursor: pointer;
+    margin-right: 5px;
+    fill: #5f5f5f;
+}
+
+.end_post_block svg:last-child {
+    margin-right: 0;
+}
+
+.right_post_icons_block {
+    display: flex;
+    align-items: center;
+}
+
+.bookmark_post_icon {
+    margin-top: 0.5px;
+    margin-left: 5px;
+}

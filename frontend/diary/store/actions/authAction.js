@@ -1,4 +1,6 @@
 import Auth from '../../services/Auth'
+import User from '../../services/User';
+import Router from 'next/router';
 
 export const registerStart = (data) => dispatch => {
     dispatch({ type: "LOADING_START" })
@@ -7,13 +9,15 @@ export const registerStart = (data) => dispatch => {
     }
     Auth.startRegistration(req).then(res => {
         if (res.status) {
+            loggedSuccessful(dispatch, res.data.bearer);
             dispatch({ type: "AUTH_SUCCESS" })
+            Router.push("/")
         }
         else {
             dispatch({
                 type: "AUTH_ERROR",
                 payload: {
-                    errors: res.message
+                    errors: res.error
                 }
             })
         }
@@ -27,123 +31,76 @@ export const authenticationStart = (data) => dispatch => {
     }
     Auth.startAuthentication(req).then(res => {
         if (res.status) {
-            loggedSuccessful(dispatch, res.access_token);
+            loggedSuccessful(dispatch, res.data.bearer);
+            Router.push("/")
         }
         else {
-            if (res.errors) {
-                dispatch({
-                    type: "AUTH_ERROR",
-                    payload: {
-                        errors: res.message
-                    }
-                })
+            dispatch({
+                type: "AUTH_ERROR",
+                payload: {
+                    errors: res.error
+                }
+            })
+        }
+    })
+}
+
+export const setUserLogged = (store, token) => {
+    const checkToken = !store.getState().authReducer.token
+    getUserInfo(token, store.dispatch);
+    if (checkToken) {
+        store.dispatch({
+            type: "LOGGED",
+            payload: {
+                token: token
             }
-            else {
-                dispatch({
-                    type: "main/set",
-                    payload: {
-                        key: "errorNotification",
-                        value: {
-                            status: true,
-                            message: res.message
-                        }
-                    }
-                })
-                dispatch({
-                    type: "FINISH_LOADING"
-                })
+        })
+    }
+}
+
+export const getUserInfo = (token, dispatch) => {
+    const userSession = sessionStorage.getItem("user") && JSON.parse(sessionStorage.getItem("user"))
+
+    if (!userSession) {
+        User.getUserInfo(token).then(res => {
+            if (res.status) {
+                setUserInfo(res.data, dispatch)
             }
-        }
-    })
-}
-
-export const authenticationGoogleStart = (data) => dispatch => {
-    dispatch({ type: "LOADING_START" })
-    const req = {
-        body: JSON.stringify(data)
+        })
     }
-    Auth.startGoogleAuthentication(req).then(res => {
-        if (res.status) {
-            loggedSuccessful(dispatch, res.access_token);
-        }
-        else {
-            dispatch({
-                type: "main/set",
-                payload: {
-                    key: "errorNotification",
-                    value: {
-                        status: true,
-                        message: res.message
-                    }
-                }
-            })
-            dispatch({
-                type: "FINISH_LOADING"
-            })
-        }
-    })
-}
 
-export const confirmEmail = (token) => dispatch => {
-    dispatch({ type: "LOADING_START" })
-    Auth.confirmToken(token).then(res => {
-        if (res.status) {
-            loggedSuccessful(dispatch, res.access_token);
-        }
-        else {
-            dispatch({
-                type: "AUTH_ERROR",
-                payload: {
-                    errors: res.errors
-                }
-            })
-        }
-    })
-}
-
-export const sendResetEmail = (email) => dispatch => {
-    dispatch({ type: "LOADING_START" })
-    Auth.resetEmailPassword(email).then(res => {
-        if (res.status) {
-            dispatch({
-                type: "RESET_START"
-            })
-        }
-        else {
-            dispatch({
-                type: "AUTH_ERROR",
-                payload: {
-                    errors: res.errors
-                }
-            })
-        }
-    })
-}
-
-export const sendPassword = (data) => dispatch => {
-    dispatch({ type: "LOADING_START" })
-    const req = {
-        body: JSON.stringify(data)
+    else {
+        dispatch({
+            type: "SET_AUTH_DATA",
+            payload: {
+                key: "user",
+                data: userSession
+            }
+        })
     }
-    Auth.resetPassword(req).then(res => {
-        if (res.status) {
-            dispatch({
-                type: "RESET_START"
-            })
-        }
-        else {
-            dispatch({
-                type: "AUTH_ERROR",
-                payload: {
-                    errors: res.errors
-                }
-            })
+}
+
+export const setUserInfo = (data, dispatch) => {
+    const obj = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        avatar: data.avatar,
+        email: data.email
+    }
+    sessionStorage.setItem("user", JSON.stringify(obj))
+    dispatch({
+        type: "SET_AUTH_DATA",
+        payload: {
+            key: "user",
+            data: obj
         }
     })
 }
 
-export const getProfileData = (token) => dispatch => {
-    setProfileData(dispatch, token)
+export const logout = () => {
+    localStorage.removeItem("token")
+    sessionStorage.removeItem("user")
+    window.location.reload()
 }
 
 export const loggedSuccessful = (dispatch, token) => {
@@ -154,19 +111,7 @@ export const loggedSuccessful = (dispatch, token) => {
         }
     })
     localStorage.setItem("token", token)
-    sessionStorage.setItem("user", JSON.stringify({ token: token }));
-    setProfileData(dispatch, token)
-}
-
-export const setUserData = (dispatch, data) => {
-    dispatch({
-        type: "SET_AUTH_DATA",
-        payload: {
-            key: "user",
-            data: data
-        }
-    })
-    sessionStorage.setItem("userInfo", JSON.stringify(data))
+    getUserInfo(token, dispatch)
 }
 
 export const setAuthData = (key, data) => dispatch => {
@@ -175,15 +120,6 @@ export const setAuthData = (key, data) => dispatch => {
         payload: {
             key: key,
             data: data
-        }
-    })
-}
-
-export const logged = token => (dispatch) => {
-    dispatch({
-        type: "LOGGED",
-        payload: {
-            token: token
         }
     })
 }

@@ -1,6 +1,7 @@
+import { logout } from '../store/actions/authAction'
 class Settings {
     constructor() {
-        this.url = "http://localhost:8080"
+        this.url = "https://ruwebdiary.herokuapp.com"
         this.postReq = {
             method: "POST",
             headers: {
@@ -17,6 +18,15 @@ class Settings {
             method: "PUT"
         }
         this.lang = "ro"
+    }
+
+    checkToken = (res) => {
+        console.log(res)
+        if (!res.status) {
+            if (res.error.description === "USER_NOT_FOUND") {
+                logout();
+            }
+        }
     }
 }
 

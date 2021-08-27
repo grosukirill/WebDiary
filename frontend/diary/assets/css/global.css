@@ -6,10 +6,22 @@
 :root {
     --global-color: #15948e;
     --global-hover-color: #108680;
+    --width-page: 80%;
+    --background-hover-grey: rgb(240, 240, 240);
+    --sidebar-width: 230px;
+    --error-color: #c47f7a;
 }
 
-body {
+body, input, button {
     font-family: 'Ubuntu', sans-serif;
+}
+
+input:focus {
+    outline: none;
+}
+
+ul li {
+    list-style: none;
 }
 
 /* checkbox */
@@ -70,6 +82,18 @@ body {
     background-color: #ffc5c1 !important;
 }
 
+.error_block_line {
+    border-bottom: 1px solid var(--error-color);
+}
+
+.error_block_line .drop_down_element svg {
+    fill: var(--error-color);
+}
+
+.error_block_line .drop_down_element {
+    color: var(--error-color);
+}
+
 .loader, .loader:after {
     border-radius: 50%;
     width: 10em;
@@ -109,6 +133,307 @@ body {
 .loading_autht_button .button_text {
     position: relative;
     left: 5px;
+}
+
+.main {
+    min-height: 100vh;
+}
+
+.main_background {
+    background-color: rgb(245 245 245);
+}
+
+header {
+    background-color: white;
+    width: 100%;
+    border-bottom: 1px solid rgb(236 236 236);
+    padding: 15px 0;
+}
+
+.header_container {
+    width: var(--width-page);
+    margin: auto;
+    padding-left: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header_profile_block img {
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.auth_main {
+    width: var(--width-page);
+    margin: auto;
+    margin-top: 15px;
+    display: flex;
+}
+
+.right_header_block {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar {
+    height: fit-content;
+    width: var(--sidebar-width);
+    border-radius: 3px;
+    margin-right: 30px;
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar ul {
+    margin-bottom: 20px;
+}
+
+.sidebar ul:last-child {
+    margin-bottom: 0px;
+}
+
+.sidebar_menu_block {
+    margin-bottom: 20px;
+    margin-left: 10px;
+    padding-top: 20px;
+    border-top: 1px solid rgb(219, 219, 219);
+}
+
+.sidebar_menu_title {
+    color: #5f5f5f;
+    font-weight: 500;
+}
+
+.sidebar ul li {
+    padding: 10px 0 10px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #5f5f5f;
+    margin-bottom: 3px;
+    border-radius: 3px;
+    transition: .1s;
+}
+
+.sidebar ul .acive_sidebar_li {
+    background-color: var( --background-hover-grey);
+    border-left: 2px solid var(--global-color);
+    font-weight: 500;
+    border-radius: 0px;
+}
+
+.sidebar ul li:hover {
+    background-color: var( --background-hover-grey);
+}
+
+.sidebar ul li:last-child {
+    margin-bottom: 0px;
+}
+
+.sidebar ul li svg {
+    margin-right: 15px;
+    fill: #5f5f5f;
+}
+
+.header_logo span {
+    font-size: 18px;
+}
+
+.header_notification_icon {
+    margin-right: 20px;
+}
+
+.header_notification_icon svg {
+    fill: #5f5f5f;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    margin-top: 1px;
+}
+
+.header_profile_block {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.header_search_input input {
+    background-color: rgb(245 245 245);
+    border: none;
+    font-size: 16px;
+    padding-left: 10px;
+    width: 100%;
+}
+
+.header_search_input {
+    display: flex;
+    align-items: center;
+    background-color: rgb(245 245 245);
+    border-radius: 3px;
+    padding: 6px 18px;
+    width: 300px;
+    margin-left: calc(var(--sidebar-width) - 160px + 20px);
+}
+
+.header_search_icon {
+    margin-top: 2px;
+}
+
+.header_search_icon svg {
+    fill: #5f5f5f;
+}
+
+.header_left_block {
+    display: flex;
+    align-items: center;
+}
+
+.main_container {
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - var(--sidebar-width) + 30px);
+}
+
+.main_post_container {
+    width: 100%;
+}
+
+.content_loader {
+    border-top: 1.4em solid rgba(161, 161, 161, 0.342);
+    border-right: 1.4em solid rgba(161, 161, 161, 0.342);
+    border-bottom: 1.4em solid rgba(161, 161, 161, 0.342);
+    border-left: 1.4em solid rgb(134, 134, 134);
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.content_loader, .content_loader:after {
+    border-radius: 50%;
+    width: 12em;
+    height: 12em;
+}
+
+.feed_loader {
+    top: 30px;
+    right: 0;
+    left: 0;
+    display: flex;
+    margin: auto;
+}
+
+.drop_down_block {
+    background-color: #fff;
+    position: absolute;
+    border: 1px solid rgb(216, 216, 216);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    z-index: 9;
+    max-height: 250px;
+    overflow: auto;
+    right: 0;
+    border-radius: 4px;
+    transition: .1s;
+    margin-top: 5px;
+    width: max-content;
+}
+
+.drop_down_main_element {
+    position: relative;
+    width: fit-content;
+}
+
+.drop_down_element {
+    cursor: pointer;
+    color: #353535;
+}
+
+.send_question_button {
+    background-color: var(--global-color);
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: .1s;
+    font-size: 14px;
+    position: relative;
+}
+
+.loading_small_button .loader {
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    border-left: 2px solid #ffffff;
+    left: 8px;
+    top: 8.5px;
+}
+
+.send_question_button .overlay_loading {
+    border-radius: 4px;
+}
+
+.loading_small_button .loader, .loader:after {
+    width: 6em;
+    height: 6em;
+}
+
+.loading_small_button span {
+    position: relative;
+    left: 12px;
+}
+
+.send_question_button:hover {
+    background-color: var(--global-hover-color)
+}
+
+.own_drop_down_element {
+    display: flex;
+    align-items: center;
+}
+
+.own_drop_down_element svg {
+    margin-left: 5px;
+    fill: #353535;
+    width: 22px;
+    height: 22px;
+}
+
+.left_position {
+    left: 0;
+}
+
+.drop_down_block ul li {
+    padding: 8px 35px 8px 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #353535;
+}
+
+.icon_padding {
+    margin-left: 15px;
+}
+
+.voted_icon {
+    fill: var(--global-hover-color) !important;
+}
+
+.downvote {
+    fill: rgb(185, 1, 1) !important;
+}
+
+.drop_down_block ul li svg {
+    fill: #353535;
+}
+
+.drop_down_block ul li:hover {
+    background-color: var( --background-hover-grey);
+}
+
+.no_data_component {
+    margin-top: 30px;
 }
 
 @keyframes loading {

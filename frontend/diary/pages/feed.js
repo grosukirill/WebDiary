@@ -1,21 +1,20 @@
 import withAuth from '../utils/withAuth'
 import HeadLayout from "../app/layout/Head";
-import Main from '../app/controller/Home/Main';
-import { useEffect } from 'react';
+import FeedController from '../app/controller/Home/Feed';
 
-const Home = () => {
+const Feed = () => {
   return (
     <>
       <HeadLayout
-        title="Главная страница"
+        title="Лента"
         // content={
         //   <link href="/css/feed.css" rel="stylesheet" />
         // }
       />
-      <Main />
+      <FeedController />
     </>
   )
 }
 
 
-export default withAuth(Home);
+export default withAuth(Feed);

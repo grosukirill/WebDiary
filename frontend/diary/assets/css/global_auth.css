@@ -123,6 +123,7 @@ input {
     color: var(--global-color);
     font-weight: bold;
     font-size: 30px;
+    text-align: center;
 }
 
 .auth_input_blocks {

@@ -1,22 +1,13 @@
-import { useRouter } from "next/router";
-
-const withAuth = (WrappedComponent) => {
-  return (props) => {
-    if (typeof window !== "undefined") {
-      const Router = useRouter();
-
-      const accessToken = localStorage.getItem("accessToken");
-
-      if (!accessToken) {
-        Router.replace("/login");
-        return null;
-      }
-
-      return <WrappedComponent {...props} />;
-    }
-
-    return null;
+const Auth = (Component) => {  
+  const withAuth = props => {
+    return <Component {...props} />;
   };
+
+  withAuth.getInitialProps = async ctx => {
+    return { isProtected: true };
+  };
+
+  return withAuth;
 };
 
-export default withAuth;
+export default Auth;
