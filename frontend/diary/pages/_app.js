@@ -1,37 +1,56 @@
-import React from 'react';
-import App from 'next/app';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from "next/router";
 
 import { Provider } from 'react-redux';
 import store from '../store/index';
 
 import Layout from '../app/layout/Layout';
+import { setUserLogged } from '../store/actions/authAction'
 
 import '../assets/css/global_auth.css'
 import '../assets/css/global.css'
+import '../public/css/feed.css'
+import '../assets/css/global_components.css'
 
-class MyApp extends App {
+const App = ({ Component, pageProps }) => {
+  const [isLogged, setLogged] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const Router = useRouter();
 
-  static async getStaticProps({ Component, ctx }) {
-    const pageProps = Component.getStaticProps ? await Component.getStaticProps(ctx) : {};
+  useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
 
-    return { pageProps: pageProps };
+    if (token) {
+      setUserLogged(store, token)
+      setLogged(true)
+    }
+    if (pageProps.isProtected) {
+      if (token === null || token === undefined) {
+        goLogin();
+        setLoading(false)
+      }
+    }
+
+    setLoading(false)
+  })
+
+  const goLogin = () => {
+    Router.replace("/login");
   }
 
-  render() {
-    const { Component, pageProps } = this.props;
-
-    return (
-      <Provider store={store}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </Provider>
-    );
-  }
-
+  return (
+    <Provider store={store}>
+      {loading ? (
+        <span>Loading...</span>
+      ) : (
+        <div className={(isLogged ? "main_background " : "") + "main"}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </div>
+      )}
+    </Provider>
+  )
 }
 
-const makeStore = () => store;
-
-//withRedux wrapper that passes the store to the App Component
-export default MyApp;
+export default App;

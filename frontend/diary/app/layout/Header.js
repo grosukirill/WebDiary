@@ -1,16 +1,89 @@
-import Head from 'next/head'
+import Image from 'next/image'
+import NotificationSvg from '../components/svg/Header/Notification'
+import SearchSvg from '../components/svg/Header/Search'
+import DropDown from '../components/Main/DropDown/Dropdown'
+import SettingsSvg from '../components/svg/Header/Settings'
+import StatisticsSvg from '../components/svg/Header/Statistics'
+import LogoutSvg from '../components/svg/Header/Logout'
+import { logout } from '../../store/actions/authAction'
+import { connect } from 'react-redux'
 
-const Header = () => {
-    return (
-        <Head>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
-            <link
-                href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap"
-                rel="stylesheet"
-            />
-        </Head>
-    )
+const Header = ({ denyPaths, ...props }) => {
+
+    const select = item => {
+        if (item.type === "logout") {
+            logout();
+        }
+    }
+
+    const user = props.auth.user;
+    if (!denyPaths) {
+        return (
+            <header>
+                <div className="header_container">
+
+                    <div className="header_left_block">
+                        <div className="header_logo">
+                            <span>Дневник Вопросов</span>
+                        </div>
+                        <div className="header_search_input">
+                            <div className="header_search_icon">
+                                <SearchSvg />
+                            </div>
+                            <input type="text" placeholder="Поиск" />
+                        </div>
+                    </div>
+
+                    <div className="right_header_block">
+                        <div className="header_notification_icon">
+                            <NotificationSvg />
+                        </div>
+                        <div className="header_profile_block">
+                            {Object.keys(user).length !== 0 ? (
+                                <DropDown
+                                    children={
+                                        <img
+                                            src={user.avatar}
+                                            alt="Picture"
+                                            width={32}
+                                            height={32}
+                                        />
+                                    }
+                                    dataId="header_avatar"
+                                    data={
+                                        [
+                                            {
+                                                icon: <StatisticsSvg />,
+                                                name: "Статистика"
+                                            },
+                                            {
+                                                icon: <SettingsSvg />,
+                                                name: "Настройки"
+                                            },
+                                            {
+                                                icon: <LogoutSvg />,
+                                                name: "Выйти",
+                                                type: "logout"
+                                            }
+                                        ]
+                                    }
+                                    select={select}
+                                    containsIcons
+                                />
+                            ) : ""}
+                        </div>
+                    </div>
+                </div>
+            </header>
+        )
+    }
+    return ""
 }
 
-export default Header;
+const mapStateToProps = state => {
+    return {
+        auth: state.authReducer
+    }
+}
+
+export default connect(mapStateToProps)(Header);

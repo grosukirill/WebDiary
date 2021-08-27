@@ -14,7 +14,7 @@ const Register = (props) => {
             + "auth"}>
             <Banner />
             <div className="auth_container register_auth">
-                <span className="auth_title_container">Вход в Дневник Вопросов</span>
+                <span className="auth_title_container">Регистрация в Дневник Вопросов</span>
 
                 <div className="auth_input_blocks">
                     <Input

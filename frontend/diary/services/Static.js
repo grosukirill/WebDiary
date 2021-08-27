@@ -16,12 +16,19 @@ class Static extends Settings {
             }
         }
 
-        const request = await fetch(url, requestReg);
-        const json = await request.json();
+        try {
+            const request = await fetch(url, requestReg);
+            const json = await request.json();
 
-        this.checkToken(json)
+            this.checkToken(json)
 
-        return json;
+            return json;
+        }
+        catch (e) {
+            return {
+                status: false
+            }
+        }
     }
 }
 

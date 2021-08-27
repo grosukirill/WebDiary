@@ -6,7 +6,6 @@ import Checkbox from '../../components/View/Auth/Checkbox'
 import Button from '../../components/View/Auth/Button'
 
 const Login = (props) => {
-    const errors = props.getAuthErrors()
     return (
         <div
             className={(props.props.data.loginAnimation ? "login_appear " : "")
@@ -36,15 +35,15 @@ const Login = (props) => {
                         dataId="password"
                     />
 
-                    {errors.status ? (
+                    {Object.keys(props.props.auth.errors).length !== 0 && props.props.auth.errors.message ? (
                         <div className="erorr_text_block">
-                            <span>{errors.message}</span>
+                            <span>{props.props.auth.errors.message}</span>
                         </div>
                     ) : ""}
 
                     <Button
                         onClick={props.signIn}
-                        // loading={props.props.auth.loading}
+                        loading={props.props.auth.loading}
                         title="Войти"
                     />
                 </div>
