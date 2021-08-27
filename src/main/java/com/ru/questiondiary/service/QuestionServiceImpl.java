@@ -209,6 +209,28 @@ public class QuestionServiceImpl implements QuestionService {
         return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
     }
 
+    @Override
+    @Transactional
+    public PaginationDto findAllFavoriteQuestions(Integer pageNumber, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        Pageable page = PageRequest.of(pageNumber, 20);
+        Page<Question> questions = questionRepository.findAllFavorite(user.getId(), page);
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
+        List<Long> downVoted = voteRepository.getAllByVoteAndUser(-1, user.getId());
+        for (Question question: questions.getContent()) {
+            Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question, user);
+            if (upVoted.contains(question.getId())) {
+                questionDtos.add(QuestionDto.from(question, true, isFavorite));
+            } else if (downVoted.contains(question.getId())) {
+                questionDtos.add(QuestionDto.from(question, false, isFavorite));
+            } else {
+                questionDtos.add(QuestionDto.from(question, null, isFavorite));
+            }
+        }
+        return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
+    }
+
     private User getUserFromToken(String rawToken) {
         Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
         Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));

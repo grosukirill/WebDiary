@@ -79,6 +79,12 @@ public class QuestionController {
         return buildResponse(questions);
     }
 
+    @GetMapping("/favorite")
+    public ResponseEntity<?> findAllFavoriteQuestions(@RequestParam("page") Integer pageNumber,@RequestHeader("Authorization") String rawToken) {
+        PaginationDto questions = questionService.findAllFavoriteQuestions(pageNumber, rawToken);
+        return buildResponse(questions);
+    }
+
 
     private ResponseEntity<?> buildResponse(Object question) {
         OkResponse response = new OkResponse(question);

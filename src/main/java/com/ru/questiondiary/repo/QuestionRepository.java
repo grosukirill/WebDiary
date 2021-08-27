@@ -37,4 +37,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 
     @Query(nativeQuery = true, value = "select * from public.question where id in (select question_id from public.answer where date=:date and user_id=:userId)")
     Page<Question> findAllByDate(@Param("userId") Long userId, @Param("date") String date, Pageable pageable);
+
+    @Query(nativeQuery = true, value = "select * from public.question where id in (select question_id from public.favorite where users_id=:userId)")
+    Page<Question> findAllFavorite(@Param("userId") Long userId, Pageable pageable);
 }

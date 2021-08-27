@@ -27,4 +27,6 @@ public interface QuestionService {
     List<CategoryDto> findAllCategories();
 
     PaginationDto findAllQuestionsByDate(Integer page, QuestionByDateRequest request, String rawToken);
+
+    PaginationDto findAllFavoriteQuestions(Integer pageNumber, String rawToken);
 }
