@@ -35,8 +35,8 @@ public class QuestionController {
     }
 
     @GetMapping("/category")
-    public ResponseEntity<?> findAllQuestionByCategory(@RequestParam("categoryId") Long categoryId, @RequestHeader("Authorization") String rawToken) {
-        List<QuestionDto> questions = questionService.findAllQuestionsByCategory(categoryId, rawToken);
+    public ResponseEntity<?> findAllQuestionByCategory(@RequestParam("page") Integer pageNumber, @RequestParam("categoryId") Long categoryId, @RequestHeader("Authorization") String rawToken) {
+        List<QuestionDto> questions = questionService.findAllQuestionsByCategory(categoryId, rawToken, pageNumber);
         return buildResponse(questions);
     }
 
@@ -80,8 +80,14 @@ public class QuestionController {
     }
 
     @GetMapping("/favorite")
-    public ResponseEntity<?> findAllFavoriteQuestions(@RequestParam("page") Integer pageNumber,@RequestHeader("Authorization") String rawToken) {
+    public ResponseEntity<?> findAllFavoriteQuestions(@RequestParam("page") Integer pageNumber, @RequestHeader("Authorization") String rawToken) {
         PaginationDto questions = questionService.findAllFavoriteQuestions(pageNumber, rawToken);
+        return buildResponse(questions);
+    }
+
+    @GetMapping("/new")
+    public ResponseEntity<?> findNewQuestions(@RequestParam("page") Integer pageNumber, @RequestHeader("Authorization") String rawToken) {
+        PaginationDto questions = questionService.findNewQuestions(pageNumber, rawToken);
         return buildResponse(questions);
     }
 

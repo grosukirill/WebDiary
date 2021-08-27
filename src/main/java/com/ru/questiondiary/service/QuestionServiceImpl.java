@@ -42,19 +42,7 @@ public class QuestionServiceImpl implements QuestionService {
         User user = getUserFromToken(rawToken);
         Pageable page = PageRequest.of(pageNumber, 20);
         Page<Question> questions = questionRepository.findAll(page);
-        List<QuestionDto> questionDtos = new ArrayList<>();
-        List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
-        List<Long> downVoted = voteRepository.getAllByVoteAndUser(-1, user.getId());
-        for (Question question: questions.getContent()) {
-            Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question, user);
-            if (upVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, true, isFavorite));
-            } else if (downVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, false, isFavorite));
-            } else {
-                questionDtos.add(QuestionDto.from(question, null, isFavorite));
-            }
-        }
+        List<QuestionDto> questionDtos = buildDtoFromDomain(user, questions);
         Collections.shuffle(questionDtos);
         return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
     }
@@ -74,22 +62,11 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public List<QuestionDto> findAllQuestionsByCategory(Long category, String rawToken) {
+    public List<QuestionDto> findAllQuestionsByCategory(Long category, String rawToken, Integer pageNumber) {
         User user = getUserFromToken(rawToken);
-        Set<Question> questions = questionRepository.findAllByCategories(category);
-        List<QuestionDto> questionDtos = new ArrayList<>();
-        List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
-        List<Long> downVoted = voteRepository.getAllByVoteAndUser(-1, user.getId());
-        for (Question question: questions) {
-            Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question, user);
-            if (upVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, true, isFavorite));
-            } else if (downVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, false, isFavorite));
-            } else {
-                questionDtos.add(QuestionDto.from(question, null, isFavorite));
-            }
-        }
+        Pageable page = PageRequest.of(pageNumber, 20);
+        Page<Question> questions = questionRepository.findAllByCategories(category, page);
+        List<QuestionDto> questionDtos = buildDtoFromDomain(user, questions);
         Collections.shuffle(questionDtos);
         return questionDtos;
     }
@@ -168,19 +145,7 @@ public class QuestionServiceImpl implements QuestionService {
             default:
                 throw new WrongFeedTypeException(String.format("Feed type %s does not match any known types.", type));
         }
-        List<QuestionDto> questionDtos = new ArrayList<>();
-        List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
-        List<Long> downVoted = voteRepository.getAllByVoteAndUser(-1, user.getId());
-        for (Question question: questions.getContent()) {
-            Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question, user);
-            if (upVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, true, isFavorite));
-            } else if (downVoted.contains(question.getId())) {
-                questionDtos.add(QuestionDto.from(question, false, isFavorite));
-            } else {
-                questionDtos.add(QuestionDto.from(question, null, isFavorite));
-            }
-        }
+        List<QuestionDto> questionDtos = buildDtoFromDomain(user, questions);
         return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
     }
 
@@ -215,6 +180,30 @@ public class QuestionServiceImpl implements QuestionService {
         User user = getUserFromToken(rawToken);
         Pageable page = PageRequest.of(pageNumber, 20);
         Page<Question> questions = questionRepository.findAllFavorite(user.getId(), page);
+        List<QuestionDto> questionDtos = buildDtoFromDomain(user, questions);
+        return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
+    }
+
+    @Override
+    @Transactional
+    public PaginationDto findNewQuestions(Integer pageNumber, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        Pageable page = PageRequest.of(pageNumber, 20, Sort.by("creation_date").descending());
+        Page<Question> questions = questionRepository.findNew(page);
+        List<QuestionDto> questionDtos = buildDtoFromDomain(user, questions);
+        return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
+    }
+
+    private User getUserFromToken(String rawToken) {
+        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
+        Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with ID [%s] not found", userData.get("id")));
+        }
+        return user.get();
+    }
+
+    private List<QuestionDto> buildDtoFromDomain(User user, Page<Question> questions) {
         List<QuestionDto> questionDtos = new ArrayList<>();
         List<Long> upVoted = voteRepository.getAllByVoteAndUser(1, user.getId());
         List<Long> downVoted = voteRepository.getAllByVoteAndUser(-1, user.getId());
@@ -228,15 +217,6 @@ public class QuestionServiceImpl implements QuestionService {
                 questionDtos.add(QuestionDto.from(question, null, isFavorite));
             }
         }
-        return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
-    }
-
-    private User getUserFromToken(String rawToken) {
-        Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
-        Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));
-        if (user.isEmpty()) {
-            throw new UserNotFoundException(String.format("User with ID [%s] not found", userData.get("id")));
-        }
-        return user.get();
+        return questionDtos;
     }
 }

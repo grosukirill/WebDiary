@@ -14,7 +14,7 @@ public interface QuestionService {
 
     QuestionDto findQuestionById(Long questionId, String token);
 
-    List<QuestionDto> findAllQuestionsByCategory(Long category, String rawToken);
+    List<QuestionDto> findAllQuestionsByCategory(Long category, String rawToken, Integer pageNumber);
 
     QuestionDto createQuestion(CreateQuestionRequest request, String rawToken);
 
@@ -29,4 +29,6 @@ public interface QuestionService {
     PaginationDto findAllQuestionsByDate(Integer page, QuestionByDateRequest request, String rawToken);
 
     PaginationDto findAllFavoriteQuestions(Integer pageNumber, String rawToken);
+
+    PaginationDto findNewQuestions(Integer pageNumber, String rawToken);
 }
