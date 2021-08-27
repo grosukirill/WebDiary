@@ -1,6 +1,5 @@
 package com.ru.questiondiary.config;
 
-import com.google.gson.Gson;
 import com.ru.questiondiary.service.TokenService;
 import com.ru.questiondiary.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth", "/users").permitAll()
                 .anyRequest().authenticated()
         .and()
-        .addFilterBefore(new JwtFilter(tokenService, userService, new Gson()), UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(new JwtFilter(tokenService, userService), UsernamePasswordAuthenticationFilter.class);
     }
 }
