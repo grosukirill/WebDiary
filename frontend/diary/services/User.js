@@ -17,7 +17,7 @@ class Auth extends Settings {
         }
 
         const request = await fetch(url, requestReg);
-        const json = await request.text();
+        const json = await request.json();
 
         this.checkToken(json)
 
