@@ -31,4 +31,6 @@ public interface QuestionService {
     PaginationDto findAllFavoriteQuestions(Integer pageNumber, String rawToken);
 
     PaginationDto findNewQuestions(Integer pageNumber, String rawToken);
+
+    List<QuestionDto> searchQuestions(String pattern, String rawToken);
 }

@@ -10,6 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -42,4 +43,6 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 
     @Query(nativeQuery = true, value = "select * from public.question")
     Page<Question> findNew(Pageable page);
+
+    List<Question> findAllByQuestionContainingIgnoreCase(String pattern);
 }

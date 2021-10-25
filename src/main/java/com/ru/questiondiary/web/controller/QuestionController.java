@@ -91,6 +91,13 @@ public class QuestionController {
         return buildResponse(questions);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchQuestions(@RequestParam("search") String pattern, @RequestHeader("Authorization") String rawToken) {
+        List<QuestionDto> questions = questionService.searchQuestions(pattern, rawToken);
+        return buildResponse(questions);
+    }
+
+
 
     private ResponseEntity<?> buildResponse(Object question) {
         OkResponse response = new OkResponse(question);

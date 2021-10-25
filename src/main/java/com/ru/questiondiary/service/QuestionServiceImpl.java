@@ -194,6 +194,17 @@ public class QuestionServiceImpl implements QuestionService {
         return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
     }
 
+    @Override
+    public List<QuestionDto> searchQuestions(String pattern, String rawToken) {
+        getUserFromToken(rawToken);
+        List<Question> questions = questionRepository.findAllByQuestionContainingIgnoreCase(pattern);
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        for (Question question: questions) {
+            questionDtos.add(QuestionDto.from(question, null, null));
+        }
+        return questionDtos;
+    }
+
     private User getUserFromToken(String rawToken) {
         Map<String, String> userData = tokenService.getUserDataFromToken(rawToken);
         Optional<User> user = userRepository.findById(Long.parseLong(userData.get("id")));
