@@ -48,6 +48,17 @@ class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public UserLoginDto findUserByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("User with Email: %s not found", email));
+        }
+        String token = tokenService.createToken(user.get());
+        return UserLoginDto.from(user.get(), token);
+    }
+
+    @Override
+    @Transactional
     public UserLoginDto register(RegisterRequest request) throws DuplicateUserEmailException {
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
@@ -137,6 +148,33 @@ class UserServiceImpl implements UserService {
         user.setAvatar(newAvatarURL);
         userRepository.save(user);
         return UserDto.from(user);
+    }
+
+    @Override
+    public UserLoginDto createFromGoogle(Map<String, Object> attributes) {
+        String email = attributes.get("email").toString();
+        String firstName = attributes.get("given_name").toString();
+        String lastName = attributes.get("family_name").toString();
+        String avatar = attributes.get("picture").toString();
+        String password = passwordEncoder.encode(email);
+        User user = User.builder()
+                .email(email)
+                .firstName(firstName)
+                .lastName(lastName)
+                .avatar(avatar)
+                .password(password)
+                .role("USER")
+                .isApproved(false)
+                .followers(new ArrayList<>())
+                .following(new ArrayList<>())
+                .answers(new ArrayList<>())
+                .createdQuestions(new ArrayList<>())
+                .favoriteQuestions(new ArrayList<>())
+                .followingCommunities(new ArrayList<>())
+                .build();
+        User savedUser = userRepository.save(user);
+        String token = tokenService.createToken(savedUser);
+        return UserLoginDto.from(savedUser, token);
     }
 
     @Override

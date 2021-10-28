@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
@@ -20,6 +22,11 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         UserLoginDto authenticatedUser = authenticationService.authenticate(loginRequest);
         return buildResponse(authenticatedUser);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> user(Principal principal) {
+        return ResponseEntity.status(HttpStatus.OK).body(principal);
     }
 
     private ResponseEntity<?> buildResponse(Object authenticatedUser) {
