@@ -36,13 +36,13 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     Page<Question> findRecommendations(@Param("followedId") Long followedId, Pageable page);
 
     @Query(nativeQuery = true, value = "select * from public.question where id in (select question_id from public.answer where date=:date and user_id=:userId)")
-    Page<Question> findAllByDate(@Param("userId") Long userId, @Param("date") String date, Pageable pageable);
+    Page<Question> findAllByAnswerDate(@Param("userId") Long userId, @Param("date") String date, Pageable pageable);
 
     @Query(nativeQuery = true, value = "select * from public.question where id in (select question_id from public.favorite where users_id=:userId)")
     Page<Question> findAllFavorite(@Param("userId") Long userId, Pageable pageable);
 
     @Query(nativeQuery = true, value = "select * from public.question")
-    Page<Question> findNew(Pageable page);
+    Page<Question> findLatest(Pageable page);
 
     List<Question> findAllByQuestionContainingIgnoreCase(String pattern);
 }

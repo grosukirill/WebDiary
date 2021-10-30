@@ -74,8 +74,8 @@ public class QuestionController {
     }
 
     @GetMapping("/date")
-    public ResponseEntity<?> findAllQuestionByDate(@RequestParam("page") Integer page, @RequestBody QuestionByDateRequest request, @RequestHeader("Authorization") String rawToken) {
-        PaginationDto questions = questionService.findAllQuestionsByDate(page, request, rawToken);
+    public ResponseEntity<?> findAllQuestionByAnswerDate(@RequestParam("page") Integer page, @RequestBody QuestionByDateRequest request, @RequestHeader("Authorization") String rawToken) {
+        PaginationDto questions = questionService.findAllQuestionsByAnswerDate(page, request, rawToken);
         return buildResponse(questions);
     }
 
@@ -86,8 +86,8 @@ public class QuestionController {
     }
 
     @GetMapping("/new")
-    public ResponseEntity<?> findNewQuestions(@RequestParam("page") Integer pageNumber, @RequestHeader("Authorization") String rawToken) {
-        PaginationDto questions = questionService.findNewQuestions(pageNumber, rawToken);
+    public ResponseEntity<?> findLatestQuestions(@RequestParam("page") Integer pageNumber, @RequestHeader("Authorization") String rawToken) {
+        PaginationDto questions = questionService.findLatestQuestions(pageNumber, rawToken);
         return buildResponse(questions);
     }
 

@@ -35,13 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
                         .and()
                 .csrf().disable()
-//                .exceptionHandling()
-//                .authenticationEntryPoint((request, response, e) ->
-//                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage()))
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
                 .authorizeRequests()
                 .antMatchers("/auth", "/users").permitAll()
                 .anyRequest().authenticated()

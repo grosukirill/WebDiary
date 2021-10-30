@@ -162,10 +162,10 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public PaginationDto findAllQuestionsByDate(Integer page, QuestionByDateRequest request, String rawToken) {
+    public PaginationDto findAllQuestionsByAnswerDate(Integer page, QuestionByDateRequest request, String rawToken) {
         User user = getUserFromToken(rawToken);
         Pageable pageable = PageRequest.of(page, 20);
-        Page<Question> questions = questionRepository.findAllByDate(user.getId(), request.getDate(), pageable);
+        Page<Question> questions = questionRepository.findAllByAnswerDate(user.getId(), request.getDate(), pageable);
         List<QuestionDto> questionDtos = new ArrayList<>();
         for (Question question: questions.getContent()) {
             List<Answer> answers = answerRepository.getAllByQuestionAndUser(question, user);
@@ -186,10 +186,10 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public PaginationDto findNewQuestions(Integer pageNumber, String rawToken) {
+    public PaginationDto findLatestQuestions(Integer pageNumber, String rawToken) {
         User user = getUserFromToken(rawToken);
         Pageable page = PageRequest.of(pageNumber, 20, Sort.by("creation_date").descending());
-        Page<Question> questions = questionRepository.findNew(page);
+        Page<Question> questions = questionRepository.findLatest(page);
         List<QuestionDto> questionDtos = buildDtoFromDomain(user, questions);
         return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
     }

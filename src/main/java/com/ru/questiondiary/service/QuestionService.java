@@ -26,11 +26,11 @@ public interface QuestionService {
 
     List<CategoryDto> findAllCategories();
 
-    PaginationDto findAllQuestionsByDate(Integer page, QuestionByDateRequest request, String rawToken);
+    PaginationDto findAllQuestionsByAnswerDate(Integer page, QuestionByDateRequest request, String rawToken);
 
     PaginationDto findAllFavoriteQuestions(Integer pageNumber, String rawToken);
 
-    PaginationDto findNewQuestions(Integer pageNumber, String rawToken);
+    PaginationDto findLatestQuestions(Integer pageNumber, String rawToken);
 
     List<QuestionDto> searchQuestions(String pattern, String rawToken);
 }
