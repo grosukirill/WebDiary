@@ -8,10 +8,7 @@ import com.ru.questiondiary.web.dto.QuestionDto;
 import com.ru.questiondiary.web.dto.request.CreateQuestionRequest;
 import com.ru.questiondiary.web.dto.request.QuestionByDateRequest;
 import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
-import com.ru.questiondiary.web.entity.Answer;
-import com.ru.questiondiary.web.entity.Category;
-import com.ru.questiondiary.web.entity.Question;
-import com.ru.questiondiary.web.entity.User;
+import com.ru.questiondiary.web.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +20,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +32,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final TokenService tokenService;
     private final FavoriteRepository favoriteRepository;
     private final CategoryRepository categoryRepository;
+    private final RecommendationService recommendationService;
 
 
     @Override
@@ -202,6 +201,28 @@ public class QuestionServiceImpl implements QuestionService {
         for (Question question: questions) {
             questionDtos.add(QuestionDto.from(question, null, null));
         }
+        return questionDtos;
+    }
+
+    @Override
+    public QuestionDto createRecommendations(String rawToken) {
+        User user = getUserFromToken(rawToken);
+        List<Vote> votes = voteRepository.findAll();
+        return recommendationService.findRecommendations(user, votes);
+    }
+
+    @Override
+    @Transactional
+    public List<QuestionDto> findTopTen(String rawToken) {
+        getUserFromToken(rawToken);
+        List<Question> questions = (List<Question>) questionRepository.findAll();
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        List<Question> sorted = questions.stream().sorted(Comparator.comparing(Question::getCountOfVotes)).collect(Collectors.toList());
+        for (int i = 0; i < 10; i++) {
+            Question question = sorted.get(i);
+            questionDtos.add(QuestionDto.from(question, null, null));
+        }
+        Collections.shuffle(questionDtos);
         return questionDtos;
     }
 

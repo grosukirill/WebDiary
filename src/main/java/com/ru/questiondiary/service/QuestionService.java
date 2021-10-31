@@ -33,4 +33,8 @@ public interface QuestionService {
     PaginationDto findLatestQuestions(Integer pageNumber, String rawToken);
 
     List<QuestionDto> searchQuestions(String pattern, String rawToken);
+
+    QuestionDto createRecommendations(String rawToken);
+
+    List<QuestionDto> findTopTen(String rawToken);
 }

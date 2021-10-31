@@ -27,4 +27,9 @@ public class Vote {
     @ToString.Exclude
     @JoinColumn(name = "question_id", nullable = false, updatable = false)
     private Question question;
+
+    @Override
+    public String toString() {
+        return user.getId() + "," + question.getId() + "," + vote;
+    }
 }
