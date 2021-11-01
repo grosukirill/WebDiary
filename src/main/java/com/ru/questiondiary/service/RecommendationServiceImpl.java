@@ -1,8 +1,6 @@
 package com.ru.questiondiary.service;
 
 import com.ru.questiondiary.repo.QuestionRepository;
-import com.ru.questiondiary.web.dto.QuestionDto;
-import com.ru.questiondiary.web.entity.Question;
 import com.ru.questiondiary.web.entity.User;
 import com.ru.questiondiary.web.entity.Vote;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +27,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final QuestionRepository questionRepository;
 
     @Override
-    public QuestionDto findRecommendations(User user, List<Vote> votes) {
+    public List<RecommendedItem> findRecommendations(User user, List<Vote> votes) {
         List<String> stringVotes = new ArrayList<>();
         for (Vote vote: votes) {
             stringVotes.add(vote.toString());
@@ -47,10 +44,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             UserBasedRecommender recommender = new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
             List<RecommendedItem> recommendations = recommender.recommend(user.getId(), 1);
             if (!recommendations.isEmpty()) {
-                RecommendedItem item = recommendations.get(0);
-                Optional<Question> question = questionRepository.findById(item.getItemID());
-                if (question.isEmpty()) return null;
-                return QuestionDto.from(question.get(), null, null);
+                return recommendations;
             }
         } catch (IOException | TasteException e) {
             e.printStackTrace();

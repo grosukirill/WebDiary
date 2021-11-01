@@ -10,6 +10,7 @@ import com.ru.questiondiary.web.dto.request.QuestionByDateRequest;
 import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
 import com.ru.questiondiary.web.entity.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -205,10 +206,21 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionDto createRecommendations(String rawToken) {
+    public List<QuestionDto> createRecommendations(String rawToken) {
         User user = getUserFromToken(rawToken);
         List<Vote> votes = voteRepository.findAll();
-        return recommendationService.findRecommendations(user, votes);
+        List<RecommendedItem> recommendations = recommendationService.findRecommendations(user, votes);
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        if (!recommendations.isEmpty()) {
+            Optional<Question> question = questionRepository.findById(recommendations.get(0).getItemID());
+            if (question.isEmpty()) {
+                throw new QuestionNotFoundException(String.format("Questions with ID: [%s] not found", recommendations.get(0).getItemID()));
+            }
+            questionDtos.add(QuestionDto.from(question.get(), null, null));
+        } else {
+            questionDtos = findTopTen(rawToken);
+        }
+        return questionDtos;
     }
 
     @Override

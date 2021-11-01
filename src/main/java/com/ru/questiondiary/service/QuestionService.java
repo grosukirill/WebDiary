@@ -34,7 +34,7 @@ public interface QuestionService {
 
     List<QuestionDto> searchQuestions(String pattern, String rawToken);
 
-    QuestionDto createRecommendations(String rawToken);
+    List<QuestionDto> createRecommendations(String rawToken);
 
     List<QuestionDto> findTopTen(String rawToken);
 }
