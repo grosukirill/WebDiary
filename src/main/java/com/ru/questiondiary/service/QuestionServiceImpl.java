@@ -211,14 +211,14 @@ public class QuestionServiceImpl implements QuestionService {
         List<Vote> votes = voteRepository.findAll();
         List<RecommendedItem> recommendations = recommendationService.findRecommendations(user, votes);
         List<QuestionDto> questionDtos = new ArrayList<>();
-        if (!recommendations.isEmpty()) {
+        if (recommendations == null || recommendations.isEmpty()) {
+            questionDtos = findTopTen(rawToken);
+        } else {
             Optional<Question> question = questionRepository.findById(recommendations.get(0).getItemID());
             if (question.isEmpty()) {
                 throw new QuestionNotFoundException(String.format("Questions with ID: [%s] not found", recommendations.get(0).getItemID()));
             }
             questionDtos.add(QuestionDto.from(question.get(), null, null));
-        } else {
-            questionDtos = findTopTen(rawToken);
         }
         return questionDtos;
     }
