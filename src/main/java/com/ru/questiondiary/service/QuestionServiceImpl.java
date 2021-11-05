@@ -229,7 +229,7 @@ public class QuestionServiceImpl implements QuestionService {
         getUserFromToken(rawToken);
         List<Question> questions = (List<Question>) questionRepository.findAll();
         List<QuestionDto> questionDtos = new ArrayList<>();
-        List<Question> sorted = questions.stream().sorted(Comparator.comparing(Question::getCountOfVotes)).collect(Collectors.toList());
+        List<Question> sorted = questions.stream().sorted(Comparator.comparing(Question::getCountOfVotes, Comparator.reverseOrder())).collect(Collectors.toList());
         for (int i = 0; i < 10; i++) {
             Question question = sorted.get(i);
             questionDtos.add(QuestionDto.from(question, null, null));
