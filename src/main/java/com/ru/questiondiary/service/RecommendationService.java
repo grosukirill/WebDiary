@@ -8,5 +8,5 @@ import java.util.List;
 
 
 public interface RecommendationService {
-    List<RecommendedItem> findRecommendations(User user, List<Vote> votes);
+    List<RecommendedItem> findRecommendations(User user, List<Vote> votes, Integer numberOfRecommendations);
 }

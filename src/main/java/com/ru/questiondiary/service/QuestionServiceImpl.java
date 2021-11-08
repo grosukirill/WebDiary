@@ -57,6 +57,8 @@ public class QuestionServiceImpl implements QuestionService {
         User user = getUserFromToken(token);
         List<Answer> answers = answerRepository.getAllByQuestionAndUser(question.get(), user);
         Boolean isFavorite = favoriteRepository.existsByQuestionAndUser(question.get(), user);
+        question.get().setViews(question.get().getViews() + 1);
+        questionRepository.save(question.get());
         return QuestionDto.fromWithAnswers(question.get(), answers, isFavorite);
     }
 
@@ -206,10 +208,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<QuestionDto> createRecommendations(String rawToken) {
+    @Transactional
+    public List<QuestionDto> createFirstRecommendations(String rawToken) {
         User user = getUserFromToken(rawToken);
         List<Vote> votes = voteRepository.findAll();
-        List<RecommendedItem> recommendations = recommendationService.findRecommendations(user, votes);
+        List<RecommendedItem> recommendations = recommendationService.findRecommendations(user, votes, 1);
         List<QuestionDto> questionDtos = new ArrayList<>();
         if (recommendations == null || recommendations.isEmpty()) {
             questionDtos = findTopTen(rawToken);
@@ -218,6 +221,8 @@ public class QuestionServiceImpl implements QuestionService {
             if (question.isEmpty()) {
                 throw new QuestionNotFoundException(String.format("Questions with ID: [%s] not found", recommendations.get(0).getItemID()));
             }
+            question.get().setViews(question.get().getViews());
+            questionRepository.save(question.get());
             questionDtos.add(QuestionDto.from(question.get(), null, null));
         }
         return questionDtos;

@@ -45,4 +45,6 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     Page<Question> findLatest(Pageable page);
 
     List<Question> findAllByQuestionContainingIgnoreCase(String pattern);
+
+    Page<Question> findAllByCreator(Pageable pageable, User user);
 }

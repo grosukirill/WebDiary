@@ -1,6 +1,5 @@
 package com.ru.questiondiary.service;
 
-import com.ru.questiondiary.repo.QuestionRepository;
 import com.ru.questiondiary.web.entity.User;
 import com.ru.questiondiary.web.entity.Vote;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +23,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RecommendationServiceImpl implements RecommendationService {
-    private final QuestionRepository questionRepository;
 
     @Override
-    public List<RecommendedItem> findRecommendations(User user, List<Vote> votes) {
+    public List<RecommendedItem> findRecommendations(User user, List<Vote> votes, Integer numberOfRecommendations) {
         List<String> stringVotes = new ArrayList<>();
         for (Vote vote: votes) {
             stringVotes.add(vote.toString());
@@ -42,7 +40,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             CityBlockSimilarity similarity = new CityBlockSimilarity(dataModel);
             UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1,similarity, dataModel);
             UserBasedRecommender recommender = new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
-            List<RecommendedItem> recommendations = recommender.recommend(user.getId(), 1);
+            List<RecommendedItem> recommendations = recommender.recommend(user.getId(), numberOfRecommendations);
             if (!recommendations.isEmpty()) {
                 return recommendations;
             }

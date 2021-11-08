@@ -99,7 +99,7 @@ public class QuestionController {
 
     @GetMapping("/recommendations")
     public ResponseEntity<?> recommendations(@RequestHeader("Authorization") String rawToken) {
-        List<QuestionDto> questions = questionService.createRecommendations(rawToken);
+        List<QuestionDto> questions = questionService.createFirstRecommendations(rawToken);
         return buildResponse(questions);
     }
 
@@ -108,7 +108,6 @@ public class QuestionController {
         List<QuestionDto> questions = questionService.findTopTen(rawToken);
         return buildResponse(questions);
     }
-
 
 
     private ResponseEntity<?> buildResponse(Object question) {

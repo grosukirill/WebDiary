@@ -24,6 +24,7 @@ public class Question {
     private LocalDate creationDate;
     private Boolean isAdmins;
     private Boolean isApproved;
+    private Long views = 0L;
 
     @ManyToMany(mappedBy = "questions")
     private Set<Category> categories = new HashSet<>();
@@ -47,5 +48,9 @@ public class Question {
 
     public Integer getCountOfVotes() {
         return getVotes().stream().map(Vote::getVote).mapToInt(Integer::intValue).sum();
+    }
+
+    public Integer getCountOfAnswers() {
+        return getAnswers().size();
     }
 }

@@ -473,6 +473,34 @@ public class QuestionRepositoryTest {
         assertThat(questions.getTotalElements()).isEqualTo(0);
     }
 
+    @Test
+    void test_findAllByCreator_questionsReturned() {
+        //ARRANGE
+        User someUser = someUser();
+        User otherUser = someUser();
+        Question someQuestion = someQuestion(someUser);
+        Question otherQuestion = someQuestion(otherUser);
+        Pageable page = PageRequest.of(0, 20);
+        //ACT
+        Page<Question> questions = questionRepository.findAllByCreator(page, someUser);
+        //ASSERT
+        assertThat(questions.getContent().size()).isGreaterThan(0);
+        assertThat(questions.getContent()).contains(someQuestion);
+        assertThat(questions.getContent()).doesNotContain(otherQuestion);
+    }
+
+    @Test
+    void test_findAllByCreator_nothingReturned() {
+        //ARRANGE
+        User someUser = someUser();
+        someQuestion();
+        Pageable page = PageRequest.of(0, 20);
+        //ACT
+        Page<Question> questions = questionRepository.findAllByCreator(page, someUser);
+        //ASSERT
+        assertThat(questions.getContent().size()).isEqualTo(0);
+    }
+
     private Question someQuestion() {
         return questionRepository.save(Question.builder()
                 .creationDate(LocalDate.now())

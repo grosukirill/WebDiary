@@ -27,6 +27,7 @@ public class QuestionDto extends ResponseData {
     private List<CommentDto> comments;
     private Boolean voted = null;
     private Boolean isFavorite;
+    private Long views;
 
     public static QuestionDto fromWithComments(Question question, List<Comment> comments, Boolean isFavorite) {
         String type;
@@ -53,6 +54,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
+        result.setViews(question.getViews());
         result.setCategories(categoryDtos);
         result.setType(type);
         if (isUsers) {
@@ -93,6 +95,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
+        result.setViews(question.getViews());
         result.setCategories(categoryDtos);
         result.setType(type);
         if (isUsers) {
@@ -134,6 +137,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
+        result.setViews(question.getViews());
         result.setCategories(categoryDtos);
         result.setType(type);
         if (isUsers) {
@@ -169,6 +173,7 @@ public class QuestionDto extends ResponseData {
         result.setId(question.getId());
         result.setQuestion(question.getQuestion());
         result.setCreationDate(question.getCreationDate());
+        result.setViews(question.getViews());
         result.setCategories(categoryDtos);
         result.setType(type);
         if (isUsers) {
