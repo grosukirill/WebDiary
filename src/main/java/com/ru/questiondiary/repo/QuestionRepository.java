@@ -48,6 +48,6 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     @Query(nativeQuery = true, value = "select * from public.question where creator_id in (select followed_id from public.user_relations where follower_id=:userId)")
     Page<Question> findFollowersFeed(@Param("userId") Long userId, Pageable page);
 
-    @Query(nativeQuery = true, value = "select question.*, count(vote.question_id) as votes from question left join vote on question.id = vote.question_id where question.creation_date between current_date - (interval '7' day) and current_date group by question.id order by votes desc offset :from fetch first 20 rows only ")
+    @Query(nativeQuery = true, value = "select question.*, coalesce(sum(vote.vote), 0) as total from question left join vote on question.id = vote.question_id where question.creation_date between current_date - (interval '7' day) and current_date group by question.id order by total desc offset :from fetch first 20 rows only ")
     List<Question> findTopByVotesAndCreationDateLastWeek(@Param("from") int from);
 }
