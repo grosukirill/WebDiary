@@ -29,9 +29,6 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     @Query(nativeQuery = true, value = "select * from public.question where is_admins=true")
     Page<Question> findAllByIsAdminsTrue(Pageable pageable);
 
-    @Query(nativeQuery = true, value = "select * from public.question where is_admins=false and community_id in (select following_communities_id from public.community_followers where followers_id=:followedId) or creator_id in (select follower_id from public.user_relations where followed_id=:followedId) order by random()")
-    Page<Question> findAllByIsAdminsFalse(@Param("followedId") Long followedId, Pageable pageable);
-
     @Query(nativeQuery = true, value = "select * from public.question where creator_id in (select id from public.users where is_approved=true) and creator_id not in (select follower_id from public.user_relations where followed_id=:followedId) order by random()")
     Page<Question> findRecommendations(@Param("followedId") Long followedId, Pageable page);
 
@@ -47,4 +44,10 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     List<Question> findAllByQuestionContainingIgnoreCase(String pattern);
 
     Page<Question> findAllByCreator(Pageable pageable, User user);
+
+    @Query(nativeQuery = true, value = "select * from public.question where creator_id in (select followed_id from public.user_relations where follower_id=:userId)")
+    Page<Question> findFollowersFeed(@Param("userId") Long userId, Pageable page);
+
+    @Query(nativeQuery = true, value = "select question.*, count(vote.question_id) as votes from question left join vote on question.id = vote.question_id where question.creation_date between current_date - (interval '7' day) and current_date group by question.id order by votes desc offset :from fetch first 20 rows only ")
+    List<Question> findTopByVotesAndCreationDateLastWeek(@Param("from") int from);
 }

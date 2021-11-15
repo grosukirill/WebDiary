@@ -11,10 +11,7 @@ import com.ru.questiondiary.web.dto.request.UpdateQuestionRequest;
 import com.ru.questiondiary.web.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -132,23 +129,92 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional
     public PaginationDto findFeed(String type, Integer pageNumber, String rawToken) {
         User user = getUserFromToken(rawToken);
-        Pageable page = PageRequest.of(pageNumber, 20, Sort.by("creation_date").descending());
+        List<Vote> votes = voteRepository.findAll();
+        List<RecommendedItem> recommendations;
         Page<Question> questions;
+        List<QuestionDto> questionDtos = new ArrayList<>();
         switch (type) {
-            case "Admin":
-                questions = questionRepository.findAllByIsAdminsTrue(page);
-                break;
-            case "Users":
-                questions = questionRepository.findAllByIsAdminsFalse(user.getId(), page);
-                break;
+            case "Main":
+                Pageable pageForMain = PageRequest.of(pageNumber, 20, Sort.by("creation_date").descending());
+                questions = questionRepository.findAllByIsAdminsTrue(pageForMain);
+                questionDtos = buildDtoFromDomain(user, questions);
+                return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber() + 1);
+            case "New":
+                List<Question> questionsList;
+                if (pageNumber == 0) {
+                    questionsList = questionRepository.findTopByVotesAndCreationDateLastWeek(pageNumber);
+                } else {
+                    int top = pageNumber * 20;
+                    questionsList = questionRepository.findTopByVotesAndCreationDateLastWeek(top);
+                }
+                Collections.shuffle(questionsList);
+                for (Question question: questionsList) {
+                    questionDtos.add(QuestionDto.from(question, null, null));
+                }
+                return new PaginationDto(questionDtos, true, pageNumber + 1);
+            case "Home":
+                Pageable pageForFollowers = PageRequest.of(pageNumber, 10);
+                questions = questionRepository.findFollowersFeed(user.getId(), pageForFollowers);
+                for (Question question: questions.getContent()) {
+                    questionDtos.add(QuestionDto.from(question, null, null));
+                }
+                recommendations = recommendationService.findRecommendations(user, votes, 15);
+                if (recommendations == null || recommendations.size() == 0) {
+                    List<Question> questionList = (List<Question>) questionRepository.findAll();
+                    List<Question> sorted = questionList.stream().sorted(Comparator.comparing(Question::getCountOfVotes, Comparator.reverseOrder())).collect(Collectors.toList());
+                    questionDtos = new ArrayList<>();
+                    for (int i = 0; i < 10; i++) {
+                        questionDtos.add(QuestionDto.from(sorted.get(i), null, null));
+                    }
+                    return new PaginationDto(questionDtos, false, null);
+                }
+                else {
+                    for (RecommendedItem item: recommendations) {
+                        Optional<Question> question = questionRepository.findById(item.getItemID());
+                        if (question.isEmpty()) {
+                            throw new QuestionNotFoundException(String.format("Questions with ID: [%s] not found", item.getItemID()));
+                        }
+                        question.get().setViews(question.get().getViews() + 1);
+                        questionRepository.save(question.get());
+                        questionDtos.add(QuestionDto.from(question.get(), null, null));
+                    }
+                    Pageable pageForAnsweredAndAdmins = PageRequest.of(pageNumber, 5);
+                    Page<Answer> answered = answerRepository.findAllByUser(pageForAnsweredAndAdmins, user);
+                    for (Answer answer: answered) {
+                        questionDtos.add(QuestionDto.from(answer.getQuestion(), null, null));
+                    }
+                    Page<Question> adminsQuestions = questionRepository.findAllByIsAdminsTrue(pageForAnsweredAndAdmins);
+                    for (Question question: adminsQuestions) {
+                        questionDtos.add(QuestionDto.from(question, null, null));
+                    }
+                    return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber() + 1);
+                }
             case "Recommendations":
-                questions = questionRepository.findRecommendations(user.getId(), page);
-                break;
+                recommendations = recommendationService.findRecommendations(user, votes, 1);
+                if (recommendations == null || recommendations.size() == 0) {
+                    List<Question> questionList = (List<Question>) questionRepository.findAll();
+                    List<Question> sorted = questionList.stream().sorted(Comparator.comparing(Question::getCountOfVotes, Comparator.reverseOrder())).collect(Collectors.toList());
+                    questionDtos = new ArrayList<>();
+                    for (int i = 0; i < 10; i++) {
+                        questionDtos.add(QuestionDto.from(sorted.get(i), null, null));
+                    }
+                    return new PaginationDto(questionDtos, false, null);
+                } else {
+                    QuestionDto question = new QuestionDto();
+                    for (RecommendedItem item : recommendations) {
+                        Optional<Question> questionFound = questionRepository.findById(item.getItemID());
+                        if (questionFound.isEmpty()) {
+                            throw new QuestionNotFoundException(String.format("Questions with ID: [%s] not found", item.getItemID()));
+                        }
+                        questionFound.get().setViews(questionFound.get().getViews() + 1);
+                        questionRepository.save(questionFound.get());
+                        question = QuestionDto.from(questionFound.get(), null, null);
+                    }
+                    return new PaginationDto(question, false, null);
+                }
             default:
                 throw new WrongFeedTypeException(String.format("Feed type %s does not match any known types.", type));
         }
-        List<QuestionDto> questionDtos = buildDtoFromDomain(user, questions);
-        return new PaginationDto(questionDtos, questions.hasNext(), questions.getNumber()+1);
     }
 
     @Override
