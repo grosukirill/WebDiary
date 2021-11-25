@@ -1,0 +1,3 @@
+interface ProtectedRouteProps {
+    isProtected?: boolean
+}
