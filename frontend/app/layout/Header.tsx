@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import NotificationSvg from '../components/svg/Header/Notification'
+import AddCircleSvg from '../components/svg/Header/AddCircle'
 import SearchSvg from '../components/svg/Header/Search'
 import DropDown from '../components/Main/DropDown/Dropdown'
 import SettingsSvg from '../components/svg/Header/Settings'
@@ -35,11 +36,14 @@ const Header: React.FC<IHeaderProps> = ({ denyPaths, ...props }) => {
                             <div className="header_search_icon">
                                 <SearchSvg />
                             </div>
-                            <input type="text" placeholder="Поиск" />
+                            <input type="text" placeholder="Поиск по вопросам, пользователям, сообществам..." />
                         </div>
                     </div>
 
                     <div className="right_header_block">
+                        <div className="header_notification_icon">
+                            <AddCircleSvg />
+                        </div>
                         <div className="header_notification_icon">
                             <NotificationSvg />
                         </div>
@@ -50,8 +54,8 @@ const Header: React.FC<IHeaderProps> = ({ denyPaths, ...props }) => {
                                         <img
                                             src={user.avatar}
                                             alt="Picture"
-                                            width={32}
-                                            height={32}
+                                            width={37}
+                                            height={37}
                                         />
                                     }
                                     dataId="header_avatar"

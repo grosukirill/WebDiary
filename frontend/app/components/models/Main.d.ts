@@ -16,11 +16,12 @@ interface IPostC {
     title: string 
     author: string
     date: string
-    count: number
-    key: string
-    id: number
+    count?: number
+    key: number
+    idEl: number
+    views: number
+    voted: boolean | null
     votes: number
-    voted: boolean
     auth: IauthReducer
 }
 

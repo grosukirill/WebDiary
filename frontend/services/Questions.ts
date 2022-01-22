@@ -31,7 +31,7 @@ class Auth extends Settings {
         }
     }
 
-    getFeedQuestions = async (token: string, type: string, page: number) => {
+    getFeedQuestions = async (token: string | null, type: string, page: number) => {
         const url = this.url + `/questions/feed?type=${type}&page=${page}`
 
         const requestReg = {

@@ -16,65 +16,70 @@ const Sidebar: React.FC<ISidebarProps> = ({ denyPaths }) => {
     if (!denyPaths) {
         return (
             <div className="sidebar">
-                <ul>
-                    <li>
-                        <ProfileSvg />
-                        <span>Профиль</span>
-                    </li>
-                    <Link href="/feed">
-                        <li className="acive_sidebar_li">
-                            <FeedSvg />
-                            <span>Лента</span>
+                <div className="sidebar_component">
+                    <ul>
+                        <li>
+                            <ProfileSvg />
+                            <span>Профиль</span>
                         </li>
-                    </Link>
-                    <li>
-                        <CalendarSvg />
-                        <span>Календарь</span>
-                    </li>
-                    <li>
-                        <CategorySvg />
-                        <span>Категории</span>
-                    </li>
-                    <li>
-                        <SubscriptionsSvg />
-                        <span>Подписки</span>
-                    </li>
-                    <li>
-                        <CommunitySvg />
-                        <span>Сообщества</span>
-                    </li>
-                    <li>
-                        <RecommendationSvg />
-                        <span>Рекомендации</span>
-                    </li>
-                    <li>
-                        <Bookmark />
-                        <span>Избранное</span>
-                    </li>
-                </ul>
+                        <Link href="/feed">
+                            <li className="acive_sidebar_li">
+                                <FeedSvg />
+                                <span>Лента</span>
+                            </li>
+                        </Link>
+                        <li>
+                            <CalendarSvg />
+                            <span>Календарь</span>
+                        </li>
+                        <li>
+                            <CategorySvg />
+                            <span>Категории</span>
+                        </li>
+                        <li>
+                            <SubscriptionsSvg />
+                            <span>Подписки</span>
+                        </li>
+                        <li>
+                            <CommunitySvg />
+                            <span>Сообщества</span>
+                        </li>
+                        <li>
+                            <RecommendationSvg />
+                            <span>Рекомендации</span>
+                        </li>
+                        <li>
+                            <Bookmark />
+                            <span>Избранное</span>
+                        </li>
+                    </ul>
 
-                <div className="sidebar_menu_block">
-                    <span className="sidebar_menu_title">Подписки</span>
                 </div>
+                
+                <div className="sidebar_component">
+                    <div className="sidebar_menu_block">
+                        <span className="sidebar_menu_title">Подписки</span>
+                    </div>
 
-                <ul>
-                    <li>
-                        <CommunitySvg />
-                        <span>Вопросы психологии</span>
-                    </li>
-                    <li>
-                        <CommunitySvg />
-                        <span>Дневник эко</span>
-                    </li>
-                    <li>
-                        <CommunitySvg />
-                        <span>Тема вопроса</span>
-                    </li>
-                    <li>
-                        <CommunitySvg />
-                        <span>Вопросы Джо</span>
-                    </li>
-                </ul>
+                    <ul>
+                        <li>
+                            <CommunitySvg />
+                            <span>Вопросы психологии</span>
+                        </li>
+                        <li>
+                            <CommunitySvg />
+                            <span>Дневник эко</span>
+                        </li>
+                        <li>
+                            <CommunitySvg />
+                            <span>Тема вопроса</span>
+                        </li>
+                        <li>
+                            <CommunitySvg />
+                            <span>Вопросы Джо</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         )
     }
