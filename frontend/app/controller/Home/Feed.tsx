@@ -14,10 +14,15 @@ class Feed extends React.Component<IProps, FeedStateC> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-
+            questions: [],
+            loading: false
         }
     }
-    
+
+    componentDidMount = () => {
+        this.getAllQuestions();
+    }
+
     setQuestion = (data: ICreateQuestionS) => {
         // let ques = [...this.state.questions]
         // ques.unshift(data);
@@ -26,16 +31,16 @@ class Feed extends React.Component<IProps, FeedStateC> {
         // })
     }
 
-    // getAllQuestions = () => {
-    //     Questions.getFeedQuestions(this.props.auth.token, "Users", 0).then(res => {
-    //         if (res.status) {
-    //             this.setState({
-    //                 questions: res.data.content,
-    //                 loading: false
-    //             })
-    //         }
-    //     })
-    // }
+    getAllQuestions = () => {
+        Questions.getFeedQuestions(this.props.auth.token, "Home", 0).then(res => {
+            if (res.status) {
+                this.setState({
+                    questions: res.data.content,
+                    loading: false
+                })
+            }
+        })
+    }
 
     render() {
         const obj: FeedPropsC = {
@@ -43,9 +48,13 @@ class Feed extends React.Component<IProps, FeedStateC> {
             props: {
                 data: this.props.data,
                 auth: this.props.auth
+            },
+            state: {
+                questions: this.state.questions,
+                loading: this.state.loading
             }
         }
-        
+
         return createElement(FeedView, obj)
     }
 }

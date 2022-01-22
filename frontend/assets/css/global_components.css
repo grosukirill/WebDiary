@@ -1,9 +1,9 @@
 .tab_component {
-    width: 350px;
-    margin-left: 20px;
+    width: var(--tab-component);
+    margin-left: 30px;
     background-color: white;
     height: fit-content;
-    border-radius: 8px;
+    border-radius: 12px;
 }
 
 .tab_component ul {
@@ -12,7 +12,7 @@
 
 .tab_component ul li {
     cursor: pointer;
-    padding: 9px 10px 9px 18px;
+    padding: 12px 10px 12px 18px;
     color: #353535;
     font-size: 15px;
 }
@@ -103,7 +103,7 @@
 
 .main_post_block .question_title {
     color: #353535;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .end_post_block {

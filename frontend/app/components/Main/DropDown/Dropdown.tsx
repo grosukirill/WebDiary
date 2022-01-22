@@ -76,7 +76,7 @@ const DropDown: React.FC<DropDownProps> = ({ children, dataId, data, select, con
                                     onClick={() => selectData(item)}
                                 >
                                     {item.icon ? item.icon : ""}
-                                    <span className={containsIcons ? "icon_padding" : ""}>{item.name}</span>
+                                    <span className={containsIcons ? "icon_padding" : ""}>{keyItem ? item[keyItem] : item.name}</span>
                                 </li>
                             )
                         })}

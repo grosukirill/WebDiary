@@ -10,14 +10,14 @@ import { connect } from 'react-redux'
 import Questions from '../../../../services/Questions'
 import { useState } from 'react'
 
-const Post: React.FC<IPostC> = ({ title, author, date, count, key, id, ...props }) => {
+const Post: React.FC<IPostC> = ({ title, author, date, count, key, idEl, ...props }) => {
     const [countVotes, setCount] = useState(props.votes)
     const [voted, setVotes] = useState(props.voted)
 
     const votePost = (action: number) => {
         const data = {
             vote: action,
-            questionId: id
+            questionId: idEl
         }
         const req = {
             body: JSON.stringify(data)
