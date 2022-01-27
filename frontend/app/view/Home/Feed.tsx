@@ -14,7 +14,7 @@ const Feed: React.FC<FeedPropsC> = (props) => {
                     setQuestion={props.setQuestion}
                 />
                 <div className="post_container">
-                    {/* {props.state.loading ? (
+                    {props.state.loading ? (
                         <div className="loader content_loader feed_loader"></div>
                     ) : (
                         <>
@@ -29,7 +29,7 @@ const Feed: React.FC<FeedPropsC> = (props) => {
                                                 date={item.creationDate}
                                                 title={item.question}
                                                 key={index}
-                                                id={item.id}
+                                                idEl={item.id}
                                                 {...item}
                                             />
                                         )
@@ -37,7 +37,7 @@ const Feed: React.FC<FeedPropsC> = (props) => {
                                 </>
                             )}
                         </>
-                    )} */}
+                    )}
                 </div>
             </div>
             <Tab />

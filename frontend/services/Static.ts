@@ -5,7 +5,7 @@ class Static extends Settings {
         super();
     }
 
-    getCategories = async (token: string) => {
+    getCategories = async (token: string | null) => {
         const url = this.url + "/questions/categories"
 
         const requestReg = {
