@@ -167,22 +167,26 @@ public class QuestionServiceImpl implements QuestionService {
                         pageable = PageRequest.of(pageNumber, 20);
                     }
                     Page<Question> questionPage = questionRepository.findAll(pageable);
-                    List<Question> result = new ArrayList<>();
+                    List<Question> questionList = new ArrayList<>();
                     if (recommendations != null) {
-                        for (int i = 0; i <= recommendations.size(); i++) {
+                        for (int i = 0; i <= recommendations.size()-1; i++) {
                             Optional<Question> question = questionRepository.findById(recommendations.get(i).getItemID());
                             if (question.isEmpty()) {
                                 throw new QuestionNotFoundException(String.format("Questions with ID: [%s] not found", recommendations.get(i).getItemID()));
                             }
                             question.get().setViews(question.get().getViews() + 1);
                             questionRepository.save(question.get());
-                            result.add(question.get());
+                            questionList.add(question.get());
                         }
                     }
-                    for (int i = 0; i <= questionPage.getContent().size(); i++) {
-                        result.add(questionPage.getContent().get(i));
+                    for (int i = 0; i <= questionPage.getContent().size()-1; i++) {
+                        questionList.add(questionPage.getContent().get(i));
                     }
-                    return new PaginationDto(result, questionPage.hasNext(), questionPage.getNumber()+1);
+                    List<QuestionDto> questionDtoList = new ArrayList<>();
+                    for (Question question : questionList) {
+                        questionDtoList.add(QuestionDto.from(question, null, null));
+                    }
+                    return new PaginationDto(questionDtoList, questionPage.hasNext(), questionPage.getNumber()+1);
                 }
                 else {
                     for (RecommendedItem item: recommendations) {
