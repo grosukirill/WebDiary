@@ -153,20 +153,36 @@ public class QuestionServiceImpl implements QuestionService {
                 }
                 return new PaginationDto(questionDtos, true, pageNumber + 1);
             case "Home":
-                Pageable pageForFollowers = PageRequest.of(pageNumber, 10);
+                Pageable pageForFollowers = PageRequest.of(pageNumber, 15);
                 questions = questionRepository.findFollowersFeed(user.getId(), pageForFollowers);
                 for (Question question: questions.getContent()) {
                     questionDtos.add(QuestionDto.from(question, null, null));
                 }
-                recommendations = recommendationService.findRecommendations(user, votes, 15);
-                if (recommendations == null || recommendations.size() == 0) {
-                    List<Question> questionList = (List<Question>) questionRepository.findAll();
-                    List<Question> sorted = questionList.stream().sorted(Comparator.comparing(Question::getCountOfVotes, Comparator.reverseOrder())).collect(Collectors.toList());
-                    questionDtos = new ArrayList<>();
-                    for (int i = 0; i < 10; i++) {
-                        questionDtos.add(QuestionDto.from(sorted.get(i), null, null));
+                recommendations = recommendationService.findRecommendations(user, votes, 20);
+                if (recommendations == null || recommendations.size() < 15) {
+                    Pageable pageable;
+                    if (recommendations != null) {
+                        pageable = PageRequest.of(pageNumber, 20 - recommendations.size());
+                    } else  {
+                        pageable = PageRequest.of(pageNumber, 20);
                     }
-                    return new PaginationDto(questionDtos, false, null);
+                    Page<Question> questionPage = questionRepository.findAll(pageable);
+                    List<Question> result = new ArrayList<>();
+                    if (recommendations != null) {
+                        for (int i = 0; i <= recommendations.size(); i++) {
+                            Optional<Question> question = questionRepository.findById(recommendations.get(i).getItemID());
+                            if (question.isEmpty()) {
+                                throw new QuestionNotFoundException(String.format("Questions with ID: [%s] not found", recommendations.get(i).getItemID()));
+                            }
+                            question.get().setViews(question.get().getViews() + 1);
+                            questionRepository.save(question.get());
+                            result.add(question.get());
+                        }
+                    }
+                    for (int i = 0; i <= questionPage.getContent().size(); i++) {
+                        result.add(questionPage.getContent().get(i));
+                    }
+                    return new PaginationDto(result, questionPage.hasNext(), questionPage.getNumber()+1);
                 }
                 else {
                     for (RecommendedItem item: recommendations) {
