@@ -1,0 +1,76 @@
+.feed_edit_container {
+    display: flex;
+    align-items: center;
+    padding: 14px 15px;
+}
+
+.feed_input_post_question {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 12px;
+    width: 100%;
+    box-shadow: 0px 1px 10px rgb(0 0 0 / 8%);
+}
+
+.end_feed_input_post_questtion {
+    padding: 5px 15px 12px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.feed_title_post_question {
+    color: #353535;
+    border-bottom: 1px solid rgb(230, 230, 230);
+    padding: 12px 15px;
+}
+
+.feed_edit_avatar {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.feed_edit_avatar img {
+    border-radius: 50%;
+}
+
+.feed_edit_input_block {
+    width: 100%;
+    margin-right: 10px;
+}
+
+.feed_edit_input_block input {
+    border: none;
+    font-size: 15px;
+    width: 100%;
+}
+
+.feed_edit_input_end_block {
+    display: flex;
+    position: relative;
+}
+
+.feed_edit_input_end_block svg {
+    fill: #9c9c9c;
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+}
+
+.post_container {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.icon_picker_container {
+    position: absolute;
+    z-index: 9;
+    right: 0;
+    margin-top: 30px;
+}
+
+.hidden_picker {
+    display: none;
+}

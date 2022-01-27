@@ -10,7 +10,6 @@ const Main: React.FC<MainPropsC> = (props) => {
                     
                 </div>
             </div>
-            <Tab />
         </div>
     )
 }

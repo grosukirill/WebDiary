@@ -1,5 +1,6 @@
 import Header from './Header'
 import Sidebar from './Sidebar';
+import RightSidebar from './RightSidebar';
 import { useRouter } from 'next/router'
 
 interface LayoutProps {
@@ -16,10 +17,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
     return (
         <>
-            <Header denyPaths={denyPaths} />
             <main className={!denyPaths ? "auth_main" : ""}>
-                <Sidebar denyPaths={denyPaths} />
-                {children}
+                <Sidebar denyPaths={denyPaths} route={router.route} />
+                {denyPaths ? children : null}
+                <Header denyPaths={denyPaths} children={children} />
+                <RightSidebar denyPaths={denyPaths} />
             </main>
         </>
     )

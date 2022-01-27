@@ -8,11 +8,17 @@ import DropDown from '../DropDown/Dropdown'
 import { connect } from 'react-redux'
 
 import Questions from '../../../../services/Questions'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+import { BiDownArrowAlt, BiUpArrowAlt, BiBookmark, BiComment } from 'react-icons/bi';
 
 const Post: React.FC<IPostC> = ({ title, author, date, count, key, idEl, ...props }) => {
-    const [countVotes, setCount] = useState(props.votes)
+    const [countVotes, setCount] = useState(0)
     const [voted, setVotes] = useState(props.voted)
+
+    useEffect(() => {
+        setCount(props.votes)
+    }, [])
 
     const votePost = (action: number) => {
         const data = {
@@ -24,8 +30,8 @@ const Post: React.FC<IPostC> = ({ title, author, date, count, key, idEl, ...prop
         }
         Questions.voteQuestion(props.auth.token, req).then(res => {
             if (res.status) {
-                setCount(res.data.votes)
-                setVotes(res.data.voted)
+                setCount(res?.data?.votes)
+                setVotes(res?.data?.voted)
             }
         })
     }
@@ -35,14 +41,14 @@ const Post: React.FC<IPostC> = ({ title, author, date, count, key, idEl, ...prop
     return (
         <div className="post_component">
             <div className="vote_post_block">
-                <Vote
+                <BiUpArrowAlt
                     onClick={() => votePost(1)}
                     className={voted === true ? "voted_icon" : ""}
                 />
                 <div className="vote_count_block">
                     <span>{countVotes}</span>
                 </div>
-                <DownVote
+                <BiDownArrowAlt
                     onClick={() => votePost(-1)}
                     className={voted === false ? "downvote" : ""}
                 />
@@ -85,9 +91,9 @@ const Post: React.FC<IPostC> = ({ title, author, date, count, key, idEl, ...prop
 
                 <div className="end_post_block">
                     <div className="right_post_icons_block">
-                        <MessageSvg />
+                        <BiComment size={24} />
                         <div className="bookmark_post_icon">
-                            <Bookmark />
+                            <BiBookmark size={24} />
                         </div>
                     </div>
                 </div>

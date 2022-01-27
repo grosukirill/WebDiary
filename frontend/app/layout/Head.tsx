@@ -1,4 +1,4 @@
-import Head from 'next/head'
+import NextHead from 'next/head'
 
 interface HeadLayoutProps {
     title: string
@@ -11,7 +11,7 @@ const HeadLayout: React.FC<HeadLayoutProps> = ({title, content, description}) =>
         description = "Дневник вопросов - приложение для отслеживания своих вопросов"
     }
     return (
-        <Head>
+        <NextHead>
             <title>{title}</title>
             <meta name="description" content={description} />
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -22,7 +22,7 @@ const HeadLayout: React.FC<HeadLayoutProps> = ({title, content, description}) =>
                 rel="stylesheet"
             />
             {content}
-        </Head>
+        </NextHead>
     )
 }
 

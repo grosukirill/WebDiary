@@ -27,6 +27,6 @@ interface IPostC {
 
 interface ICreateViewC {
     avatar: string
-    setQuestion: (data: ICreateQuestionS) => void
+    setQuestion: (data: IQuestion) => void
     auth: IauthReducer
 }
