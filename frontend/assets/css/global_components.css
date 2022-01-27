@@ -34,9 +34,9 @@
 
 .vote_post_block {
     text-align: center;
-    padding-top: 10px;
+    padding-top: 15px;
     border-right: 1px solid rgb(230, 230, 230);
-    width: 50px;
+    width: 60px;
 }
 
 .vote_post_block svg {
@@ -58,6 +58,7 @@
     background-color: white;
     border-radius: 8px;
     display: flex;
+    box-shadow: 0px 1px 10px rgb(0 0 0 / 8%);
 }
 
 .top_post_author_block {
@@ -96,9 +97,9 @@
 }
 
 .main_post_block {
-    margin-top: 20px;
+    margin-top: 22px;
     border-bottom: 1px solid rgb(230, 230, 230);
-    padding: 0 15px 20px 15px;
+    padding: 0 15px 22px 15px;
 }
 
 .main_post_block .question_title {

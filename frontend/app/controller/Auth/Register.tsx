@@ -197,7 +197,7 @@ class Register extends React.Component<IProps, RegisterStateC> {
                 auth: this.props.auth
             }
         }
-
+        
         return React.createElement(RegisterView, obj)
     }
 }

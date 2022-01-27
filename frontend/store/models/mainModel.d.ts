@@ -1,3 +1,10 @@
+interface IUser {
+    avatar?: string
+    id?: number,
+    firstName?: string,
+    lastName?: string,
+    email?: string
+}
 interface IauthReducer {
     loading: boolean,
     token: string | null,
@@ -5,9 +12,7 @@ interface IauthReducer {
     confirmation: boolean,
     resetPassword: boolean,
     errors: IError,
-    user: {
-        avatar?: string
-    }
+    user: IUser
 }
 
 interface ImainReducer {
