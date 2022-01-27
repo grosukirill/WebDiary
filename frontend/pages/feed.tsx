@@ -9,7 +9,7 @@ const Home = () => {
       <HeadLayout
         title="Главная страница"
         // content={
-        //   <link href="/css/feed.css" rel="stylesheet" />
+        //   <link href="/static/feed.css" rel="stylesheet" />
         // }
       />
       <Feed />

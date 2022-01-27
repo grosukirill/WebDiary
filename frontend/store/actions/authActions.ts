@@ -68,7 +68,8 @@ export const logout = () => {
 }
 
 export const setUserInfo = (data: any, dispatch: Dispatch) => {
-    const obj = {
+    const obj: IUser = {
+        id: data.id,
         firstName: data.firstName,
         lastName: data.lastName,
         avatar: data.avatar,

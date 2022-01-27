@@ -5,6 +5,7 @@ interface MainStateC {
 interface FeedStateC {
     questions: IQuestion[]
     loading: boolean
+    nextPage: number
 }
 
 interface MainPropsC {
@@ -15,7 +16,8 @@ interface MainPropsC {
 }
 
 interface FeedPropsC {
-    setQuestion: (data: ICreateQuestionS) => void
+    setQuestion: (data: IQuestion) => void
+    getRef?: LegacyRef<HTMLDivElement>
     state: FeedStateC
     props: {
         data: ImainReducer

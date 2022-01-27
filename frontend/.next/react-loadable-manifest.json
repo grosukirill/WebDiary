@@ -1,4 +1,10 @@
 {
+  "../app/components/Main/Question/CreateView.tsx -> emoji-picker-react": {
+    "id": "./node_modules/emoji-picker-react/dist/index.js",
+    "files": [
+      "static/chunks/node_modules_emoji-picker-react_dist_index_js.js"
+    ]
+  },
   "../node_modules/next/dist/client/next-dev.js -> ./dev/noop": {
     "id": "./node_modules/next/dist/client/dev/noop.js",
     "files": [
