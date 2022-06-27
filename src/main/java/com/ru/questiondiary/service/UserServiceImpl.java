@@ -91,7 +91,12 @@ class UserServiceImpl implements UserService {
             throw new UserNotFoundException(String.format("User with ID [%s] not found", id));
         }
         Boolean isFollowed = user.get().getFollowers().contains(requester);
-        return UserDto.from(user.get(), isFollowed);
+        List<Community> communitiesWhereUserIdAdmin = communityRepository.findCommunitiesByCreator(user.get());
+        List<CommunityDto> communitiesWhereUserIdAdminDto = new ArrayList<>();
+        communitiesWhereUserIdAdmin.forEach(community -> {
+            communitiesWhereUserIdAdminDto.add(CommunityDto.from(community));
+        });
+        return UserDto.from(user.get(), isFollowed, communitiesWhereUserIdAdminDto);
     }
 
     @Override

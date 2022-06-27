@@ -21,6 +21,9 @@ public class Community {
     private String description;
     private String link;
 
+    @OneToOne
+    private User creator;
+
     @Lob
     private byte[] avatar;
 

@@ -30,6 +30,15 @@ public class User implements UserDetails {
     private String role;
     private String avatar;
     private Boolean isApproved;
+    @Column(length = 260)
+    private String description;
+    @Column(length = 60)
+    private String shortDescription;
+    private Country country;
+    private String city;
+
+    @OneToMany
+    private List<Link> links = new ArrayList<>();
 
     @OneToMany(mappedBy = "creator")
     private List<Question> createdQuestions = new ArrayList<>();
