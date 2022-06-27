@@ -1,8 +1,11 @@
 package com.ru.questiondiary.repository;
 
 import com.ru.questiondiary.repo.CommunityRepository;
+import com.ru.questiondiary.repo.CommunityUserRepository;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.entity.Community;
+import com.ru.questiondiary.web.entity.CommunityUser;
+import com.ru.questiondiary.web.entity.Role;
 import com.ru.questiondiary.web.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ public class CommunityRepositoryTest {
     private CommunityRepository communityRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CommunityUserRepository communityUserRepository;
 
     @Test
     void test_create() {
@@ -76,5 +81,38 @@ public class CommunityRepositoryTest {
         assertThat(communityList.size()==4).isTrue();
         assertThat(communityList).contains(community2, community3, community4, community5);
         assertThat(communityList).doesNotContain(community1);
+    }
+
+    @Test
+    void test_findCommunitiesWhereUserIdAdmin() {
+        //ARRANGE
+        User user = userRepository.save(User.builder().build());
+        User user1 = userRepository.save(User.builder().build());
+        Community communityOK = communityRepository.save(Community.builder().build());
+        Community communityNOTADMIN = communityRepository.save(Community.builder().build());
+        Community communityNOTUSER = communityRepository.save(Community.builder().build());
+        CommunityUser communityUserOK = communityUserRepository.save(CommunityUser.builder().communities(Collections.singletonList(communityOK)).user(user).role(Role.ADMIN).build());
+        CommunityUser communityUserWRONGROLE = communityUserRepository.save(CommunityUser.builder().communities(Collections.singletonList(communityNOTADMIN)).user(user).role(Role.REDACTOR).build());
+        CommunityUser communityUserWRONGUSER = communityUserRepository.save(CommunityUser.builder().communities(Collections.singletonList(communityNOTUSER)).user(user1).role(Role.ADMIN).build());
+        communityOK.setWorkers(Collections.singletonList(communityUserOK));
+        communityNOTADMIN.setWorkers(Collections.singletonList(communityUserWRONGROLE));
+        communityNOTUSER.setWorkers(Collections.singletonList(communityUserWRONGUSER));
+        //ACT
+        List<Community> communities = communityRepository.findCommunitiesWhereUserIsAdmin(user.getId());
+        //ASSERT
+        assertThat(communities).contains(communityOK).doesNotContain(communityNOTADMIN, communityNOTUSER);
+    }
+
+    @Test
+    void test_findCommunitiesByCreator() {
+        //ARRANGE
+        User user = userRepository.save(User.builder().build());
+        User user1 = userRepository.save(User.builder().build());
+        Community communityOK = communityRepository.save(Community.builder().creator(user).build());
+        Community communityNOTCREATOR = communityRepository.save(Community.builder().creator(user1).build());
+        //ACT
+        List<Community> communities = communityRepository.findCommunitiesByCreator(user);
+        //ASSERT
+        assertThat(communities).contains(communityOK).doesNotContain(communityNOTCREATOR);
     }
 }

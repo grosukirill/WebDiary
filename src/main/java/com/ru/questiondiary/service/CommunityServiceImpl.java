@@ -49,6 +49,7 @@ public class CommunityServiceImpl implements CommunityService {
         communityUserRepository.save(communityUser);
         workers.add(communityUser);
         Community createdCommunity = Community.builder()
+                .creator(user)
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .link("")
