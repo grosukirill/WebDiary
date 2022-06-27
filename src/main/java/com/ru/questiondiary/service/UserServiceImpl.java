@@ -11,6 +11,7 @@ import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
 import com.ru.questiondiary.web.entity.Community;
+import com.ru.questiondiary.web.entity.Country;
 import com.ru.questiondiary.web.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -73,6 +74,11 @@ class UserServiceImpl implements UserService {
                 .role("USER")
                 .isApproved(false)
                 .avatar("https://i.ibb.co/5Bt6Q0t/Default-avatar.png")
+                .description("")
+                .shortDescription("")
+                .country(Country.NONE)
+                .city("")
+                .links(new ArrayList<>())
                 .answers(new ArrayList<>())
                 .following(new ArrayList<>())
                 .followers(new ArrayList<>())

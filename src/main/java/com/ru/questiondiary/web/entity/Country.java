@@ -202,7 +202,8 @@ public enum Country {
     VIETNAM("Vietnam"),
     YEMEN("Yemen"),
     ZAMBIA("Zambia"),
-    ZIMBABWE("Zimbabwe");
+    ZIMBABWE("Zimbabwe"),
+    NONE("None");
 
     private final String country;
 
