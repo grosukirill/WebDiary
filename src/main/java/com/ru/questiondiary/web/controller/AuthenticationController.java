@@ -3,6 +3,7 @@ package com.ru.questiondiary.web.controller;
 import com.ru.questiondiary.service.AuthenticationService;
 import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.UserLoginDto;
+import com.ru.questiondiary.web.dto.request.EditPasswordRequest;
 import com.ru.questiondiary.web.dto.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,5 +33,11 @@ public class AuthenticationController {
     private ResponseEntity<?> buildResponse(Object authenticatedUser) {
         OkResponse response = new OkResponse(authenticatedUser);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/edit/password")
+    public ResponseEntity<?> editPassword(@RequestBody EditPasswordRequest request, @RequestHeader("Authorization") String rawToken) {
+        UserLoginDto user = authenticationService.editPassword(request, rawToken);
+        return buildResponse(user);
     }
 }
