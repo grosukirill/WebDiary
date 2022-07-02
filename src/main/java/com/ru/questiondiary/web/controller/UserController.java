@@ -5,6 +5,7 @@ import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.OkResponse;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
+import com.ru.questiondiary.web.dto.request.EditProfileRequest;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,12 @@ public class UserController {
         UserDto user = userService.uploadAvatar(image, rawToken);
         return buildResponse(user);
     }
+
+     @PutMapping("/edit")
+     public ResponseEntity<?> editProfile(@RequestBody EditProfileRequest request, @RequestHeader("Authorization") String rawToken) {
+        UserDto user = userService.editProfile(request, rawToken);
+        return buildResponse(user);
+     }
 
     private ResponseEntity<?> buildResponse(Object data) {
         OkResponse response = new OkResponse(data);

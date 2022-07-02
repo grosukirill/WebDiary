@@ -5,10 +5,12 @@ import com.ru.questiondiary.exception.DuplicateUserEmailException;
 import com.ru.questiondiary.exception.TokenValidationException;
 import com.ru.questiondiary.exception.UserNotFoundException;
 import com.ru.questiondiary.repo.CommunityRepository;
+import com.ru.questiondiary.repo.LinkRepository;
 import com.ru.questiondiary.repo.UserRepository;
 import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
+import com.ru.questiondiary.web.dto.request.EditProfileRequest;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
 import com.ru.questiondiary.web.entity.Community;
 import com.ru.questiondiary.web.entity.Country;
@@ -35,6 +37,7 @@ class UserServiceImpl implements UserService {
     private final CommunityRepository communityRepository;
     private final TokenService tokenService;
     private final ImageService imageService;
+    private final LinkRepository linkRepository;
 
     @Override
     @Transactional
@@ -186,6 +189,23 @@ class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         String token = tokenService.createToken(savedUser);
         return UserLoginDto.from(savedUser, token);
+    }
+
+    @Override
+    public UserDto editProfile(EditProfileRequest request, String rawToken) {
+        User user = getUserFromToken(rawToken);
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setDescription(request.getDescription());
+        user.setShortDescription(request.getShortDescription());
+        user.setCountry(request.getCountry());
+        user.setCity(request.getCity());
+        linkRepository.saveAll(request.getLinks());
+        user.setLinks(request.getLinks());
+        User updatedUser = userRepository.save(user);
+        String token = tokenService.createToken(user);
+        return UserDto.from(updatedUser, token);
     }
 
     @Override

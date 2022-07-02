@@ -18,7 +18,6 @@ public class Link {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String link;
-    private Social social;
 
     public Link() {
 

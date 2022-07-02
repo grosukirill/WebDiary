@@ -4,6 +4,7 @@ import com.ru.questiondiary.exception.DuplicateUserEmailException;
 import com.ru.questiondiary.web.dto.CommunityDto;
 import com.ru.questiondiary.web.dto.UserDto;
 import com.ru.questiondiary.web.dto.UserLoginDto;
+import com.ru.questiondiary.web.dto.request.EditProfileRequest;
 import com.ru.questiondiary.web.dto.request.RegisterRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,4 +34,6 @@ public interface UserService extends UserDetailsService {
     UserDto uploadAvatar(MultipartFile image, String rawToken) throws IOException;
 
     UserLoginDto createFromGoogle(Map<String, Object> attributes);
+
+    UserDto editProfile(EditProfileRequest request, String rawToken);
 }
