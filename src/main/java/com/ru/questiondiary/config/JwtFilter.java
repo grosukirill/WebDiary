@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(body);
             response.getWriter().flush();
-            response.sendError(HttpServletResponse.SC_OK);
+            response.getWriter().close();
             return;
         }
 
@@ -52,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(body);
             response.getWriter().flush();
-            response.sendError(HttpServletResponse.SC_OK);
+            response.getWriter().close();
         } else {
             request.setAttribute("userId", userId);
             request.setAttribute("username", userEmail);
